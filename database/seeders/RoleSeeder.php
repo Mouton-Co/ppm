@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\UserRole;
+use App\Models\Role;
 use Illuminate\Database\Seeder;
 
-class UserRoleSeeder extends Seeder
+class RoleSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -20,7 +20,7 @@ class UserRoleSeeder extends Seeder
         ];
 
         foreach($roles as $role) {
-            UserRole::create([
+            Role::create([
                 'role' => $role,
             ]);
         }
