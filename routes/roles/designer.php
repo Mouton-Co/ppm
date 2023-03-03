@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Design\SubmissionController;
 use App\Http\Controllers\Design\UploadFilesController;
 
 /*
@@ -13,4 +14,5 @@ use App\Http\Controllers\Design\UploadFilesController;
 Route::middleware('designer')->group(function () {
     Route::get('/designer', [DashboardController::class, 'designer'])->name('dashboard.designer');
     Route::post('/upload', [UploadFilesController::class, 'uploadFile'])->name('designer.upload');
+    Route::get('/submission', [SubmissionController::class, 'show'])->name('new.submission');
 });
