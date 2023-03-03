@@ -1,0 +1,29 @@
+.dropzone {
+    border: 1px dashed #d3d3d3 !important;
+    border-radius: 14px !important;
+}
+.dz-drag-hover {
+    background-color: #f7f7f7 !important;
+}
+
+.progress-container {
+    box-shadow: 0 0 5px #22c55e;
+    background-color: transparent;
+}
+
+.pro {
+    width: 0;
+    max-width: 100%;
+}
+
+.pro.progress {
+    animation: progress 1.65s ease-in-out forwards;
+}
+
+@keyframes progress {
+    from {
+        width: 0;
+    } to {
+        width: 100%;
+    }
+}
