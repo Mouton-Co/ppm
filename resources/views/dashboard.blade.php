@@ -13,11 +13,13 @@
                 </div>
             </div>
             <br>
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    <a href="{{ route('dashboard.designer') }}">Designer</a>
-                </div>
-            </div>
+            @if (App\Models\User::find(auth()->user()->id)->hasRole('designer'))
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                    <div class="p-6 text-gray-900">
+                        <a href="{{ route('dashboard.designer') }}">Designer</a>
+                    </div>
+                </div>  
+            @endif
         </div>
     </div>
 </x-app-layout>

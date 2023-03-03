@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Design\UploadFilesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -11,5 +11,6 @@ use App\Http\Controllers\DashboardController;
 */
 
 Route::middleware('designer')->group(function () {
-    Route::get('/designer-dashboard', [DashboardController::class, 'designer'])->name('dashboard.designer');
+    Route::get('/designer', [DashboardController::class, 'designer'])->name('dashboard.designer');
+    Route::post('/upload', [UploadFilesController::class, 'uploadFile'])->name('designer.upload');
 });
