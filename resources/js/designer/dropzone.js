@@ -10,9 +10,12 @@ let defaultPreviewTemplate = ''+
             '<span class="w-1/12 flex justify-center"><img class="h-8" src=""></span>'+
             '<span class="w-6/12" data-dz-name></span>'+
             '<span class="w-1/12" data-dz-size></span>'+
-            '<div class="w-2/12 h-4 rounded-full progress-container">'+
+            '<div class="w-3/12 h-4 rounded-full progress-container">'+
                 '<div data-dz-uploadprogress class="pro progress h-4 bg-green-500 rounded-full"></div>'+
             '</div>'+
+            '<span class="w-1/12 flex justify-center cursor-pointer-important hover:opacity-70">'+
+                '<img id="remove-file" data-dz-remove class="h-5 cursor-pointer-important" src="'+delete_img+'">'+
+            '</span>'+
         '</div>'+
         '<hr>'+
     '</div>';
@@ -30,6 +33,7 @@ let dropzone = new Dropzone('#file-upload',{
     autoProcessQueue: true,
     previewTemplate: defaultPreviewTemplate,
     dictDefaultMessage: initialMessage,
+    headers: {"submission_code": submission_code},
 })
 
 /*
@@ -39,6 +43,26 @@ let dropzone = new Dropzone('#file-upload',{
 */
 dropzone.on('addedfile', file => {
     createThumbnail(file);
+});
+/*
+|--------------------------------------------------------------------------
+| WHEN FILE IS DELETED
+|--------------------------------------------------------------------------
+*/
+dropzone.on('removedfile', file => {
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    $.ajax({
+        type: "POST",
+        url: "remove",
+        data: {
+            file: JSON.stringify(file),
+            submission_code: submission_code,
+        },
+    }).done(function(msg) {});
 });
 
 /*
@@ -57,7 +81,5 @@ function createThumbnail(file) {
         } else if (file.type === "application/pdf") {
             image.setAttribute('src', pdf_img);
         }
-    } catch (error) {
-        
-    }
+    } catch (error) { }
 }

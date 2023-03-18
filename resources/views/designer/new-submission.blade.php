@@ -3,9 +3,11 @@
     <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
     @vite(['resources/js/designer/dropzone.js'])
     <script type="text/javascript">
-        let pdf_img = "{{asset('images/pdf.png')}}";
-        let excel_img = "{{asset('images/excel.png')}}";
-        let upload_img = "{{asset('images/upload.png')}}";
+        let pdf_img         = "{{asset('images/pdf.png')}}";
+        let excel_img       = "{{asset('images/excel.png')}}";
+        let upload_img      = "{{asset('images/upload.png')}}";
+        let delete_img      = "{{asset('images/delete.png')}}";
+        let submission_code = "{{$submission->submission_code}}";
     </script>
 @endsection
 
