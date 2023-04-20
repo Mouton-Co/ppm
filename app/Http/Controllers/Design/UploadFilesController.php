@@ -48,9 +48,7 @@ class UploadFilesController extends Controller
         $submissionCode = $request->submission_code;
         
         if (!empty($submissionCode) && !empty($fileName)){
-            
             Storage::delete('files/temp/'.$submissionCode.'/'.$fileName);
-
             return response()->json(['success' => $fileName]);
         } else {
             return response()->json(['error' => 'No file uploaded']);

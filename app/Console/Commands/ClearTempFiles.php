@@ -26,7 +26,7 @@ class ClearTempFiles extends Command
      */
     public function handle(): void
     {
-        Storage::deleteDirectory('files/temp');
+        Storage::disk('local')->deleteDirectory('files/temp');
         info('Temp files cleared');
     }
 }
