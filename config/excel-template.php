@@ -5,17 +5,51 @@
  *
  * Layout:
  *
- * Filename
+ * Filename => [
+ *  allowedValues => []
+ * ]
  */
 
 return [
-    'No.',
-    'File Name',
-    'Qty',
-    'Material',
-    'Material Thickness',
-    'Finish',
-    'Used In Weldment',
-    'Process Type',
-    'Notes'
+    'No.' => [
+        "type" => "int"
+    ],
+    'File Name' => [
+        "type" => "string"
+    ],
+    'Qty' => [
+        "type" => "int"
+    ],
+    'Material' => [
+        "type" => "string"
+    ],
+    'Material Thickness' => [
+        "type" => "string"
+    ],
+    'Finish' => [
+        "type" => "string"
+    ],
+    'Used In Weldment' => [
+        "type" => "string",
+        "allowed" => [
+            'no',
+            'yes'
+        ]
+    ],
+    'Process Type' => [
+        "type" => "string",
+        "allowed" => [
+            'lc',
+            'mch',
+            'lcb',
+            'lcbw',
+            'lbwm',
+            'tlcm',
+            'pm',
+            'p'
+        ]
+    ],
+    'Notes' => [
+        "type" => "string"
+    ]
 ];

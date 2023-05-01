@@ -44,6 +44,7 @@ dropzone.on('addedfile', file => {
     createThumbnail(file);
     removeDuplicates();
     removeDuplicateExcels();
+    writeSubmissionFeedback();
 });
 
 /*
@@ -64,7 +65,7 @@ dropzone.on('removedfile', file => {
             file: JSON.stringify(file),
             submission_code: submission_code,
         },
-    }).done(function (msg) { });
+    }).done(function (msg) {});
 });
 
 /*
@@ -115,4 +116,53 @@ function outputError(error) {
     let errorMsg = $("#error-message");
     errorMsg.text(error);
     errorMsg.parent().parent().removeClass('hidden');
+}
+function writeSubmissionFeedback() {
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    $.ajax({
+        type: "POST",
+        url: "feedback",
+        data: {
+            submission_code: submission_code,
+        },
+    }).done(function (response) {
+        $('#submission-feedback').empty();
+
+        if (response.heading != undefined || response.heading != null) {
+            $('#submission-feedback').append(
+                "<h3 class='mb-4 text-gray-700'>"+response.heading+"</h3>"
+            );
+        }
+
+        let color = "";
+        if (response.type != undefined || response.type != null) {
+            if (response.type == 'error') {
+                color = "text-red-600";
+            } else if (response.type == 'success') {
+                color = "text-green-600";
+            }
+        }
+
+        if (response.message != undefined || response.message != null) {
+            $('#submission-feedback').append(
+                "<hr><h3 class='mt-4 text-red-600'>"+response.message+"</h3>"
+            );
+        }
+
+        if (response.output != undefined || response.output != null) {
+            $('#submission-feedback').append("<ul>");
+            response.output.forEach(element => {
+                $('#submission-feedback').append(
+                    "<li class='text-red-600'>"+element+"</li>"
+                );
+            });
+            $('#submission-feedback').append("</ul>");
+        }
+        
+        $('#submission-feedback').parent().parent().removeClass('hidden');
+    });
 }
