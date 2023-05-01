@@ -184,5 +184,70 @@ class UploadFilesHelper
 
         return [true, $matrix, ''];
     }
+
+    public function checkDuplicates($matrix)
+    {
+        $headings = config('excel-template');
+
+        foreach ($headings as $heading => $headingData) {
+            if ($headingData['unique']) {
+                $result = array_diff_assoc($matrix[$heading], array_unique($matrix[$heading]));
+                if (!empty($result)) {
+                    $filename = reset($result);
+                    $indexes  = array_keys($matrix[$heading], $filename);
+                    $rows = [];
+                    foreach ($indexes as $index) {
+                        $rows[] = "Row ".($index+1);
+                    }
+                    return [
+                        false,
+                        "Duplicate values in column '$heading' found for $filename on the following rows:",
+                        $rows
+                    ];
+                }
+            }
+        }
+
+        return [true, '', ''];
+    }
+
+    public function getRequiredFiles($matrix)
+    {
+        $files = [];
+
+        for ($i = 0; $i < count($matrix['No.'])-1; $i++) {
+            switch ($matrix['Process Type'][$i]) {
+                case 'PM':
+                    // pdf 
+                    $files[] = $matrix['File Name'][$i].' - PDF';
+                    break;
+                case 'LC':
+                case 'LCB':
+                    // pdf and dwg
+                    $files[] = $matrix['File Name'][$i].' - PDF';
+                    $files[] = $matrix['File Name'][$i].' - DWG';
+                    break;
+                case 'MCH':
+                case 'TLCM':
+                    // pdf and step
+                    $files[] = $matrix['File Name'][$i].' - PDF';
+                    $files[] = $matrix['File Name'][$i].' - STEP';
+                    break;
+                case 'LCBW':
+                    // pdf x2 and dwg
+                    $files[] = $matrix['File Name'][$i].' - PDF';
+                    $files[] = $matrix['File Name'][$i].' - DWG';
+                    break;
+                case 'LBWM':
+                    // (pdf | step) and step
+                    $files[] = $matrix['File Name'][$i].' - PDF or STEP';
+                    $files[] = $matrix['File Name'][$i].' - DWG';
+                    break;
+                default: break;
+            }
+        }
+
+        return $files;
+    }
     
 }

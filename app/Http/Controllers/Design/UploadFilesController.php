@@ -101,9 +101,26 @@ class UploadFilesController extends Controller
             } else {
                 $matrix = $message;
             }
+
+            // check for duplicates
+            list($correct, $message, $response) = $helper->checkDuplicates($matrix);
+            if (!$correct) {
+                return response()->json([
+                    'heading' => "Excel sheet detected - $fileName",
+                    'message' => $message,
+                    'output'  => $response,
+                    'type'    => 'error'
+                ]);
+            }
             
             // get required files
-            
+            $requiredFiles = $helper->getRequiredFiles($matrix);
+            return response()->json([
+                'heading' => "Excel sheet detected - $fileName",
+                'message' => 'Files required:',
+                'output'  => $requiredFiles,
+                'type'    => 'requiredFiles'
+            ]);
 
         } else {
             return response()->json(['error' => 'Submission code not found']);

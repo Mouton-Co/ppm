@@ -12,32 +12,40 @@
 
 return [
     'No.' => [
-        "type" => "int"
+        "type"   => "int",
+        "unique" => true,
     ],
     'File Name' => [
-        "type" => "string"
+        "type"   => "string",
+        "unique" => true
     ],
     'Qty' => [
-        "type" => "int"
+        "type"   => "int",
+        "unique" => false
     ],
     'Material' => [
-        "type" => "string"
+        "type"   => "string",
+        "unique" => false
     ],
     'Material Thickness' => [
-        "type" => "string"
+        "type"   => "string",
+        "unique" => false
     ],
     'Finish' => [
-        "type" => "string"
+        "type"   => "string",
+        "unique" => false
     ],
     'Used In Weldment' => [
-        "type" => "string",
+        "type"    => "string",
+        "unique"  => false,
         "allowed" => [
             'no',
             'yes'
         ]
     ],
     'Process Type' => [
-        "type" => "string",
+        "type"    => "string",
+        "unique"  => false,
         "allowed" => [
             'lc',
             'mch',
@@ -50,6 +58,7 @@ return [
         ]
     ],
     'Notes' => [
-        "type" => "string"
+        "type"   => "string",
+        "unique" => false
     ]
 ];
