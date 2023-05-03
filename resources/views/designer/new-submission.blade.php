@@ -7,6 +7,8 @@
         let excel_img       = "{{ asset('images/excel.png') }}";
         let upload_img      = "{{ asset('images/upload.png') }}";
         let delete_img      = "{{ asset('images/delete.png') }}";
+        let green_tick      = "{{ asset('images/green-tick.png') }}";
+        let dots_loading    = "{{ asset('images/dots-loading.gif') }}";
         let submission_code = "{{ $submission->submission_code }}";
     </script>
 @endsection
@@ -35,7 +37,7 @@
             </div>
         </div>
 
-        <div class="mt-12 max-w-7xl mx-auto hidden sm:px-6 lg:px-8">
+        <div class="mt-12 pb-12 max-w-7xl mx-auto hidden sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div id="submission-feedback" class="p-6 text-gray-900">
                     

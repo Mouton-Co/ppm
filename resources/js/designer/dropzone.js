@@ -25,15 +25,17 @@ let initialMessage = '' +
     '<span class="text-slate-600">Drop files to upload, or <a class="underline">browse</a></span>' +
     '</div>' +
     '<div class="">' +
-    '<span class="text-slate-400">xlsx, xls, pdf</span>' +
+    '<span class="text-slate-400">xlsx, pdf, step, stp, dwg, dxf</span>' +
     '</div>';
 
 let dropzone = new Dropzone('#file-upload', {
-    acceptedFiles: ".xlsx,.pdf",
+    acceptedFiles: ".xlsx,.pdf,.step,.stp,.dwg,.dxf",
     previewTemplate: defaultPreviewTemplate,
     dictDefaultMessage: initialMessage,
     headers: { "submission_code": submission_code },
 });
+
+let allowedFiles = ['xlsx', 'pdf', 'step', 'stp', 'dwg', 'dxf'];
 
 /*
 |--------------------------------------------------------------------------
@@ -41,9 +43,15 @@ let dropzone = new Dropzone('#file-upload', {
 |--------------------------------------------------------------------------
 */
 dropzone.on('addedfile', file => {
-    createThumbnail(file);
-    removeDuplicates();
-    removeDuplicateExcels();
+    clearSubmissionFeedback();
+    let fileType = getFileType(file);
+    if (!allowedFiles.includes(fileType)) {
+        removeFile(file);
+    } else {
+        createThumbnail(fileType);
+        removeDuplicates();
+        removeDuplicateExcels();
+    }
     writeSubmissionFeedback();
 });
 
@@ -53,6 +61,7 @@ dropzone.on('addedfile', file => {
 |--------------------------------------------------------------------------
 */
 dropzone.on('removedfile', file => {
+    clearSubmissionFeedback();
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -66,6 +75,7 @@ dropzone.on('removedfile', file => {
             submission_code: submission_code,
         },
     }).done(function (msg) {});
+    writeSubmissionFeedback();
 });
 
 /*
@@ -73,15 +83,26 @@ dropzone.on('removedfile', file => {
 | GENERAL FUNCTIONS
 |--------------------------------------------------------------------------
 */
-function createThumbnail(file) {
+function removeFile(file) {
+    $(".uploaded-file-name").each(function () {
+        if ($(this).text() == file.name) {
+            $(this).parent().parent().remove();
+            outputError("File type not allowed");
+        }
+    });
+}
+function getFileType(file) {
+    return file.name.split('.').slice(-1)[0];
+}
+function createThumbnail(fileType) {
     try {
         let uploads = document.getElementsByClassName('uploaded-file-row');
         let lastUpload = uploads[uploads.length - 1];
         let image = lastUpload.childNodes[0].childNodes[0].childNodes[0];
 
-        if (file.type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") {
+        if (fileType == 'xlsx') {
             image.setAttribute('src', excel_img);
-        } else if (file.type === "application/pdf") {
+        } else if (fileType == 'pdf') {
             image.setAttribute('src', pdf_img);
         }
     } catch (error) { }
@@ -117,6 +138,12 @@ function outputError(error) {
     errorMsg.text(error);
     errorMsg.parent().parent().removeClass('hidden');
 }
+function clearSubmissionFeedback() {
+    $('#submission-feedback').empty();
+    $('#submission-feedback').append(
+        "<hr class='my-4'><h3 class='flex items-center gap-2'>Checking <img src='"+dots_loading+"'/></h3>"
+    );
+}
 function writeSubmissionFeedback() {
     $.ajaxSetup({
         headers: {
@@ -132,35 +159,46 @@ function writeSubmissionFeedback() {
     }).done(function (response) {
         $('#submission-feedback').empty();
 
-        if (response.heading != undefined || response.heading != null) {
-            $('#submission-feedback').append(
-                "<h3 class='mb-4 text-gray-700'>"+response.heading+"</h3>"
-            );
-        }
+        for (let i=0;i<response.lines.length;i++) {
+            let line = response.lines[i];
 
-        let color = "";
-        if (response.type != undefined || response.type != null) {
-            if (response.type == 'error') {
-                color = "text-red-600";
-            } else if (response.type == 'success') {
-                color = "text-green-600";
+            // get color
+            let color = line.type == 'error' ? 'text-red-600' : 'text-green-600';
+
+            // check if line has green tick
+            let tick = (line.tick != undefined && line.tick) == "true"
+            ? "<img class='aspect-square w-7' src='"+green_tick+"'/>"
+            : "";
+
+            // output line text
+            $('#submission-feedback').append(
+                "<hr class='my-4'><h3 class='flex items-center gap-2 "+color+"'>"+line.text+tick+"</h3>"
+            );
+
+            // output list if there is one
+            if (line.list != undefined || line.list != null) {
+                $('#submission-feedback').append("<ul>");
+                line.list.forEach(element => {
+                    if (line.list_files != undefined && line.list_files == "true") {
+                        // output a checked list if it is files
+                        let checked = (element.checked != undefined && element.checked) == "true"
+                        ? "<img class='aspect-square w-5' src='"+green_tick+"'/>"
+                        : "";
+                        $('#submission-feedback').append(
+                            "<li class='flex items-center gap-2 "+element.color+"'>"+element.text+checked+"</li>"
+                        );
+                    } else {
+                        if (line.list_case != undefined && line.list_case == "upper") {
+                            element = element.toUpperCase();
+                        }
+                        $('#submission-feedback').append(
+                            "<li class='"+color+"'>"+element+"</li>"
+                        );
+                    }
+                });
+                $('#submission-feedback').append("</ul>");
             }
-        }
 
-        if (response.message != undefined || response.message != null) {
-            $('#submission-feedback').append(
-                "<hr><h3 class='mt-4 text-red-600'>"+response.message+"</h3>"
-            );
-        }
-
-        if (response.output != undefined || response.output != null) {
-            $('#submission-feedback').append("<ul>");
-            response.output.forEach(element => {
-                $('#submission-feedback').append(
-                    "<li class='text-red-600'>"+element+"</li>"
-                );
-            });
-            $('#submission-feedback').append("</ul>");
         }
         
         $('#submission-feedback').parent().parent().removeClass('hidden');

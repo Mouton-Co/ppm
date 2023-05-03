@@ -25,8 +25,9 @@ class UploadFilesController extends Controller
         if (!empty($submissionCode) && $request->hasFile('file')){
             $file     = $request->file('file');
             $fileName = $file->getClientOriginalName();
+            $fileType = $file->getClientOriginalExtension();
 
-            if ($helper->containsExcel($submissionCode)) {
+            if ($fileType == 'xlsx' && $helper->containsExcel($submissionCode)) {
                 return response()->json(['error' => 'Submission already has excel sheet.']);
             } else {
                 $file->storeAs('files/temp/'.$submissionCode, $file->getClientOriginalName());
@@ -66,9 +67,15 @@ class UploadFilesController extends Controller
             
             $excel = $helper->getSubmissionExcel($submissionCode);
 
+            // check if there's an excel sheet
             if (empty($excel)) {
                 return response()->json([
-                    'heading' => "No excel sheet found"
+                    "lines" => [
+                        [
+                            "type" => "error",
+                            "text" => "No excel sheet found",
+                        ],
+                    ],
                 ]);
             }
             
@@ -79,10 +86,18 @@ class UploadFilesController extends Controller
             list($correct, $response) = $helper->checkHeadings($matrix);
             if (!$correct) {
                 return response()->json([
-                    'heading' => "Excel sheet detected - $fileName",
-                    'message' => 'Headings not found: ',
-                    'output'  => $response,
-                    'type'    => 'error'
+                    "lines" => [
+                        [
+                            "type" => "success",
+                            "text" => "Excel sheet found - $fileName",
+                            "tick" => "true",
+                        ],
+                        [
+                            "type" => "error",
+                            "text" => "Columns are missing:",
+                            "list" => $response,
+                        ],
+                    ],
                 ]);
             }
             
@@ -93,10 +108,24 @@ class UploadFilesController extends Controller
             list($correct, $message, $response) = $helper->checkDataIntegrity($matrix);
             if (!$correct) {
                 return response()->json([
-                    'heading' => "Excel sheet detected - $fileName",
-                    'message' => $message,
-                    'output'  => $response,
-                    'type'    => 'error'
+                    "lines" => [
+                        [
+                            "type" => "success",
+                            "text" => "Excel sheet found - $fileName",
+                            "tick" => "true",
+                        ],
+                        [
+                            "type" => "success",
+                            "text" => "Excel sheet columns checked",
+                            "tick" => "true",
+                        ],
+                        [
+                            "type" => "error",
+                            "text" => $message,
+                            "list" => $response,
+                            "list_case" => "upper",
+                        ],
+                    ],
                 ]);
             } else {
                 $matrix = $message;
@@ -106,20 +135,79 @@ class UploadFilesController extends Controller
             list($correct, $message, $response) = $helper->checkDuplicates($matrix);
             if (!$correct) {
                 return response()->json([
-                    'heading' => "Excel sheet detected - $fileName",
-                    'message' => $message,
-                    'output'  => $response,
-                    'type'    => 'error'
+                    "lines" => [
+                        [
+                            "type" => "success",
+                            "text" => "Excel sheet found - $fileName",
+                            "tick" => "true",
+                        ],
+                        [
+                            "type" => "success",
+                            "text" => "Excel sheet columns checked",
+                            "tick" => "true",
+                        ],
+                        [
+                            "type" => "error",
+                            "text" => $message,
+                            "list" => $response,
+                        ],
+                    ],
                 ]);
             }
             
-            // get required files
-            $requiredFiles = $helper->getRequiredFiles($matrix);
+            // get file matches
+            list($correct, $requiredFiles) = $helper->getFileMatches($matrix, $submissionCode);
+            if (!$correct) {
+                return response()->json([
+                    "lines" => [
+                        [
+                            "type" => "success",
+                            "text" => "Excel sheet found - $fileName",
+                            "tick" => "true",
+                        ],
+                        [
+                            "type" => "success",
+                            "text" => "Excel sheet columns checked",
+                            "tick" => "true",
+                        ],
+                        [
+                            "type" => "success",
+                            "text" => "Excel sheet data checked",
+                            "tick" => "true",
+                        ],
+                        [
+                            "type"       => "error",
+                            "text"       => "Files required: ",
+                            "list"       => $requiredFiles,
+                            "list_files" => "true",
+                        ],
+                    ],
+                ]);
+            }
+
             return response()->json([
-                'heading' => "Excel sheet detected - $fileName",
-                'message' => 'Files required:',
-                'output'  => $requiredFiles,
-                'type'    => 'requiredFiles'
+                "lines" => [
+                    [
+                        "type" => "success",
+                        "text" => "Excel sheet found - $fileName",
+                        "tick" => "true",
+                    ],
+                    [
+                        "type" => "success",
+                        "text" => "Excel sheet columns checked",
+                        "tick" => "true",
+                    ],
+                    [
+                        "type" => "success",
+                        "text" => "Excel sheet data checked",
+                        "tick" => "true",
+                    ],
+                    [
+                        "type" => "success",
+                        "text" => "All required files found",
+                        "tick" => "true",
+                    ],
+                ],
             ]);
 
         } else {

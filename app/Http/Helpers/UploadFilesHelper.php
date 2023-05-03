@@ -113,15 +113,18 @@ class UploadFilesHelper
                 continue;
             }
 
-            $lastRow = true;
+            $allEmpty = true;
             foreach ($headings as $heading => $headingData) {
                 $newMatrix[$heading][] = $row[$headingMatrix[$heading]];
                 
-                $lastRow = empty($row[$headingMatrix[$heading]]);
-                // if all the fields for this row is empty, treat it as the last row
+                if (!empty($row[$headingMatrix[$heading]])) {
+                    $allEmpty = false;
+                    // if all the fields for this row is empty, treat it as the last row
+                }
+                
             }
 
-            if ($lastRow) {
+            if ($allEmpty) {
                 break;
             }
         }
@@ -223,6 +226,7 @@ class UploadFilesHelper
                     break;
                 case 'LC':
                 case 'LCB':
+                case 'LCBW':
                     // pdf and dwg
                     $files[] = $matrix['File Name'][$i].' - PDF';
                     $files[] = $matrix['File Name'][$i].' - DWG';
@@ -233,14 +237,9 @@ class UploadFilesHelper
                     $files[] = $matrix['File Name'][$i].' - PDF';
                     $files[] = $matrix['File Name'][$i].' - STEP';
                     break;
-                case 'LCBW':
-                    // pdf x2 and dwg
-                    $files[] = $matrix['File Name'][$i].' - PDF';
-                    $files[] = $matrix['File Name'][$i].' - DWG';
-                    break;
                 case 'LBWM':
-                    // (pdf | step) and step
-                    $files[] = $matrix['File Name'][$i].' - PDF or STEP';
+                    // (pdf | step) and dwg
+                    $files[] = $matrix['File Name'][$i].' - PDF/STEP';
                     $files[] = $matrix['File Name'][$i].' - DWG';
                     break;
                 default: break;
@@ -248,6 +247,69 @@ class UploadFilesHelper
         }
 
         return $files;
+    }
+
+    public function getFileMatches($matrix, $submissionCode)
+    {
+        $requiredFiles = $this->getRequiredFiles($matrix);
+        $files = Storage::disk('local')->files('files/temp/' . $submissionCode);
+        $feedback = [];
+
+        foreach ($requiredFiles as $requiredFile) {
+            list($fileName, $fileType) = explode('.par - ', $requiredFile);
+            $fileType = strtolower($fileType);
+            
+            // check if above file exists
+            foreach ($files as $file) {
+                $file = explode("$submissionCode/", $file)[1];
+                
+                switch ($fileType) {
+                    case 'step':
+                    case 'stp':
+                        $exists = ($file == "$fileName.stp") || ($file == "$fileName.step");
+                        break;
+                    case 'dwg':
+                    case 'dxf':
+                        $exists = ($file == "$fileName.dwg") || ($file == "$fileName.dxf");
+                        break;
+                    case 'pdf/step':
+                        $exists = ($file == "$fileName.pdf") || ($file == "$fileName.step");
+                        break;
+                    default:
+                        $exists = $file == "$fileName.$fileType";
+                }
+
+                if ($exists) {
+                    break;
+                }
+            }
+
+            $feedback[] = $exists ?
+            [
+                "text"    => "$requiredFile ($fileName.$fileType)",
+                "checked" => "true",
+                "color"   => "text-green-600",
+            ] :
+            [
+                "text"    => "$requiredFile",
+                "checked" => "false",
+                "color"   => "text-red-600",
+            ];
+
+        }
+
+        return [$this->allFilesChecked($feedback), $feedback];
+    }
+
+    public function allFilesChecked($fileMatches)
+    {
+        foreach ($fileMatches as $file) {
+            if ($file['checked'] == "false") {
+                return false;
+            }
+        }
+
+        return true;
     }
     
 }
