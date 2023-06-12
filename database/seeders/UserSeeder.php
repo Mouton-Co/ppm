@@ -114,10 +114,6 @@ class UserSeeder extends Seeder
             ]);
             foreach ($roles as $roleSlug) {
                 $role = Role::where('role', $roleSlug)->first();
-                if (empty($role)) {
-                    dump('ROLE NOT FOUND');
-                    dd($roleSlug);
-                }
                 UserRole::create([
                     'user_id' => $user->id,
                     'role_id' => $role->id,
