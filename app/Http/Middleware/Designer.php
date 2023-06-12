@@ -16,6 +16,6 @@ class Designer
      */
     public function handle(Request $request, Closure $next): Response
     {
-        return User::find(auth()->user()->id)->hasRole('designer') ? $next($request) : redirect()->route('dashboard');
+        return User::find(auth()->user()->id)->hasRole('design') ? $next($request) : redirect()->route('dashboard');
     }
 }
