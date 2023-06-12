@@ -5,6 +5,8 @@
     <script type="text/javascript">
         let pdf_img         = "{{ asset('images/pdf.png') }}";
         let excel_img       = "{{ asset('images/excel.png') }}";
+        let dwg_img         = "{{ asset('images/dwg.png') }}";
+        let step_img        = "{{ asset('images/step.png') }}";
         let upload_img      = "{{ asset('images/upload.png') }}";
         let delete_img      = "{{ asset('images/delete.png') }}";
         let green_tick      = "{{ asset('images/green-tick.png') }}";

@@ -104,6 +104,10 @@ function createThumbnail(fileType) {
             image.setAttribute('src', excel_img);
         } else if (fileType == 'pdf') {
             image.setAttribute('src', pdf_img);
+        } else if (fileType == 'dwg' || fileType == 'dxf') {
+            image.setAttribute('src', dwg_img);
+        } else if (fileType == 'step' || fileType == 'stp') {
+            image.setAttribute('src', step_img);
         }
     } catch (error) { }
 }
