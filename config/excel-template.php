@@ -3,50 +3,48 @@
 /**
  * Template to check the uploaded designer .xlsx sheets against
  *
- * Layout:
+ * Layout with default values:
  *
  * Filename => [
+ *  type => string
+ *  unique => false
+ *  required => false
  *  allowedValues => []
  * ]
  */
 
 return [
     'No.' => [
-        "type"   => "int",
-        "unique" => true,
+        "type"     => "int",
+        "unique"   => true,
+        "required" => true,
     ],
     'File Name' => [
-        "type"   => "string",
-        "unique" => true
+        "unique"   => true,
+        "required" => true,
     ],
-    'Qty' => [
+    'Quantity' => [
         "type"   => "int",
-        "unique" => false
+        "required" => true,
     ],
     'Material' => [
-        "type"   => "string",
-        "unique" => false
+        "required" => true,
     ],
     'Material Thickness' => [
-        "type"   => "string",
-        "unique" => false
+        "required" => true,
     ],
-    'Finish' => [
-        "type"   => "string",
-        "unique" => false
-    ],
+    'Finish' => "",
     'Used In Weldment' => [
-        "type"    => "string",
-        "unique"  => false,
-        "allowed" => [
+        "required" => true,
+        "allowed"  => [
             'no',
-            'yes'
+            'yes',
+            'lone weldment',
         ]
     ],
     'Process Type' => [
-        "type"    => "string",
-        "unique"  => false,
-        "allowed" => [
+        "required" => true,
+        "allowed"  => [
             'lc',
             'mch',
             'lcb',
@@ -57,8 +55,12 @@ return [
             'p'
         ]
     ],
-    'Notes' => [
-        "type"   => "string",
-        "unique" => false
-    ]
+    'Notes' => "",
+    "Manufactured or Purchased" => [
+        "allowed"  => [
+            "purchased",
+            "machined",
+            "purchased then machined",
+        ],
+    ],
 ];

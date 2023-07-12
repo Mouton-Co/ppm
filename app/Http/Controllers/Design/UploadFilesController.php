@@ -72,15 +72,17 @@ class UploadFilesController extends Controller
                 return response()->json([
                     "lines" => [
                         [
-                            "type" => "error",
-                            "text" => "No excel sheet found",
+                            "type"          => "error",
+                            "text"          => "No excel sheet found",
+                            "assembly_name" =>  "",
                         ],
                     ],
                 ]);
             }
             
-            $matrix   = Excel::toArray(new BomExcel, $excel)[0];
-            $fileName = $helper->getFileName($excel, $submissionCode);
+            $matrix       = Excel::toArray(new BomExcel, $excel)[0];
+            $fileName     = $helper->getFileName($excel, $submissionCode);
+            $assemblyName = $helper->getAssemblyName($matrix);
 
             // check headings
             list($correct, $response) = $helper->checkHeadings($matrix);
@@ -88,9 +90,10 @@ class UploadFilesController extends Controller
                 return response()->json([
                     "lines" => [
                         [
-                            "type" => "success",
-                            "text" => "Excel sheet found - $fileName",
-                            "tick" => "true",
+                            "type"          => "success",
+                            "text"          => "Excel sheet found - $fileName",
+                            "tick"          => "true",
+                            "assembly_name" => $assemblyName,
                         ],
                         [
                             "type" => "error",
@@ -110,9 +113,10 @@ class UploadFilesController extends Controller
                 return response()->json([
                     "lines" => [
                         [
-                            "type" => "success",
-                            "text" => "Excel sheet found - $fileName",
-                            "tick" => "true",
+                            "type"          => "success",
+                            "text"          => "Excel sheet found - $fileName",
+                            "tick"          => "true",
+                            "assembly_name" => $assemblyName,
                         ],
                         [
                             "type" => "success",
@@ -137,9 +141,10 @@ class UploadFilesController extends Controller
                 return response()->json([
                     "lines" => [
                         [
-                            "type" => "success",
-                            "text" => "Excel sheet found - $fileName",
-                            "tick" => "true",
+                            "type"          => "success",
+                            "text"          => "Excel sheet found - $fileName",
+                            "tick"          => "true",
+                            "assembly_name" => $assemblyName,
                         ],
                         [
                             "type" => "success",
@@ -161,9 +166,10 @@ class UploadFilesController extends Controller
                 return response()->json([
                     "lines" => [
                         [
-                            "type" => "success",
-                            "text" => "Excel sheet found - $fileName",
-                            "tick" => "true",
+                            "type"          => "success",
+                            "text"          => "Excel sheet found - $fileName",
+                            "tick"          => "true",
+                            "assembly_name" => $assemblyName,
                         ],
                         [
                             "type" => "success",
@@ -188,9 +194,10 @@ class UploadFilesController extends Controller
             return response()->json([
                 "lines" => [
                     [
-                        "type" => "success",
-                        "text" => "Excel sheet found - $fileName",
-                        "tick" => "true",
+                        "type"          => "success",
+                        "text"          => "Excel sheet found - $fileName",
+                        "tick"          => "true",
+                        "assembly_name" => $assemblyName,
                     ],
                     [
                         "type" => "success",
@@ -203,9 +210,10 @@ class UploadFilesController extends Controller
                         "tick" => "true",
                     ],
                     [
-                        "type" => "success",
-                        "text" => "All required files found",
-                        "tick" => "true",
+                        "type"        => "success",
+                        "text"        => "All required files found",
+                        "tick"        => "true",
+                        'show_button' => "true",
                     ],
                 ],
             ]);

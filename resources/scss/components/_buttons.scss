@@ -1,0 +1,19 @@
+.btn {
+    @apply rounded-md px-3.5 py-2.5 text-sm font-semibold text-gray-900 text-base
+    shadow-sm ring-1 self-end ring-inset ring-gray-300 hover:bg-gray-50;
+
+    &-normal {
+        @apply bg-white btn;
+    }
+
+    &-disabled {
+        @apply bg-gray-50 btn;
+    }
+
+    &-ticked {
+        @apply bg-white text-green-600 flex items-center gap-2 border-green-600 btn;
+        &:hover {
+            box-shadow: 0 0 5px #22c55e;
+        }
+    }
+}

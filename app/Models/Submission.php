@@ -16,6 +16,12 @@ class Submission extends Model
      */
     protected $fillable = [
         'submission_code',
+        'assembly_name',
+        'machine_number',
+        'submission_type',
+        'current_unit_number',
+        'notes',
+        'submitted',
         'user_id',
     ];
 }

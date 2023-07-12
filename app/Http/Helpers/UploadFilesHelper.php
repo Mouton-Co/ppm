@@ -73,7 +73,7 @@ class UploadFilesHelper
         $headingsCorrect  = true;
         $response         = [];
         $expectedHeadings = config('excel-template');
-        $headings         = $matrix[0];
+        $headings         = $matrix[1];
         
         foreach ($expectedHeadings as $heading => $headingData) {
             if (!in_array($heading, $headings)) {
@@ -99,17 +99,18 @@ class UploadFilesHelper
         $headings = config('excel-template');
         $headingMatrix = [];
         foreach ($headings as $heading => $headingData) {
-            $index = array_search($heading, $matrix[0]);
+            $index = array_search($heading, $matrix[1]);
             $headingMatrix[$heading] = $index;
         }
 
-        $firstRow  = true;
+        $skip    = 2;
+        $counter = 0;
         $newMatrix = [];
 
         foreach ($matrix as $row) {
-            // skip the headings
-            if ($firstRow) {
-                $firstRow = false;
+            $counter++;
+
+            if ($counter <= $skip) {
                 continue;
             }
 
@@ -127,6 +128,7 @@ class UploadFilesHelper
             if ($allEmpty) {
                 break;
             }
+            
         }
         
         return $newMatrix;
@@ -148,37 +150,64 @@ class UploadFilesHelper
             
             foreach ($headings as $heading => $headingData) {
 
-                // check numeric values
-                if (
-                    $headingData['type'] == 'int'
-                    && !is_numeric($matrix[$heading][$i])
-                ) {
-                    return [
-                        false,
-                        "Data integrity violation:",
-                        ["Row ".($i+2)." , heading '$heading' doesn't have a numeric value: '".$matrix[$heading][$i]."'"],
-                    ];
-                }
+                if (!empty($headingData)) {
 
-                // check forced values
-                if (
-                    !empty($headingData['allowed'])
-                    && !in_array(strtolower($matrix[$heading][$i]), $headingData['allowed'])
-                ) {
-                    return [
-                        false,
-                        "Data integrity violation - Row ".($i+2)." , heading '$heading' must contain one of the following:",
-                        $headingData['allowed']
-                    ];
-                }
+                    if (
+                        !empty($matrix["Manufactured or Purchased"])
+                        && strtolower($matrix["Manufactured or Purchased"][$i]) == "purchased"
+                        && ($heading == "Process Type" || $heading =="Material")
+                    ) {
+                        $headingData['required'] = false;
+                    }
 
-                // convert values to correct state
-                if ($headingData['type'] == 'int') {
-                    $matrix[$heading][$i] = (int)$matrix[$heading][$i];
-                } elseif ($heading == 'Used In Weldment') {
-                    $matrix[$heading][$i] = (string)strtolower($matrix[$heading][$i]);
-                } elseif ($heading == 'Process Type') {
-                    $matrix[$heading][$i] = (string)strtoupper($matrix[$heading][$i]);
+                    // check required
+                    if (
+                        !empty($headingData['required']) && $headingData['required'] // if required
+                        && empty($matrix[$heading][$i]) // and value is empty
+                    ) {
+                        return [
+                            false,
+                            "Data integrity violation:",
+                            ["Row ".($i+3)." , heading '$heading' is required. Please fill in."],
+                        ];
+                    }
+
+                    // check numeric values
+                    if (
+                        !empty($headingData['type']) && $headingData['type'] == 'int' // if int
+                        && !is_numeric($matrix[$heading][$i]) // and not a number
+                    ) {
+                        return [
+                            false,
+                            "Data integrity violation:",
+                            ["Row ".($i+3)." , heading '$heading' doesn't have a numeric value:
+                            '".$matrix[$heading][$i]."'"],
+                        ];
+                    }
+
+                    // check forced values
+                    if (
+                        !empty($headingData['required']) && $headingData['required'] // if required
+                        && !empty($headingData['allowed']) // and has allowed value
+                        && !in_array(strtolower($matrix[$heading][$i]), $headingData['allowed'])
+                    ) {
+                        return [
+                            false,
+                            "Data integrity violation - Row ".($i+3)." , heading '$heading' must contain
+                            one of the following:",
+                            $headingData['allowed']
+                        ];
+                    }
+
+                    // convert values to correct state
+                    if (!empty($headingData['type']) && $headingData['type'] == 'int') {
+                        $matrix[$heading][$i] = (int)$matrix[$heading][$i];
+                    } elseif ($heading == 'Used In Weldment') {
+                        $matrix[$heading][$i] = (string)strtolower($matrix[$heading][$i]);
+                    } elseif ($heading == 'Process Type') {
+                        $matrix[$heading][$i] = (string)strtoupper($matrix[$heading][$i]);
+                    }
+
                 }
 
             }
@@ -193,14 +222,14 @@ class UploadFilesHelper
         $headings = config('excel-template');
 
         foreach ($headings as $heading => $headingData) {
-            if ($headingData['unique']) {
+            if (!empty($headingData['unique']) && $headingData['unique']) {
                 $result = array_diff_assoc($matrix[$heading], array_unique($matrix[$heading]));
                 if (!empty($result)) {
                     $filename = reset($result);
                     $indexes  = array_keys($matrix[$heading], $filename);
                     $rows = [];
                     foreach ($indexes as $index) {
-                        $rows[] = "Row ".($index+1);
+                        $rows[] = "Row ".($index+2);
                     }
                     return [
                         false,
@@ -221,7 +250,7 @@ class UploadFilesHelper
         for ($i = 0; $i < count($matrix['No.'])-1; $i++) {
             switch ($matrix['Process Type'][$i]) {
                 case 'PM':
-                    // pdf 
+                    // pdf
                     $files[] = $matrix['File Name'][$i].' - PDF';
                     break;
                 case 'LC':
@@ -258,11 +287,9 @@ class UploadFilesHelper
         foreach ($requiredFiles as $requiredFile) {
             list($fileName, $fileType) = explode('.par - ', $requiredFile);
             $fileType = strtolower($fileType);
-            
             // check if above file exists
             foreach ($files as $file) {
                 $file = explode("$submissionCode/", $file)[1];
-                
                 switch ($fileType) {
                     case 'step':
                     case 'stp':
@@ -310,6 +337,17 @@ class UploadFilesHelper
         }
 
         return true;
+    }
+
+    public function getAssemblyName($matrix)
+    {
+        $assemblyName = "";
+        foreach ($matrix[0] as $column) {
+            if (!empty($column)) {
+                $assemblyName = $column;
+            }
+        }
+        return trim(str_replace("Summary of Atomic Parts For", "", $assemblyName));
     }
     
 }

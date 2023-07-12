@@ -163,8 +163,7 @@ function writeSubmissionFeedback() {
     }).done(function (response) {
         $('#submission-feedback').empty();
 
-        for (let i=0;i<response.lines.length;i++) {
-            let line = response.lines[i];
+        for (let line of response.lines) {
 
             // get color
             let color = line.type == 'error' ? 'text-red-600' : 'text-green-600';
@@ -178,6 +177,10 @@ function writeSubmissionFeedback() {
             $('#submission-feedback').append(
                 "<hr class='my-4'><h3 class='flex items-center gap-2 "+color+"'>"+line.text+tick+"</h3>"
             );
+
+            if (line.text.includes("Excel sheet found") && line.assembly_name != undefined) {
+                $('#assembly_name').val(line.assembly_name);
+            }
 
             // output list if there is one
             if (line.list != undefined || line.list != null) {
@@ -201,6 +204,17 @@ function writeSubmissionFeedback() {
                     }
                 });
                 $('#submission-feedback').append("</ul>");
+            }
+
+            // check if button can be enabled
+            if (line.show_button != undefined && line.show_button == "true") {
+                $('#submit-button').attr('class', 'btn-ticked');
+                $('#submit-button').removeAttr('disabled');
+                $('#submit-button img').attr('class', 'aspect-square w-7');
+            } else {
+                $('#submit-button').attr('class', 'btn-disabled');
+                $('#submit-button').attr('disabled', "");
+                $('#submit-button img').attr('class', 'hidden');
             }
 
         }
