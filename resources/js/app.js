@@ -11,3 +11,5 @@ Alpine.start();
 
 import { dismiss } from "./general/dismiss.js";
 dismiss();
+import { designerFormSubmission } from "./designer/form-submission.js";
+designerFormSubmission();

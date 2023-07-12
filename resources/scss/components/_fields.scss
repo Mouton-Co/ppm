@@ -1,0 +1,11 @@
+.field {
+    @apply focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm;
+
+    &-normal {
+        @apply border-gray-300 field;
+    }
+
+    &-error {
+        @apply border-red-500 field;
+    }
+}

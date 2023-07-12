@@ -17,4 +17,5 @@ Route::middleware('design')->group(function () {
     Route::post('/remove', [UploadFilesController::class, 'removeFile'])->name('designer.remove');
     Route::post('/feedback', [UploadFilesController::class, 'getFeedback'])->name('designer.feedback');
     Route::get('/submission', [SubmissionController::class, 'show'])->name('new.submission');
+    Route::post('/submission', [SubmissionController::class, 'store'])->name('store.submission');
 });

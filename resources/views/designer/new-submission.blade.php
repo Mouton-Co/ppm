@@ -30,7 +30,8 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <h3 class="mb-4 text-gray-700">Please upload your files to start your submission</h3>
+                    @include('designer.submission-form')
+                    <x-input-label class="my-1" for="assembly_name" :value="__('Submission files')" />
                     <form action="{{ route('designer.upload') }}" method="POST" enctype="multipart/form-data"
                         id="file-upload" class="dropzone flex flex-col">
                         @csrf
@@ -39,12 +40,17 @@
             </div>
         </div>
 
-        <div class="mt-12 pb-12 max-w-7xl mx-auto hidden sm:px-6 lg:px-8">
+        <div class="mt-6 max-w-7xl mx-auto hidden sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div id="submission-feedback" class="p-6 text-gray-900">
-                    
-                </div>
+                <div id="submission-feedback" class="p-6 text-gray-900"></div>
             </div>
+        </div>
+
+        <div class="max-w-7xl pb-12 mt-6 flex justify-end mx-auto sm:px-6 lg:px-8">
+            <button type="button" id="submit-button" disabled class="btn-disabled">
+                Submit
+                <img class='hidden' src='{{ asset('images/green-tick.png') }}' alt=""/>
+            </button>
         </div>
 
     </div>
