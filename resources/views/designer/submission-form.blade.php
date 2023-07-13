@@ -26,7 +26,7 @@
             <select class="w-full my-1 field-normal" name="current_unit_number" id="current_unit_number" required>
                 <option value="">--Please select--</option>
                 @foreach ($unit_numbers as $key => $unit_number)
-                    <option value="{{$key}}">{{$unit_number}}</option>
+                    <option value="{{$key}}">{{$key.' - '.$unit_number}}</option>
                 @endforeach
             </select>
         </div>
