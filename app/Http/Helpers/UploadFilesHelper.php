@@ -152,10 +152,17 @@ class UploadFilesHelper
 
                 if (!empty($headingData)) {
 
+                    // require overrides
                     if (
-                        !empty($matrix["Manufactured or Purchased"])
-                        && strtolower($matrix["Manufactured or Purchased"][$i]) == "purchased"
+                        strtolower($matrix["Manufactured or Purchased"][$i]) == "purchased"
                         && ($heading == "Process Type" || $heading =="Material")
+                    ) {
+                        $headingData['required'] = false;
+                    }
+
+                    if (
+                        str_contains(strtolower($matrix["Process Type"][$i]), "l")
+                        && ($heading == "Material Thickness")
                     ) {
                         $headingData['required'] = false;
                     }
