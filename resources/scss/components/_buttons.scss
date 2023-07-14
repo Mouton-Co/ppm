@@ -1,19 +1,29 @@
+// .btn {
+//     @apply rounded-md px-3.5 py-2.5 text-sm font-semibold text-gray-900 text-base
+//     shadow-sm ring-1 self-end ring-inset ring-gray-300 hover:bg-gray-50;
+
+//     &-normal {
+//         @apply bg-white btn;
+//     }
+
+//     &-disabled {
+//         @apply bg-gray-50 btn;
+//     }
+
+//     &-ticked {
+//         @apply bg-white text-green-600 flex items-center gap-2 border-green-600 btn;
+//         &:hover {
+//             box-shadow: 0 0 5px #22c55e;
+//         }
+//     }
+// }
+
 .btn {
-    @apply rounded-md px-3.5 py-2.5 text-sm font-semibold text-gray-900 text-base
-    shadow-sm ring-1 self-end ring-inset ring-gray-300 hover:bg-gray-50;
+    @apply flex w-full justify-center rounded-md px-3 py-1.5 text-sm font-semibold leading-6
+    shadow-sm focus-visible:outline focus-visible:outline-2
+    focus-visible:outline-offset-2 focus-visible:outline-indigo-500;
 
-    &-normal {
-        @apply bg-white btn;
-    }
-
-    &-disabled {
-        @apply bg-gray-50 btn;
-    }
-
-    &-ticked {
-        @apply bg-white text-green-600 flex items-center gap-2 border-green-600 btn;
-        &:hover {
-            box-shadow: 0 0 5px #22c55e;
-        }
+    &-indigo {
+        @apply btn bg-indigo-500 hover:bg-indigo-400 text-white;
     }
 }

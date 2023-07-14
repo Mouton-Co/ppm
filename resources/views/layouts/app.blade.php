@@ -7,6 +7,11 @@
 
         <title>{{ env('APP_NAME', 'PPM') }}</title>
 
+        <!-- Fonts -->
+        <link rel="preconnect" href="https://fonts.bunny.net">
+        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+
         <!-- Scripts -->
         @vite(['resources/scss/app.scss', 'resources/js/app.js'])
         @yield('custom-scripts')
