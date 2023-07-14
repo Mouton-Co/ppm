@@ -1,11 +1,20 @@
-.field {
-    @apply focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm;
+// .field {
+//     @apply focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm;
 
-    &-normal {
-        @apply border-gray-300 field;
-    }
+//     &-normal {
+//         @apply border-gray-300 field;
+//     }
 
-    &-error {
-        @apply border-red-500 field;
-    }
+//     &-error {
+//         @apply border-red-500 field;
+//     }
+// }
+
+.field-dark {
+    @apply block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset
+    ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6
+}
+
+.label-dark {
+    @apply block text-sm font-medium leading-6 text-white;
 }
