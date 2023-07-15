@@ -13,3 +13,5 @@ import { dismiss } from "./general/dismiss.js";
 dismiss();
 import { designerFormSubmission } from "./designer/form-submission.js";
 designerFormSubmission();
+import { dashboard } from "./layouts/dashboard.js";
+dashboard();
