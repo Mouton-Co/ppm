@@ -1,5 +1,13 @@
 @extends('layouts.dark')
 
+@section('html-class')
+    bg-gray-800
+@endsection
+
+@section('body-class')
+    z-10
+@endsection
+
 @section('content')
     <div>
         {{-- mobile sidebar --}}
@@ -22,13 +30,13 @@
         </div>
 
         {{-- desktop sidebar --}}
-        <div class="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
+        <div class="shadow-lg hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
             @include('layouts.sidebar')
         </div>
 
         <div class="lg:pl-">
             <div class="sticky top-0 z-40 flex justify-between lg:justify-end h-16 shrink-0 items-center gap-x-4
-            border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
+            border-b border-gray-900 shadow-md bg-gray-800 px-4 sm:gap-x-6 sm:px-6 lg:px-8">
 
                 <button id="open-menu" type="button" class="-m-2.5 p-2.5 text-gray-700 lg:hidden">
                     <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -48,9 +56,9 @@
                                 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
                             </svg>
                         </span>
-                        <span class="flex lg:items-center">
-                            <span class="ml-4 text-sm font-semibold leading-6 text-gray-900" aria-hidden="true">
-                                Tom Cook
+                        <span class="flex items-center">
+                            <span class="nav-item-default hover:text-gray-400 ml-2" aria-hidden="true">
+                                {{ Auth::user()->name }}
                             </span>
                             <svg class="ml-2 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor"
                                 aria-hidden="true">
@@ -61,24 +69,27 @@
                         </span>
                     </button>
 
-                    <div class="transform opacity-0 scale-95 absolute right-0 z-10 mt-2.5 w-32 origin-top-right
-                    rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none"
+                    <div class="hidden transform opacity-0 scale-95 absolute right-0 mt-2.5 w-32 origin-top-right
+                    rounded-md bg-dark-field shadow-md ring-1 ring-dark-field-border focus:outline-none"
                     role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1"
                     id="user-menu">
-                        <a href="#" class="block px-3 py-1 text-sm leading-6 text-gray-900" role="menuitem"
-                            tabindex="-1" id="user-menu-item-0">Your profile</a>
+                        <a href="#" class="dropdown-item-top !my-0 !text-nav-link hover:!text-white" role="menuitem"
+                            tabindex="-1" id="user-menu-item-0">{{ __('Your profile') }}</a>
                         <form action="{{ route('logout') }}" method="post">
                             @csrf
-                            <button class="block px-3 py-1 text-sm leading-6 text-gray-900" type="submit">
-                                Sign out
+                            <button class="dropdown-item-bottom !my-0 !text-nav-link hover:!text-white" type="submit">
+                                {{ __('Sign out') }}
                             </button>
                         </form>
                     </div>
                 </div>
             </div>
 
-            <main class="py-10">
-                <div class="px-4 sm:px-6 lg:px-8">
+            <main class="py-5 px-5 md:px-10 lg:pl-[328px]">
+                <div class="">
+                    @if (session('success'))
+                        @include('components.success-message', ['success' => session('success')])
+                    @endif
                     @yield('dashboard-content')
                 </div>
             </main>

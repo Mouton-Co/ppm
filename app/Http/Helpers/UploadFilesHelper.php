@@ -322,12 +322,12 @@ class UploadFilesHelper
             [
                 "text"    => "$requiredFile ($fileName.$fileType)",
                 "checked" => "true",
-                "color"   => "text-green-600",
+                "color"   => "text-feedback-success",
             ] :
             [
                 "text"    => "$requiredFile",
                 "checked" => "false",
-                "color"   => "text-red-600",
+                "color"   => "text-white",
             ];
 
         }

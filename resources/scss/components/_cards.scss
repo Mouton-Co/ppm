@@ -1,0 +1,6 @@
+.card {
+    @apply text-white py-4;
+}
+.field-card {
+    @apply bg-dark-field border border-solid border-dark-field-border shadow-md rounded-[14px] p-6;
+}
