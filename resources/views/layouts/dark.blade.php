@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full bg-gray-900">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full @yield('html-class')">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,7 +16,9 @@
     @vite(['resources/scss/main.scss', 'resources/js/app.js'])
     @yield('custom-scripts')
 </head>
-<body class="h-full">
+<body @yield('body-class') class="h-full font-sans antialiased">
     @yield('content')
+
+    @yield('end-body-scripts')
 </body>
 </html>

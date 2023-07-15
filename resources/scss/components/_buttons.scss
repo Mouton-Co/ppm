@@ -23,7 +23,7 @@
     shadow-sm focus-visible:outline focus-visible:outline-2
     focus-visible:outline-offset-2 focus-visible:outline-indigo-500;
 
-    &-indigo {
-        @apply btn bg-indigo-500 hover:bg-indigo-400 text-white;
+    &-sky {
+        @apply btn bg-sky-700 hover:bg-sky-600 text-white;
     }
 }

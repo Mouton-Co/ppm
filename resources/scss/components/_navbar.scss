@@ -1,0 +1,9 @@
+.nav-item {
+    @apply flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold;
+    &-active {
+        @apply nav-item bg-gray-800 text-white;
+    }
+    &-default {
+        @apply nav-item text-gray-400 hover:text-white hover:bg-gray-800;
+    }
+}

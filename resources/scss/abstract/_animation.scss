@@ -1,0 +1,38 @@
+.user-menu {
+    &-expanded {
+        @apply transition ease-out duration-100 transform opacity-100 scale-100;
+    }
+    &-closed {
+        @apply transition ease-in duration-75 transform opacity-0 scale-95;
+    }
+}
+
+.curtain {
+    @apply transition-opacity ease-linear duration-300;
+    &-expanded {
+        @apply curtain opacity-100;
+    }
+    &-closed {
+        @apply curtain opacity-0;
+    }
+}
+
+.side-panel {
+    @apply transition ease-in-out duration-300 transform;
+    &-expanded {
+        @apply side-panel translate-x-0;
+    }
+    &-closed {
+        @apply side-panel -translate-x-full;
+    }
+}
+
+.close-button{
+    @apply ease-in-out duration-300;
+    &-expanded {
+        @apply close-button opacity-100;
+    }
+    &-closed {
+        @apply close-button opacity-0;
+    }
+}
