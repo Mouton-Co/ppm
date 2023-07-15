@@ -7,14 +7,14 @@ Dropzone.autoDiscover = false;
 let defaultPreviewTemplate = '' +
     '<div class="uploaded-file-row">' +
     '<div class="flex items-center mb-1">' +
-    '<span class="w-1/12 flex justify-center"><img class="h-8" src=""></span>' +
-    '<span class="uploaded-file-name w-6/12" data-dz-name></span>' +
-    '<span class="w-1/12" data-dz-size></span>' +
+    '<span class="w-1/12 flex justify-center"><img class="h-8 min-w-[2rem] mr-5 md:mr-0" src=""></span>' +
+    '<span class="uploaded-file-name w-6/12 md:w-5/12 !mb-0 label-dark truncate" data-dz-name></span>' +
+    '<span class="hidden md:flex text-sm justify-center md:gap-1 w-2/12 label-black !mb-0" data-dz-size></span>' +
     '<div class="w-3/12 h-4 rounded-full progress-container">' +
-    '<div data-dz-uploadprogress class="pro progress h-4 bg-green-500 rounded-full"></div>' +
+    '<div data-dz-uploadprogress class="pro progress h-4 bg-sky-700 rounded-full"></div>' +
     '</div>' +
-    '<span class="w-1/12 flex justify-center cursor-pointer-important hover:opacity-70">' +
-    '<img id="remove-file" data-dz-remove class="h-5 cursor-pointer-important" src="' + delete_img + '">' +
+    '<span class="w-[51px] flex justify-center !cursor-pointer hover:opacity-70">' +
+    '<svg data-dz-remove class="h-5 w-5 !cursor-pointer" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" /></svg>' +
     '</span>' +
     '</div>' +
     '<hr>' +
@@ -36,6 +36,8 @@ let dropzone = new Dropzone('#file-upload', {
 });
 
 let allowedFiles = ['xlsx', 'pdf', 'step', 'stp', 'dwg', 'dxf'];
+
+let dots_loading = '<svg class="w-5" id="dots" width="132px" height="58px" viewBox="0 0 132 58" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns"><title>dots</title> <desc>Created with Sketch.</desc> <defs></defs> <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage"> <g id="dots" sketch:type="MSArtboardGroup" fill="#A3A3A3"> <circle id="dot1" sketch:type="MSShapeGroup" cx="25" cy="30" r="13"></circle> <circle id="dot2" sketch:type="MSShapeGroup" cx="65" cy="30" r="13"></circle> <circle id="dot3" sketch:type="MSShapeGroup" cx="105" cy="30" r="13"></circle> </g> </g> </svg>';
 
 /*
 |--------------------------------------------------------------------------
@@ -145,7 +147,7 @@ function outputError(error) {
 function clearSubmissionFeedback() {
     $('#submission-feedback').empty();
     $('#submission-feedback').append(
-        "<hr class='my-4'><h3 class='flex items-center gap-2'>Checking <img src='"+dots_loading+"'/></h3>"
+        "<hr class='my-2'><h3 class='flex items-center gap-2'>Checking"+dots_loading+"</h3>"
     );
 }
 function writeSubmissionFeedback() {
@@ -166,20 +168,26 @@ function writeSubmissionFeedback() {
         for (let line of response.lines) {
 
             // get color
-            let color = line.type == 'error' ? 'text-red-600' : 'text-green-600';
+            let color = line.type == 'error' ? 'text-white' : 'text-feedback-success';
 
             // check if line has green tick
             let tick = (line.tick != undefined && line.tick) == "true"
-            ? "<img class='aspect-square w-7' src='"+green_tick+"'/>"
+            ? '<svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" class="w-5"><path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd"></path></svg>'
             : "";
 
             // output line text
             $('#submission-feedback').append(
-                "<hr class='my-4'><h3 class='flex items-center gap-2 "+color+"'>"+line.text+tick+"</h3>"
+                "<hr class='my-2'><h3 class='flex items-center gap-2 "+color+"'>"+line.text+tick+"</h3>"
             );
 
             if (line.text.includes("Excel sheet found") && line.assembly_name != undefined) {
                 $('#assembly_name').val(line.assembly_name);
+            }
+
+            if (line.text.includes('All required files found')) {
+                $('#submission-feedback').append(
+                    "<hr class='my-2'>"
+                );
             }
 
             // output list if there is one
@@ -189,17 +197,17 @@ function writeSubmissionFeedback() {
                     if (line.list_files != undefined && line.list_files == "true") {
                         // output a checked list if it is files
                         let checked = (element.checked != undefined && element.checked) == "true"
-                        ? "<img class='aspect-square w-5' src='"+green_tick+"'/>"
+                        ? 'line-through'
                         : "";
                         $('#submission-feedback').append(
-                            "<li class='flex items-center gap-2 "+element.color+"'>"+element.text+checked+"</li>"
+                            "<li class='text-sm flex items-center gap-2 "+element.color+" "+checked+"'>"+element.text+"</li>"
                         );
                     } else {
                         if (line.list_case != undefined && line.list_case == "upper") {
                             element = element.toUpperCase();
                         }
                         $('#submission-feedback').append(
-                            "<li class='"+color+"'>"+element+"</li>"
+                            "<li class='"+color+" text-sm'>"+element+"</li>"
                         );
                     }
                 });
@@ -208,17 +216,18 @@ function writeSubmissionFeedback() {
 
             // check if button can be enabled
             if (line.show_button != undefined && line.show_button == "true") {
-                $('#submit-button').attr('class', 'btn-ticked');
+                $('#submit-button').removeClass('btn-disabled');
+                $('#submit-button').addClass('btn-sky');
                 $('#submit-button').removeAttr('disabled');
-                $('#submit-button img').attr('class', 'aspect-square w-7');
             } else {
-                $('#submit-button').attr('class', 'btn-disabled');
-                $('#submit-button').attr('disabled', "");
-                $('#submit-button img').attr('class', 'hidden');
+                $('#submit-button').removeClass('btn-sky');
+                $('#submit-button').addClass('btn-disabled');
+                $('#submit-button').attr('disabled', '');
             }
 
         }
         
-        $('#submission-feedback').parent().parent().removeClass('hidden');
+        $('#submission-feedback').removeClass('hidden');
+        $('#submission-line').removeClass('hidden');
     });
 }

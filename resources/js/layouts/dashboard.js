@@ -2,11 +2,17 @@ export function dashboard() {
 
     $("#user-menu-button").on("click", function () {
         if ($("#user-menu-button").attr('aria-expanded') == "false") {
-            $('#user-menu').addClass('user-menu-expanded').removeClass('user-menu-closed');
-            $("#user-menu-button").attr('aria-expanded', "true");
+            $('#user-menu').removeClass('hidden');
+            setTimeout(function () {
+                $('#user-menu').addClass('user-menu-expanded').removeClass('user-menu-closed');
+                $("#user-menu-button").attr('aria-expanded', "true");
+            }, 100);
         } else {
             $('#user-menu').addClass('user-menu-closed').removeClass('user-menu-expanded');
             $("#user-menu-button").attr('aria-expanded', "false");
+            setTimeout(function () {
+                $('#user-menu').addClass('hidden');
+            }, 75);
         }
     });
 

@@ -1,10 +1,17 @@
-<div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-    <div class="flex items-center p-4 mb-4 text-green-800 rounded-lg bg-green-50
-    overflow-hidden shadow-sm sm:rounded-lg">
-        <img class="aspect-square w-7" src="{{asset('images/green-tick.png')}}" alt="">
-        <div id="error-message" class="ml-3 text-sm font-medium">{{ $success }}</div>
-        <button id="dimiss-button" type="button"
-        class="ml-auto -mx-1.5 -my-1.5 bg-green-50 text-green-500 rounded-lg focus:ring-2
+<div>
+    <div class="flex justify-between px-4 py-2 mt-3 text-green-900 rounded-lg bg-green-100
+    overflow-hidden w-full shadow-sm sm:rounded-lg">
+        <div class="flex align-center">
+            <svg aria-hidden="true" class="flex-shrink-0 w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+            xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1
+                        1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+            </svg>
+            <div id="success-message" class="ml-3 text-sm font-medium">{{ !empty($success) ? $success : '' }}</div>
+        </div>
+        <button class="dimiss-button" type="button"
+        class="ml-auto -mx-1.5 -my-1.5 bg-green-100 text-green-700 rounded-lg focus:ring-2
                     focus:ring-green-400 p-1.5 hover:bg-green-200 inline-flex h-8 w-8">
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414

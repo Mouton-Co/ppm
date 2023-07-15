@@ -1,3 +1,6 @@
 h2 {
-    @apply text-2xl font-bold leading-9 tracking-tight text-white;
+    @apply text-base md:text-lg text-center font-medium leading-9 tracking-tight text-white;
+}
+h3 {
+    @apply text-sm;
 }

@@ -1,5 +1,5 @@
 export function dismiss() {
-    $("#dimiss-button").on("click", function () {
+    $(".dimiss-button").on("click", function () {
         let msg = $(this).parent().parent();
         msg.fadeOut(700);
 

@@ -42,6 +42,7 @@ class SubmissionController extends Controller
             'submission'       => $submission,
             'submission_types' => config('dropdowns.submission_types'),
             'unit_numbers'     => config('dropdowns.unit_numbers'),
+            'current'          => 'new-submission',
         ]);
     }
 
@@ -68,7 +69,7 @@ class SubmissionController extends Controller
         $fmh = new FileManagementHelper();
         $fmh->makeFilesPermanent($submission->submission_code);
 
-        return redirect()->route('dashboard.designer')->with([
+        return redirect()->route('dashboard')->with([
             'success' => "Submission created - ".$submission->assembly_name,
         ]);
     }

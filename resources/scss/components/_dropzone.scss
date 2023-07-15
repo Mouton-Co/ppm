@@ -1,13 +1,14 @@
 .dropzone {
-    border: 1px dashed #d3d3d3 !important;
+    border: 1px dashed #404954 !important;
     border-radius: 14px !important;
+    background: #2a3441 !important;
 }
 .dz-drag-hover {
-    background-color: #f7f7f7 !important;
+    border: 1px dashed #0369a1 !important;
 }
 
 .progress-container {
-    box-shadow: 0 0 5px #22c55e;
+    box-shadow: 0 0 5px #0369a1;
     background-color: transparent;
 }
 

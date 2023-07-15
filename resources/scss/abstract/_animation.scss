@@ -2,6 +2,7 @@
     &-expanded {
         @apply transition ease-out duration-100 transform opacity-100 scale-100;
     }
+
     &-closed {
         @apply transition ease-in duration-75 transform opacity-0 scale-95;
     }
@@ -9,9 +10,11 @@
 
 .curtain {
     @apply transition-opacity ease-linear duration-300;
+
     &-expanded {
         @apply curtain opacity-100;
     }
+
     &-closed {
         @apply curtain opacity-0;
     }
@@ -19,20 +22,52 @@
 
 .side-panel {
     @apply transition ease-in-out duration-300 transform;
+
     &-expanded {
         @apply side-panel translate-x-0;
     }
+
     &-closed {
         @apply side-panel -translate-x-full;
     }
 }
 
-.close-button{
+.close-button {
     @apply ease-in-out duration-300;
+
     &-expanded {
         @apply close-button opacity-100;
     }
+
     &-closed {
         @apply close-button opacity-0;
+    }
+}
+
+#dots #dot1 {
+    animation: load 1s infinite;
+}
+
+#dots #dot2 {
+    animation: load 1s infinite;
+    animation-delay: 0.2s;
+}
+
+#dots #dot3 {
+    animation: load 1s infinite;
+    animation-delay: 0.4s;
+}
+
+@keyframes load {
+    0% {
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
     }
 }
