@@ -16,7 +16,7 @@
     @vite(['resources/scss/main.scss', 'resources/js/app.js'])
     @yield('custom-scripts')
 </head>
-<body @yield('body-class') class="h-full font-sans antialiased">
+<body class="h-full font-sans antialiased @yield('body-class')">
     @yield('content')
 
     @yield('end-body-scripts')

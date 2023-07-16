@@ -1,11 +1,15 @@
 @extends('layouts.dark')
 
 @section('html-class')
-bg-gray-900
+    bg-gray-900
+@endsection
+
+@section('body-class')
+    pt-40
 @endsection
 
 @section('content')
-    <div class="flex min-h-full flex-col items-center px-6 mt-40 lg:px-8">
+    <div class="flex flex-col items-center px-6 lg:px-8">
         <div class="">
             <div class="sm:mx-auto sm:w-full sm:max-w-sm">
                 <img class="mx-auto w-[300px] h-auto mb-10" src="{{ asset('images/logo.png') }}" alt="Your Company">

@@ -46,6 +46,11 @@ class SubmissionController extends Controller
         ]);
     }
 
+    /**
+     * Store a new submission
+     *
+     * @return Redirect
+     */
     public function store(Request $request)
     {
         $submission = Submission::where('submission_code', $request->get('submission_code'))->first();
@@ -72,5 +77,15 @@ class SubmissionController extends Controller
         return redirect()->route('dashboard')->with([
             'success' => "Submission created - ".$submission->assembly_name,
         ]);
+    }
+
+    /**
+     * View for showing all submissions
+     *
+     * @return View
+     */
+    public function view()
+    {
+        
     }
 }
