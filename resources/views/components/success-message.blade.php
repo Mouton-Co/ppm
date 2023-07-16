@@ -1,6 +1,6 @@
-<div>
-    <div class="flex justify-between px-4 py-2 mt-3 text-white rounded-lg bg-dark-field
-    overflow-hidden w-full shadow-md sm:rounded-lg">
+<div class="mb-6">
+    <div class="flex justify-between px-4 py-2 mt-3 text-green-500 rounded-lg bg-dark-field border
+    overflow-hidden w-full shadow-md sm:rounded-lg border-solid border-green-500">
         <div class="flex align-center">
             <svg aria-hidden="true" class="flex-shrink-0 w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
             xmlns="http://www.w3.org/2000/svg">

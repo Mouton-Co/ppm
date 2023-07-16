@@ -86,12 +86,13 @@
             </div>
 
             <main class="py-5 px-5 md:px-10 lg:pl-[328px]">
-                <div class="">
-                    @if (session('success'))
-                        @include('components.success-message', ['success' => session('success')])
-                    @endif
-                    @yield('dashboard-content')
-                </div>
+                @if (session('success'))
+                    @include('components.success-message', ['success' => session('success')])
+                @endif
+                @if (session('error'))
+                    @include('components.error-message', ['error' => session('error')])
+                @endif
+                @yield('dashboard-content')
             </main>
         </div>
     </div>

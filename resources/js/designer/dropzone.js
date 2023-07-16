@@ -32,7 +32,6 @@ let dropzone = new Dropzone('#file-upload', {
     acceptedFiles: ".xlsx,.pdf,.step,.stp,.dwg,.dxf",
     previewTemplate: defaultPreviewTemplate,
     dictDefaultMessage: initialMessage,
-    headers: { "submission_code": submission_code },
 });
 
 let allowedFiles = ['xlsx', 'pdf', 'step', 'stp', 'dwg', 'dxf'];

@@ -1,6 +1,6 @@
 <div class="hidden">
-    <div class="flex justify-between px-4 py-2 mt-3 text-red-900 rounded-lg bg-red-100 overflow-hidden
-    shadow-sm sm:rounded-lg">
+    <div class="flex justify-between px-4 py-2 mt-3 text-red-500 rounded-lg bg-dark-field overflow-hidden
+    shadow-sm sm:rounded-lg border border-solid border-red-500">
         <div class="flex align-center">
             <svg aria-hidden="true" class="flex-shrink-0 w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
             xmlns="http://www.w3.org/2000/svg">
@@ -11,7 +11,7 @@
             <div id="error-message" class="ml-3 text-sm font-medium">{{ !empty($error) ? $error : '' }}</div>
         </div>
         <button class="dimiss-button" type="button"
-        class="ml-auto -mx-1.5 -my-1.5 bg-red-100 text-red-700 rounded-lg focus:ring-2
+        class="ml-auto -mx-1.5 -my-1.5 bg-dark-field text-red-500 rounded-lg focus:ring-2
                     focus:ring-red-400 p-1.5 hover:bg-red-200 inline-flex h-8 w-8">
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414

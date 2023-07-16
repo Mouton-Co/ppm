@@ -74,7 +74,7 @@ class SubmissionController extends Controller
         $fmh = new FileManagementHelper();
         $fmh->makeFilesPermanent($submission->submission_code);
 
-        return redirect()->route('dashboard')->with([
+        return redirect()->route('submissions.index')->with([
             'success' => "Submission created - ".$submission->assembly_name,
         ]);
     }
@@ -84,8 +84,44 @@ class SubmissionController extends Controller
      *
      * @return View
      */
-    public function view()
+    public function index()
     {
+        $userRoles   = auth()->user()->roles->pluck('role')->all();
+        $submissions = Submission::where('submitted', 1);
+
+        if (
+            !(in_array('admin', $userRoles)
+            || in_array('procurement', $userRoles))
+        ) {
+            // can only view own submissions
+            $submissions = $submissions->where('user_id', auth()->user()->id);
+        }
+
+        $submissions = $submissions->orderBy('created_at', 'desc')->get();
         
+        return view('submissions.index')->with([
+            'current'     => 'view-submissions',
+            'submissions' => $submissions,
+        ]);
+    }
+
+    /**
+     * View for showing specific submission
+     *
+     * @return View
+     */
+    public function view($id)
+    {
+        $submission = Submission::find($id);
+
+        if (empty($submission)) {
+            return redirect()->route('submissions.index')->with([
+                'error' => "Submission $id not found",
+            ]);
+        }
+
+        return view('submissions.view')->with([
+            'submission' => $submission,
+        ]);
     }
 }

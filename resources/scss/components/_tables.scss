@@ -1,0 +1,22 @@
+.table-dark {
+    @apply w-full divide-y-2 divide-dark-field-border table-auto;
+
+    tbody {
+        @apply divide-y divide-dark-field-border;
+
+        tr {
+            @apply hover:bg-sky-700 cursor-pointer hover:shadow-inner;
+        }
+    }
+
+    th {
+        @apply px-3 py-3 text-left text-sm font-bold text-white;
+    }
+    td {
+        @apply whitespace-nowrap text-sm text-gray-300;
+
+        a {
+            @apply block w-full h-full px-3 py-2;
+        }
+    }
+}

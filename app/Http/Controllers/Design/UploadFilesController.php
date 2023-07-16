@@ -19,7 +19,7 @@ class UploadFilesController extends Controller
      */
     public function uploadFile(Request $request)
     {
-        $submissionCode = apache_request_headers()['submission_code'] ?? null;
+        $submissionCode = $request->get('submission_code');
         $helper         = new UploadFilesHelper();
 
         if (!empty($submissionCode) && $request->hasFile('file')){

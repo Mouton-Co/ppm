@@ -32,6 +32,7 @@
         <form action="{{ route('designer.upload') }}" method="POST" enctype="multipart/form-data" id="file-upload"
             class="dropzone flex flex-col">
             @csrf
+            <input type="hidden" name="submission_code" value="{{ $submission->submission_code }}">
         </form>
 
         <hr id="submission-line" class="hidden my-12">
