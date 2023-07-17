@@ -2,6 +2,7 @@
 
 namespace App\Http\Helpers;
 
+use App\Models\Submission;
 use Illuminate\Support\Facades\Storage;
 
 class FileManagementHelper
