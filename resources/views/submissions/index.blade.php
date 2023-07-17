@@ -3,7 +3,7 @@
 @section('dashboard-content')
     <h2 class="text-left">Submissions</h2>
 
-    <div class="field-card mt-4 overflow-scroll">
+    <div class="field-card mt-4 overflow-auto">
         <table class="table-dark">
             <caption></caption>
             <thead>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Design;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\PartsController;
 use App\Http\Helpers\FileManagementHelper;
 use App\Models\Submission;
 use App\Models\User;
@@ -70,9 +71,13 @@ class SubmissionController extends Controller
         $submission->notes               = $request->get('notes');
         $submission->submitted           = 1;
         $submission->save();
-
+        
         $fmh = new FileManagementHelper();
         $fmh->makeFilesPermanent($submission->submission_code);
+
+        $partsController = new PartsController();
+        $partsController->storeParts($submission);
+
 
         return redirect()->route('submissions.index')->with([
             'success' => "Submission created - ".$submission->assembly_name,
