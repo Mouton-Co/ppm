@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->string('file_type')->nullable();
             $table->string('location')->nullable();
+            $table->string('size')->nullable();
             $table->foreignId('part_id');
             $table->timestamps();
         });

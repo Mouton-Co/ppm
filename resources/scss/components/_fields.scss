@@ -17,3 +17,30 @@
 hr {
     @apply border-dark-field-border;
 }
+
+.details-list {
+    @apply px-4 py-1 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0;
+    &-title {
+        @apply text-sm font-medium leading-6 text-white;
+    }
+    &-value {
+        @apply mt-1 text-sm leading-6 text-gray-400 sm:col-span-2 sm:mt-0;
+    }
+    &-files {
+        @apply divide-y w-full divide-dark-field-border rounded-md border border-dark-field-border;
+    }
+    &-file {
+        @apply flex w-full items-center justify-between py-4 pl-4 pr-5 text-sm leading-6;
+    }
+}
+
+.grid-33-66 {
+    grid-template-columns: 33.33% 66%;
+}
+.children-white {
+    &:hover {
+        dt, dd {
+            color: white !important;
+        }
+    }
+}
