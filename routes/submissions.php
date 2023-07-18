@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Design\SubmissionController;
 use App\Http\Controllers\Design\UploadFilesController;
+use App\Http\Controllers\FileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,3 +19,4 @@ Route::get('/submission', [SubmissionController::class, 'show'])->name('new.subm
 Route::post('/submission', [SubmissionController::class, 'store'])->name('store.submission');
 Route::get('/submisssions', [SubmissionController::class, 'index'])->name('submissions.index');
 Route::get('/submission/{id}', [SubmissionController::class, 'view'])->name('submissions.view');
+Route::get('/download/file/{id}', [FileController::class, 'download'])->name('file.download');

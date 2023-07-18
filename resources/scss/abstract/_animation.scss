@@ -8,6 +8,15 @@
     }
 }
 
+.parts-info {
+    &-expanded {
+        @apply transition ease-linear duration-100 transform opacity-100 scale-100;
+    }
+    &-closed {
+        @apply transition ease-linear duration-75 transform opacity-0 scale-95;
+    }
+}
+
 .curtain {
     @apply transition-opacity ease-linear duration-300;
 

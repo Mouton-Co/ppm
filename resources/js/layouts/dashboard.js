@@ -30,4 +30,25 @@ export function dashboard() {
         $("#mobile-nav").removeClass('z-50').addClass('-z-10');
     });
 
+    $('div[id^="part-name-"]').on("click", function () {
+        let id = this.getAttribute('id').split('-')[2];
+        if ($("#part-info-"+id).attr('aria-expanded') == "false") {
+            $("#part-info-"+id).removeClass('hidden');
+            setTimeout(function () {
+                $("#part-info-"+id).addClass('parts-info-expanded').removeClass('parts-info-closed');
+                $("#part-name-"+id).addClass('bg-sky-700');
+                $("#part-name-"+id).children().addClass('!text-white');
+                $("#part-info-"+id).attr('aria-expanded', "true");
+            }, 100);
+        } else {
+            $("#part-info-"+id).addClass('parts-info-closed').removeClass('parts-info-expanded');
+            $("#part-info-"+id).attr('aria-expanded', "false");
+            $("#part-name-"+id).removeClass('bg-sky-700');
+            $("#part-name-"+id).children().removeClass('!text-white');
+            setTimeout(function () {
+                $("#part-info-"+id).addClass('hidden');
+            }, 75);
+        }
+    });
+
 };
