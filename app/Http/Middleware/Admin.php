@@ -7,7 +7,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class Designer
+class Admin
 {
     /**
      * Handle an incoming request.
@@ -16,6 +16,7 @@ class Designer
      */
     public function handle(Request $request, Closure $next): Response
     {
-        return User::find(auth()->user()->id)->hasRole('design') ? $next($request) : redirect()->route('dashboard');
+        return auth()->user()->role->role == 'Admin' ? $next($request) : redirect()->route('dashboard');
     }
 }
+

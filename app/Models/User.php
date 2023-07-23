@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -20,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role_id',
     ];
 
     /**
@@ -47,33 +49,11 @@ class User extends Authenticatable
     |--------------------------------------------------------------------------
     */
 
-    public function roles()
-    {
-        return $this->belongsToMany(Role::class, 'user_roles');
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | CHECKS
-    |--------------------------------------------------------------------------
-    */
-
     /**
-     * Check if current user has the given role
-     *
-     * @param $role
-     * @return boolean
+     * Get user's role
      */
-    public function hasRole($role)
+    public function role(): BelongsTo
     {
-        $roles = $this->roles;
-        if (!empty($roles)) {
-            foreach ($roles as $role) {
-                if ($role->role === 'admin' || $role->role === $role) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return $this->belongsTo(Role::class);
     }
 }

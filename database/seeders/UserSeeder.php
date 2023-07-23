@@ -21,104 +21,58 @@ class UserSeeder extends Seeder
             [
                 'email' => 'arouxmouton@gmail.com',
                 'name' => 'Adriaan Mouton',
-                'roles' => ['admin'],
+                'role' => 'Admin',
             ],
             [
                 'email' => 'john@proproject.co.za',
                 'name' => 'John Caine',
-                'roles' => ['admin'],
-            ],
-            [
-                'email' => 'ulrich@proproject.co.za',
-                'name' => 'Ulrich Spies',
-                'roles' => ['procurement'],
+                'role' => 'Admin',
             ],
             [
                 'email' => 'hannah@proproject.co.za',
                 'name' => 'Hannah Caine',
-                'roles' => ['procurement', 'chase'],
-            ],
-            [
-                'email' => 'donovan@proproject.co.za',
-                'name' => 'Donovan Thompson',
-                'roles' => ['procurement', 'reporting'],
+                'role' => 'Admin',
             ],
             [
                 'email' => 'riaan@proproject.co.za',
                 'name' => 'Riaan De Wet',
-                'roles' => ['design'],
+                'role' => 'Designer',
             ],
             [
                 'email' => 'delport@proproject.co.za',
                 'name' => 'Donovan Delport',
-                'roles' => ['design'],
+                'role' => 'Designer',
             ],
             [
                 'email' => 'ralf@proproject.co.za',
                 'name' => 'Ralf Brugers',
-                'roles' => ['design'],
-            ],
-            [
-                'email' => 'graham@proproject.co.za',
-                'name' => 'Graham Hitzeroth',
-                'roles' => ['warehouse'],
-            ],
-            [
-                'email' => 'jone@proproject.co.za',
-                'name' => 'Jone Russouw',
-                'roles' => ['warehouse'],
-            ],
-            [
-                'email' => 'danielle@proproject.co.za',
-                'name' => 'Danielle Daniels',
-                'roles' => ['warehouse'],
-            ],
-            [
-                'email' => 'nelmari.b@proproject.co.za',
-                'name' => 'Nelmari Barnard',
-                'roles' => ['reporting', 'chase'],
+                'role' => 'Designer',
             ],
             [
                 'email' => 'qc@proproject.co.za',
                 'name' => 'David Mpoyi',
-                'roles' => ['design'],
+                'role' => 'Designer',
             ],
             [
                 'email' => 'celor.k@proproject.co.za',
                 'name' => 'Celor Kalenda',
-                'roles' => ['design'],
+                'role' => 'Designer',
             ],
             [
                 'email' => 'tanaka@proproject.co.za',
                 'name' => 'Tanaka Zuze',
-                'roles' => ['design'],
-            ],
-            [
-                'email' => 'robin@proproject.co.za',
-                'name' => 'Robin Burger',
-                'roles' => ['reporting'],
-            ],
-            [
-                'email' => 'fernando@proproject.co.za',
-                'name' => 'Fernando Sneddon',
-                'roles' => ['warehouse'],
+                'role' => 'Designer',
             ],
         ];
 
         foreach($users as $user) {
-            $roles = $user['roles'];
+            $role = Role::where('role', $user['role'])->first();
             $user = User::create([
                 'name'     => $user['name'],
                 'email'    => $user['email'],
                 'password' => $password,
+                'role_id'  => $role->id,
             ]);
-            foreach ($roles as $roleSlug) {
-                $role = Role::where('role', $roleSlug)->first();
-                UserRole::create([
-                    'user_id' => $user->id,
-                    'role_id' => $role->id,
-                ]);
-            }
         }
     }
 }

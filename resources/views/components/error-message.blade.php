@@ -1,4 +1,5 @@
-<div class="hidden">
+<div class="{{ !empty($hidden) && $hidden == "false" ? "" : "hidden" }}
+{{ !empty($class) ? $class : '' }}">
     <div class="flex justify-between px-4 py-2 mt-3 text-red-500 rounded-lg bg-dark-field overflow-hidden
     shadow-sm sm:rounded-lg border border-solid border-red-500">
         <div class="flex align-center">
