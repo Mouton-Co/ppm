@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Design\SubmissionController;
 use App\Http\Controllers\Design\UploadFilesController;
 use App\Http\Controllers\FileController;

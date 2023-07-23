@@ -91,13 +91,9 @@ class SubmissionController extends Controller
      */
     public function index()
     {
-        $userRoles   = auth()->user()->roles->pluck('role')->all();
         $submissions = Submission::where('submitted', 1);
 
-        if (
-            !(in_array('admin', $userRoles)
-            || in_array('procurement', $userRoles))
-        ) {
+        if (auth()->user()->role->role != 'Admin') {
             // can only view own submissions
             $submissions = $submissions->where('user_id', auth()->user()->id);
         }

@@ -5,7 +5,13 @@
         @apply btn bg-sky-700 hover:bg-sky-600 text-white cursor-pointer focus-visible:outline
         focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500;
     }
+    &-sky-light {
+        @apply btn bg-transparent border-sky-700 border text-sky-700 cursor-pointer focus-visible:outline
+        focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500
+        hover:bg-[#313841];
+    }
     &-disabled {
         @apply btn bg-dark-field text-feedback-success cursor-default;
     }
+
 }
