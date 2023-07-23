@@ -30,13 +30,13 @@
         </div>
 
         {{-- desktop sidebar --}}
-        <div class="shadow-lg hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
+        <div class="shadow-lg hidden lg:fixed lg:inset-y-0 lg:z-40 lg:flex lg:w-72 lg:flex-col">
             @include('layouts.sidebar')
         </div>
 
         <div class="lg:pl-">
             <div
-                class="sticky top-0 z-40 flex justify-between lg:justify-end h-16 shrink-0 items-center gap-x-4
+                class="sticky top-0 z-30 flex justify-between lg:justify-end h-16 shrink-0 items-center gap-x-4
             border-b border-gray-900 shadow-md bg-gray-800 px-4 sm:gap-x-6 sm:px-6 lg:px-8">
 
                 <button id="open-menu" type="button" class="-m-2.5 p-2.5 text-gray-700 lg:hidden">

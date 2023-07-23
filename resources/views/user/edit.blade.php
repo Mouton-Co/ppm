@@ -18,12 +18,12 @@
             <div class="flex justify-center w-full gap-3 md:justify-end">
                 <input class="btn-sky max-w-none md:max-w-fit" type="submit" value="Update">
                 @if ($user->id != auth()->user()->id)
-                    <a class="w-full max-w-none md:max-w-fit" href="{{ route('user.destroy', $user->id) }}">
-                        <button class="btn-sky-light">Delete</button>
-                    </a>
+                    <div id="delete-button-{{ $user->id }}"
+                    class="btn-sky-light w-full max-w-none md:max-w-fit">{{__('Delete')}}</div>
                 @endif
             </div>
         </form>
     </div>
     
+    @include('components.delete-modal', ['user' => $user])
 @endsection
