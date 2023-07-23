@@ -15,7 +15,11 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        $users = User::all();
+
+        return view('user.index')->with([
+            'users'  => $users,
+        ]);
     }
 
     /**
@@ -47,7 +51,7 @@ class UserController extends Controller
         if (
             empty($user)
             || ($user->id != auth()->user()->id
-                && $user->role->role != 'Admin')
+                && auth()->user()->role->role != 'Admin')
         ) {
             return redirect()->route('dashboard');
         }
