@@ -39,7 +39,7 @@ export function dashboard() {
                 $("#part-name-"+id).addClass('bg-sky-700');
                 $("#part-name-"+id).children().addClass('!text-white');
                 $("#part-info-"+id).attr('aria-expanded', "true");
-                $("#arrow-down-"+id).addClass('hidden');
+                $("#arrow-right-"+id).addClass('hidden');
                 $("#arrow-up-"+id).removeClass('hidden');
             }, 100);
         } else {
@@ -48,7 +48,7 @@ export function dashboard() {
             $("#part-name-"+id).removeClass('bg-sky-700');
             $("#part-name-"+id).children().removeClass('!text-white');
             $("#arrow-up-"+id).addClass('hidden');
-            $("#arrow-down-"+id).removeClass('hidden');
+            $("#arrow-right-"+id).removeClass('hidden');
             setTimeout(function () {
                 $("#part-info-"+id).addClass('hidden');
             }, 75);
