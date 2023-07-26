@@ -3,9 +3,8 @@
 namespace App\Http\Requests\User;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class UserUpdateRequest extends FormRequest
+class UserStoreRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -14,18 +13,13 @@ class UserUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        $rules = [
-            'name'  => 'required',
-            'role'  => 'required',
-            'email' => 'required|unique:users,email,'.$this->get('user_id'),
+        return [
+            'name'             => 'required',
+            'role'             => 'required',
+            'email'            => 'required|unique:users,email',
+            'password'         => "regex:/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{8,16}$/",
+            'confirm_password' => 'same:password',
         ];
-
-        if (!empty($this->get('password')) || $this->get('confirm_password')) {
-            $rules['password'] = "regex:/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{8,16}$/";
-            $rules['confirm_password'] = "same:password";
-        }
-
-        return $rules;
     }
 
     /**

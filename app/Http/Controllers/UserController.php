@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\User\UserStoreRequest;
 use App\Http\Requests\User\UserUpdateRequest;
 use App\Models\Role;
 use App\Models\User;
@@ -27,15 +28,28 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        $roles = Role::all();
+
+        return view('user.create')->with([
+            'roles'   => $roles,
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(UserStoreRequest $request)
     {
-        //
+        User::create([
+            'name'     => $request->name,
+            'email'    => $request->email,
+            'password' => Hash::make($request->password),
+            'role_id'  => $request->role,
+        ]);
+
+        return redirect()->route('user.index')->with([
+            'success' => 'User created',
+        ]);
     }
 
     /**
@@ -59,6 +73,7 @@ class UserController extends Controller
         return view('user.edit')->with([
             'user'  => $user,
             'roles' => $roles,
+            'edit'  => true,
         ]);
     }
 
@@ -84,7 +99,7 @@ class UserController extends Controller
         $user->save();
         
         return redirect()->back()->with([
-            'success' => 'Successfully updated',
+            'success' => 'User updated',
         ]);
     }
 

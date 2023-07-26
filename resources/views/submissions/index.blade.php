@@ -1,19 +1,22 @@
 @extends('layouts.dashboard')
 
 @section('dashboard-content')
-    <h2 class="text-left">Submissions</h2>
+    <div class="flex justify-between items-center">
+        <h2 class="text-left">{{ __('Submissions') }}</h2>
+        <a href="{{ route('new.submission') }}" class="btn btn-sky max-w-fit">{{ __('Add submission') }}</a>
+    </div>
 
     <div class="field-card mt-4 overflow-auto">
         <table class="table-dark">
             <caption></caption>
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Code</th>
-                    <th>Machine number</th>
-                    <th>Type of submission</th>
-                    <th>Unit number</th>
-                    <th>Designer</th>
+                    <th>{{ __('Name') }}</th>
+                    <th>{{ __('Code') }}</th>
+                    <th>{{ __('Machine number') }}</th>
+                    <th>{{ __('Type of submission') }}</th>
+                    <th>{{ __('Unit number') }}</th>
+                    <th>{{ __('Designer') }}</th>
                 </tr>
             </thead>
             <tbody>

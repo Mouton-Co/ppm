@@ -1,7 +1,10 @@
 @extends('layouts.dashboard')
 
 @section('dashboard-content')
-    <h2 class="text-left">Users</h2>
+    <div class="flex justify-between items-center">
+        <h2 class="text-left">{{ __('Users') }}</h2>
+        <a href="{{ route('user.create') }}" class="btn btn-sky max-w-fit">{{ __('Add user') }}</a>
+    </div>
 
     <div class="field-card mt-4 overflow-auto">
         <table class="table-dark">
