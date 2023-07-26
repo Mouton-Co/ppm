@@ -64,4 +64,12 @@ class FileController extends Controller
         $file = File::find($id);
         return response()->download(storage_path().'/app/'.$file->location);
     }
+
+    /**
+     * Downloads the zip for a submission
+     */
+    public function downloadZip($id)
+    {
+        return response()->download(storage_path()."/app/files/$id/$id.zip");
+    }
 }
