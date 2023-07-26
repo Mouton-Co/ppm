@@ -8,6 +8,6 @@ class DashboardController extends Controller
 {
     public function dashboard()
     {
-        return redirect()->route('new.submission');
+        return redirect()->route('submissions.index');
     }
 }
