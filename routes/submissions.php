@@ -19,3 +19,4 @@ Route::post('/submission', [SubmissionController::class, 'store'])->name('store.
 Route::get('/submisssions', [SubmissionController::class, 'index'])->name('submissions.index');
 Route::get('/submission/{id}', [SubmissionController::class, 'view'])->name('submissions.view');
 Route::get('/download/file/{id}', [FileController::class, 'download'])->name('file.download');
+Route::get('/download/zip/{id}', [FileController::class, 'downloadZip'])->name('zip.download');
