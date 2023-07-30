@@ -34,7 +34,7 @@
 </select>
 {{-- if select is disabled still send through role_id --}}
 @if ((!empty($edit) && $edit) && (auth()->user()->id == $user->id))
-    <input type="hidden" name="role" value="{{ $role->id }}">
+    <input type="hidden" name="role" value="{{ $user->role->id }}">
 @endif
 @if (!empty($errors->get('role')))
     @foreach ($errors->get('role') as $error)

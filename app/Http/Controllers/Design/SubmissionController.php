@@ -91,14 +91,7 @@ class SubmissionController extends Controller
      */
     public function index()
     {
-        $submissions = Submission::where('submitted', 1);
-
-        if (auth()->user()->role->role != 'Admin') {
-            // can only view own submissions
-            $submissions = $submissions->where('user_id', auth()->user()->id);
-        }
-
-        $submissions = $submissions->orderBy('created_at', 'desc')->get();
+        $submissions = Submission::where('submitted', 1)->orderBy('created_at', 'desc')->get();
         
         return view('submissions.index')->with([
             'current'     => 'view-submissions',
