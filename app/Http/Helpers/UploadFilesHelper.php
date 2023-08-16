@@ -157,8 +157,8 @@ class UploadFilesHelper
                     if (
                         !empty($matrix['File Name'][$i])
                         && strtolower(substr($matrix['File Name'][$i], 0, 3))  == "ppm"
+                        && strtolower($matrix['Manufactured or Purchased'][$i]) != "purchased then manufactured"
                     ) {
-
                         $matrix['Manufactured or Purchased'][$i] = "Manufactured";
                     }
 
