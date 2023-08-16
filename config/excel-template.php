@@ -46,6 +46,7 @@ return [
         "required" => true,
         "allowed"  => [
             'lc',
+            'lcm',
             'mch',
             'lcb',
             'lcbw',

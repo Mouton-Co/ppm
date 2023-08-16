@@ -152,6 +152,16 @@ class UploadFilesHelper
 
                 if (!empty($headingData)) {
 
+                    // set manufactured or purchased column to manufactured
+                    // when the part name starts with PPM...
+                    if (
+                        !empty($matrix['File Name'][$i])
+                        && strtolower(substr($matrix['File Name'][$i], 0, 3))  == "ppm"
+                    ) {
+
+                        $matrix['Manufactured or Purchased'][$i] = "Manufactured";
+                    }
+
                     // require overrides
                     if (
                         strtolower($matrix["Manufactured or Purchased"][$i]) == "purchased"
@@ -178,7 +188,7 @@ class UploadFilesHelper
                         ];
                     }
 
-                    // check file names
+                    // check that file names contains .par or .psm
                     if (
                         $heading == "File Name"
                         && !(str_contains($matrix[$heading][$i], ".par")
@@ -273,6 +283,7 @@ class UploadFilesHelper
                     $files[] = $matrix['File Name'][$i].' - PDF';
                     break;
                 case 'LC':
+                case 'LCM':
                 case 'LCB':
                 case 'LCBW':
                     // pdf and dwg
