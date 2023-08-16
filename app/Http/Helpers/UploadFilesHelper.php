@@ -248,7 +248,7 @@ class UploadFilesHelper
                     $indexes  = array_keys($matrix[$heading], $filename);
                     $rows = [];
                     foreach ($indexes as $index) {
-                        $rows[] = "Row ".($index+2);
+                        $rows[] = "Row ".($index+3);
                     }
                     return [
                         false,
