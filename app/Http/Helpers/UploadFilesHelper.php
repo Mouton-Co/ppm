@@ -159,7 +159,6 @@ class UploadFilesHelper
                     ) {
                         $headingData['required'] = false;
                     }
-
                     if (
                         str_contains(strtolower($matrix["Process Type"][$i]), "l")
                         && ($heading == "Material Thickness")
@@ -176,6 +175,19 @@ class UploadFilesHelper
                             false,
                             "Data integrity violation:",
                             ["Row ".($i+3)." , heading '$heading' is required. Please fill in."],
+                        ];
+                    }
+
+                    // check file names
+                    if (
+                        $heading == "File Name"
+                        && !(str_contains($matrix[$heading][$i], ".par")
+                        || str_contains($matrix[$heading][$i], ".psm"))
+                    ) {
+                        return [
+                            false,
+                            "Data integrity violation:",
+                            ["Row ".($i+3)." , file name '".$matrix[$heading][$i]."' must contain '.psm' or '.par'."],
                         ];
                     }
 
@@ -292,7 +304,8 @@ class UploadFilesHelper
         $feedback = [];
 
         foreach ($requiredFiles as $requiredFile) {
-            list($fileName, $fileType) = explode('.par - ', $requiredFile);
+            $split = str_contains($requiredFile, '.par - ') ? '.par - ' : '.psm - ';
+            list($fileName, $fileType) = explode($split, $requiredFile);
             $fileType = strtolower($fileType);
             // check if above file exists
             foreach ($files as $file) {
