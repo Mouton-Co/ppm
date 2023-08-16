@@ -60,8 +60,8 @@ return [
     "Manufactured or Purchased" => [
         "allowed"  => [
             "purchased",
-            "machined",
-            "purchased then machined",
+            "manufactured",
+            "purchased then manufactured",
         ],
     ],
 ];
