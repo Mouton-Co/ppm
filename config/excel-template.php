@@ -49,6 +49,7 @@ return [
             'lcm',
             'mch',
             'lcb',
+            'lcbm',
             'lcbw',
             'lbwm',
             'tlcm',

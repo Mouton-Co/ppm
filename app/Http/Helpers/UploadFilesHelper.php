@@ -279,6 +279,7 @@ class UploadFilesHelper
         for ($i = 0; $i < count($matrix['No.'])-1; $i++) {
             switch ($matrix['Process Type'][$i]) {
                 case 'PM':
+                case 'LCBM':
                     // pdf
                     $files[] = $matrix['File Name'][$i].' - PDF';
                     break;
