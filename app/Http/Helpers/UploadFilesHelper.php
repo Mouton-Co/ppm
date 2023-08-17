@@ -162,6 +162,11 @@ class UploadFilesHelper
                         $matrix['Manufactured or Purchased'][$i] = "Manufactured";
                     }
 
+                    // if weldment is blank change it to "no"
+                    if (empty($matrix["Used In Weldment"][$i])) {
+                        $matrix["Used In Weldment"][$i] = "No";
+                    }
+
                     // require overrides
                     if (
                         strtolower($matrix["Manufactured or Purchased"][$i]) == "purchased"

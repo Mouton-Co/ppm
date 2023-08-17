@@ -40,6 +40,7 @@ return [
             'no',
             'yes',
             'lone weldment',
+            '',
         ]
     ],
     'Process Type' => [
