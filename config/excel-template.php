@@ -52,6 +52,7 @@ return [
             'lcbw',
             'lbwm',
             'tlcm',
+            'tlc',
             'pm',
             'p'
         ]

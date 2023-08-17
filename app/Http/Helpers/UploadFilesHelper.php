@@ -291,6 +291,7 @@ class UploadFilesHelper
                     $files[] = $matrix['File Name'][$i].' - DWG';
                     break;
                 case 'MCH':
+                case 'TLC':
                 case 'TLCM':
                     // pdf and step
                     $files[] = $matrix['File Name'][$i].' - PDF';
