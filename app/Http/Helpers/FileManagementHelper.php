@@ -15,9 +15,33 @@ class FileManagementHelper
         $files = Storage::disk('local')->files('files/temp/' . $submissionCode);
 
         foreach ($files as $fileName) {
+            $newName = $fileName;
+            // if DWG file
+            if (str_contains($fileName, '.dwg')) {
+                $path = explode('.dwg', $fileName)[0];
+                if (in_array($path.'_R.dwg', $files)) {
+                    // don't store filename.dwg
+                    // if filename_R.dwg is present
+                    continue;
+                } else {
+                    // add _R to filename
+                    $newName = $path.'_R.dwg';
+                }
+            }
+            if (str_contains($fileName, '.dxf')) {
+                $path = explode('.dxf', $fileName)[0];
+                if (in_array($path.'_R.dxf', $files)) {
+                    // don't store filename.dxf
+                    // if filename_R.dxf is present
+                    continue;
+                } else {
+                    // add _R to filename
+                    $newName = $path.'_R.dxf';
+                }
+            }
             Storage::disk('local')->move(
                 $fileName,
-                str_replace('/temp', '', $fileName),
+                str_replace('/temp', '', $newName),
             );
         }
 

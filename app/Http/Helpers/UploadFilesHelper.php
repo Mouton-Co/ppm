@@ -335,7 +335,8 @@ class UploadFilesHelper
                         break;
                     case 'dwg':
                     case 'dxf':
-                        $exists = ($file == "$fileName.dwg") || ($file == "$fileName.dxf");
+                        $exists = ($file == "$fileName.dwg") || ($file == "$fileName.dxf")
+                            || ($file == $fileName."_R.dwg") || ($file == $fileName."_R.dxf");
                         break;
                     case 'pdf/step':
                         $exists = ($file == "$fileName.pdf") || ($file == "$fileName.step");
@@ -351,7 +352,7 @@ class UploadFilesHelper
 
             $feedback[] = $exists ?
             [
-                "text"    => "$requiredFile ($fileName.$fileType)",
+                "text"    => "$requiredFile ($file)",
                 "checked" => "true",
                 "color"   => "text-gray-400",
             ] :
