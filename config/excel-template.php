@@ -14,7 +14,7 @@
  */
 
 return [
-    'No.' => [
+    'Item Number' => [
         "type"     => "int",
         "unique"   => true,
         "required" => true,
