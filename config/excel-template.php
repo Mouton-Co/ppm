@@ -30,9 +30,7 @@ return [
     'Material' => [
         "required" => true,
     ],
-    'Material Thickness' => [
-        "required" => true,
-    ],
+    'Material Thickness' => "",
     'Finish' => "",
     'Used In Weldment' => [
         "required" => true,
