@@ -24,8 +24,10 @@
             <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
             <g id="SVGRepo_iconCarrier">
                 <path fill="currentColor" d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z"></path>
-                <path fill="currentColor" d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32
-                0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z"></path>
+                <path fill="currentColor"
+                    d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32
+                0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z">
+                </path>
             </g>
         </svg>
         {{ __('All submission') }}
@@ -42,21 +44,32 @@
     <div class="card">
         @include('designer.submission-form')
 
-        <label class="label-dark">{{ __('Submission files') }}</label>
-        <form action="{{ route('designer.upload') }}" method="POST" enctype="multipart/form-data" id="file-upload"
-            class="dropzone flex flex-col">
-            @csrf
-            <input type="hidden" name="submission_code" value="{{ $submission->submission_code }}">
-        </form>
+        <div class="block md:flex gap-3 w-full justify-between">
+            <div class="w-full mb-5 md:mb-0">
+                <label class="label-dark">{{ __('Submission files') }}</label>
+                <form action="{{ route('designer.upload') }}" method="POST"
+                enctype="multipart/form-data" id="file-upload" class="dropzone flex flex-col !min-h-[155px]">
+                    @csrf
+                    <input type="hidden" name="submission_code" value="{{ $submission->submission_code }}">
+                </form>
+            </div>
 
-        <hr id="submission-line" class="hidden my-12">
-        <div id="submission-feedback" class="hidden field-card"></div>
+            <div class="w-full">
+                <label class="label-dark">{{ __('Feedback') }}</label>
+                <div id="submission-feedback" class="field-card min-h-[155px]">
+                    <hr class='my-2'>
+                    <h3 class='flex items-center gap-2 h-[58px]'>
+                        {{ __('Waiting on Excel sheet') }}
+                    </h3>
+                </div>
+            </div>
+        </div>
 
         <div class="pb-12 mt-10 flex justify-end mx-auto">
             <button type="button" id="submit-button" disabled class="btn-disabled gap-2 max-w-none md:max-w-fit !px-10">
                 Submit
-                <svg class="hidden w-5 h-auto" id="dots" width="132px" height="58px" viewBox="0 0 132 58" version="1.1"
-                    xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                <svg class="hidden w-5 h-auto" id="dots" width="132px" height="58px" viewBox="0 0 132 58"
+                    version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
                     xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
                     <title>dots</title>
                     <desc>Created with Sketch.</desc>

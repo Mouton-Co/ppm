@@ -7,12 +7,9 @@ Dropzone.autoDiscover = false;
 let defaultPreviewTemplate = '' +
     '<div class="uploaded-file-row">' +
     '<div class="flex items-center mb-1">' +
-    '<span class="w-1/12 flex justify-center"><img class="h-8 min-w-[2rem] mr-5 md:mr-0" src=""></span>' +
-    '<span class="uploaded-file-name w-6/12 md:w-5/12 !mb-0 label-dark truncate" data-dz-name></span>' +
+    '<span class="w-2/12 flex justify-center"><img class="h-8 min-w-[2rem] mr-5 md:mr-0" src=""></span>' +
+    '<span class="uploaded-file-name w-8/12 md:w-7/12 !mb-0 label-dark truncate" data-dz-name></span>' +
     '<span class="hidden md:flex text-sm justify-center md:gap-1 w-2/12 label-black !mb-0" data-dz-size></span>' +
-    '<div class="w-3/12 h-4 rounded-full progress-container">' +
-    '<div data-dz-uploadprogress class="pro progress h-4 bg-sky-700 rounded-full"></div>' +
-    '</div>' +
     '<span class="w-[51px] flex justify-center !cursor-pointer hover:opacity-70">' +
     '<svg data-dz-remove class="h-5 w-5 !cursor-pointer" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" /></svg>' +
     '</span>' +
