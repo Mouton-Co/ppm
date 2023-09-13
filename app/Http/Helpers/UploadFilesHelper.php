@@ -146,11 +146,17 @@ class UploadFilesHelper
     {
         $headings = config('excel-template');
 
-        for ($i = 0; $i < count($matrix['No.'])-1; $i++) {
+        for ($i = 0; $i < count($matrix['Item Number'])-1; $i++) {
             
             foreach ($headings as $heading => $headingData) {
 
                 if (!empty($headingData)) {
+
+                    // if manufactured or purchased column value is "-"
+                    // change it to "purchased"
+                    if (strtolower($matrix["Manufactured or Purchased"][$i]) == "-") {
+                        $matrix['Manufactured or Purchased'][$i] = "purchased";
+                    }
 
                     // set manufactured or purchased column to manufactured
                     // when the part name starts with PPM...
@@ -170,7 +176,7 @@ class UploadFilesHelper
                     // require overrides
                     if (
                         strtolower($matrix["Manufactured or Purchased"][$i]) == "purchased"
-                        && ($heading == "Process Type" || $heading =="Material")
+                        && ($heading == "Process Type" || $heading == "Material")
                     ) {
                         $headingData['required'] = false;
                     }
@@ -281,7 +287,7 @@ class UploadFilesHelper
     {
         $files = [];
 
-        for ($i = 0; $i < count($matrix['No.'])-1; $i++) {
+        for ($i = 0; $i < count($matrix['Item Number'])-1; $i++) {
             switch ($matrix['Process Type'][$i]) {
                 case 'PM':
                 case 'LCBM':

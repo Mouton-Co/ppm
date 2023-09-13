@@ -21,8 +21,8 @@ class PartsController extends Controller
         $matrix            = Excel::toArray(new BomExcel, $excel)[0];
         $matrix            = $uploadFilesHelper->cleanMatrix($matrix);
 
-        if (!empty($matrix) && !empty($matrix['No.'])) {
-            for ($i=0; $i<count($matrix['No.'])-1; $i++) {
+        if (!empty($matrix) && !empty($matrix['Item Number'])) {
+            for ($i=0; $i<count($matrix['Item Number'])-1; $i++) {
                 $part                            = new Part();
                 $part->name                      = $matrix['File Name'][$i];
                 $part->quantity                  = $matrix['Quantity'][$i];
