@@ -3,8 +3,16 @@
 
     tbody {
         @apply divide-y divide-dark-field-border;
+    }
 
+    .hover-row {
         tr {
+            @apply hover:bg-sky-700 cursor-pointer hover:shadow-inner;
+        }
+    }
+
+    .hover-cell {
+        td {
             @apply hover:bg-sky-700 cursor-pointer hover:shadow-inner;
         }
     }
@@ -15,8 +23,22 @@
     td {
         @apply whitespace-nowrap text-sm text-gray-300;
 
-        a {
+        a, span {
             @apply block w-full h-full px-3 py-2;
         }
+    }
+}
+
+.pagination-link {
+    @apply relative inline-flex items-center justify-center px-2 py-2 text-sm font-medium border border-gray-500
+    leading-5 w-[38px] h-[38px] mt-4;
+    &-normal {
+        @apply pagination-link cursor-pointer bg-dark-field hover:bg-sky-700 hover:text-white text-white;
+    }
+    &-inactive {
+        @apply pagination-link text-gray-500 cursor-default bg-dark-field;
+    }
+    &-active {
+        @apply pagination-link text-white bg-sky-700 cursor-default;
     }
 }
