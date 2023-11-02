@@ -22,6 +22,9 @@ return new class extends Migration
             $table->string('process_type')->nullable();
             $table->string('manufactured_or_purchased')->nullable();
             $table->text('notes')->nullable();
+            $table->string('po_number')->nullable();
+            $table->date('date_stamp')->nullable();
+            $table->string('status')->nullable();
             $table->foreignId('submission_id');
             $table->timestamps();
         });

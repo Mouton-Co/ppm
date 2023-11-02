@@ -19,7 +19,7 @@
                     <th>{{ __('Designer') }}</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="hover-row">
                 @foreach ($submissions as $submission)
                 <tr>
                     <td>

@@ -18,6 +18,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/', [DashboardController::class, 'dashboard'])->name('dashboard');
 
     include_once 'submissions.php';
+    include_once 'parts.php';
     include_once 'users.php';
 });
 

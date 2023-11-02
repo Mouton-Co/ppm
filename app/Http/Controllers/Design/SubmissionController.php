@@ -43,7 +43,6 @@ class SubmissionController extends Controller
             'submission'       => $submission,
             'submission_types' => config('dropdowns.submission_types'),
             'unit_numbers'     => config('dropdowns.unit_numbers'),
-            'current'          => 'new-submission',
         ]);
     }
 

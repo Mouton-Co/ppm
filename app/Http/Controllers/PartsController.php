@@ -6,6 +6,7 @@ use App\Models\Submission;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\BomExcel;
 use App\Http\Helpers\UploadFilesHelper;
+use App\Http\Requests\Parts\IndexRequest;
 use App\Models\Part;
 
 class PartsController extends Controller
@@ -40,6 +41,46 @@ class PartsController extends Controller
                 $fileController->storeFiles($part);
             }
         }
+    }
+
+    /**
+     * View an index of all parts
+     */
+    public function index(IndexRequest $request)
+    {
+        $parts = Part::select(['parts.*', 'submissions.submission_code'])
+            ->join('submissions', 'submissions.id', '=', 'parts.submission_id');
+
+        if (!empty($request->get('order_by')) && $request->get('order_by') == 'submission->submission_code') {
+            $parts = $parts->orderBy(
+                'submissions.submission_code',
+                $request->get('order_direction') ?? 'asc'
+            );
+        } else {
+            $parts = $parts->orderBy(
+                $request->get('order_by') ?? 'parts.created_at',
+                $request->get('order_direction') ?? 'asc'
+            );
+        }
+
+        if (!empty($request->get('search'))) {
+            $parts = $parts->where('parts.name', 'like', '%' . $request->get('search') . '%')
+                ->orWhere('parts.quantity', 'like', '%' . $request->get('search') . '%')
+                ->orWhere('parts.material', 'like', '%' . $request->get('search') . '%')
+                ->orWhere('parts.material_thickness', 'like', '%' . $request->get('search') . '%')
+                ->orWhere('parts.finish', 'like', '%' . $request->get('search') . '%')
+                ->orWhere('parts.used_in_weldment', 'like', '%' . $request->get('search') . '%')
+                ->orWhere('parts.process_type', 'like', '%' . $request->get('search') . '%')
+                ->orWhere('parts.manufactured_or_purchased', 'like', '%' . $request->get('search') . '%')
+                ->orWhere('parts.po_number', 'like', '%' . $request->get('search') . '%')
+                ->orWhere('parts.date_stamp', 'like', '%' . $request->get('search') . '%')
+                ->orWhere('parts.status', 'like', '%' . $request->get('search') . '%')
+                ->orWhere('submissions.submission_code', 'like', '%' . $request->get('search') . '%');
+        }
+
+        return view('parts.index')->with([
+            'parts' => $parts->paginate(10)
+        ]);
     }
     
 }
