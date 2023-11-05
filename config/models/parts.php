@@ -16,4 +16,9 @@ return [
         'date_stamp'                  => 'Date Stamp',
         'status'                      => 'Status',
     ],
+    'editable' => [
+        'po_number',
+        'date_stamp',
+        'status',
+    ]
 ];
