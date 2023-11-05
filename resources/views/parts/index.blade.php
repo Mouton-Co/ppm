@@ -1,6 +1,13 @@
 @extends('layouts.dashboard')
 
+@section('custom-scripts')
+    @vite(['resources/js/parts/cell-edit.js'])
+@endsection
+
 @section('dashboard-content')
+    {{-- cell form curtain --}}
+    <div id="cell-curtain" class="absolute w-full h-full bg-transparent z-40 hidden"></div>
+
     {{-- title and search --}}
     <div class="flex justify-between mb-3">
         <h2>{{ __('Parts') }}</h2>
@@ -53,22 +60,47 @@
                 </tr>
             </thead>
             <tbody class="hover-cell">
+                @php
+                    $cell = 0;
+                @endphp
                 @foreach ($parts as $part)
                     <tr>
                         @foreach (config('models.parts.columns') as $field => $column)
-                            @if (str_contains($field, '->'))
-                                <td>
-                                    <span>
-                                        {{ App\Http\Services\ModelService::nestedValue($part, $field) }}
-                                    </span>
-                                </td>
-                            @else
-                                <td>
-                                    <span>
-                                        {{ $part->$field }}
-                                    </span>
-                                </td>
-                            @endif
+                            @php
+                                $editable = in_array($field, config('models.parts.editable'));
+                            @endphp
+                            <td>
+                                <span id="cell-{{ $cell }}"
+                                class="relative w-full h-full
+                                {{ $editable ? 'cell-edit hover:bg-sky-700 cursor-text hover:shadow-inner' : '' }}
+                                {{ $field == 'date_stamp' ? 'min-w-[150px]' : '' }}">
+                                    @php
+                                        $value = str_contains($field, '->')
+                                            ? App\Http\Services\ModelService::nestedValue($part, $field)
+                                            : $part->$field;
+                                    @endphp
+                                    {{ $value ?? '-' }}
+
+                                    {{-- editable field form --}}
+                                    @if (in_array($field, config('models.parts.editable')))
+                                        <div class="absolute top-0 left-0 w-full h-full hidden cell-form
+                                        bg-dark-field"
+                                        id="cell-form-{{ $cell }}">
+                                            <form action="{{ route('parts.update', $part->id) }}" method="post"
+                                            class="relative w-full h-full">
+                                                @csrf
+                                                <input type="{{ $field == 'date_stamp' ? 'date' : 'text' }}"
+                                                name="{{ $field }}" value="{{ $value }}"
+                                                class="w-full h-full bg-transparent cell-form-input">
+                                            </form>
+                                        </div>
+                                    @endif
+
+                                </span>
+                            </td>
+                            @php
+                                $cell++;
+                            @endphp
                         @endforeach
                     </tr>
                 @endforeach

@@ -7,6 +7,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\BomExcel;
 use App\Http\Helpers\UploadFilesHelper;
 use App\Http\Requests\Parts\IndexRequest;
+use App\Http\Requests\Parts\UpdateRequest;
 use App\Models\Part;
 
 class PartsController extends Controller
@@ -83,4 +84,20 @@ class PartsController extends Controller
         ]);
     }
     
+    /**
+     * Update a part
+     */
+    public function update(UpdateRequest $request)
+    {
+        $part = Part::find($request->get('id'));
+        
+        $part->po_number  = $request->get('po_number') ?? $part->po_number;
+        $part->date_stamp = $request->get('date_stamp') ?? $part->date_stamp;
+        $part->status     = $request->get('status') ?? $part->status;
+        $part->save();
+
+        return redirect()->back()->with([
+            'message' => 'Part updated successfully'
+        ]);
+    }
 }
