@@ -6,15 +6,35 @@ return [
             'name' => 'PO Number',
             'editable' => true,
         ],
+        'part_ordered' => [
+            'name' => 'Part Ordered',
+            'editable' => true,
+            'type' => 'boolean',
+        ],
+        'raw_part_received' => [
+            'name' => 'Raw Part Received',
+            'editable' => true,
+            'type' => 'boolean',
+        ],
+        'treated_part_received' => [
+            'name' => 'Treated Part Received',
+            'editable' => true,
+            'type' => 'boolean',
+        ],
         'submission->submission_code' => [
             'name' => 'Submission',
         ],
-        'status' => [
-            'name' => 'Status',
-            'editable' => true,
-        ],
         'name' => [
             'name' => 'Name',
+        ],
+        'status' => [
+            'name'     => 'Status',
+            'format'  => [
+                'design'               => 'Design',
+                'waiting_on_parts'     => 'Waiting on Parts',
+                'waiting_on_treatment' => 'Waiting on Treatment',
+                'part_received'        => 'Part Received',
+            ],
         ],
         'quantity' => [
             'name' => 'Quantity',
@@ -33,6 +53,15 @@ return [
         ],
         'process_type' => [
             'name' => 'Process Type',
+        ],
+        'part_ordered_at' => [
+            'name' => 'Part Ordered At',
+        ],
+        'raw_part_received_at' => [
+            'name' => 'Raw Part Received At',
+        ],
+        'treated_part_received_at' => [
+            'name' => 'Treated Part Received At',
         ],
     ]
 ];

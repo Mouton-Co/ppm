@@ -1,8 +1,6 @@
 @extends('layouts.dashboard')
 
 @section('dashboard-content')
-    {{-- cell form curtain --}}
-    <div id="cell-curtain" class="absolute w-full h-full bg-transparent z-40 hidden"></div>
 
     {{-- title and search --}}
     <div class="flex justify-between mb-3">
@@ -20,8 +18,8 @@
     </div>
 
     {{-- index table --}}
-    <div class="field-card mt-4 overflow-auto">
-        <table class="table-dark">
+    <div class="field-card mt-4 overflow-auto no-scrollbar">
+        <table class="table-dark no-scrollbar">
             <caption class="hidden">{{ __('Parts index table') }}</caption>
             <thead>
                 <tr>
@@ -62,34 +60,54 @@
                 @foreach ($parts as $part)
                     <tr>
                         @foreach (config('models.parts.columns') as $key => $field)
-                            @php
-                                $editable = !empty($field['editable']) && $field['editable'];
-                            @endphp
                             <td>
-                                <span id="cell-{{ $cell }}"
-                                class="relative w-full h-full
-                                {{ $editable ? 'cell-edit hover:bg-sky-700 cursor-text hover:shadow-inner' : '' }}
-                                {{ $key == 'date_stamp' ? 'min-w-[150px]' : '' }}">
+                                @php
+                                    $editable = !empty($field['editable']) && $field['editable'];
+                                    $type = !empty($field['type']) ? $field['type'] : 'text';
+                                @endphp
+                                <span id="{{ $part->id . '-' . $key }}" class="relative w-full h-full
+                                {{ $editable && $type == 'text' ?
+                                'cell-edit hover:bg-sky-700 cursor-text hover:shadow-inner' : '' }}">
                                     @php
                                         $value = str_contains($key, '->')
                                             ? App\Http\Services\ModelService::nestedValue($part, $key)
                                             : $part->$key;
                                     @endphp
-                                    {{ $value ?? '-' }}
 
-                                    {{-- editable field form --}}
                                     @if ($editable)
-                                        <div class="absolute top-0 left-0 w-full h-full hidden cell-form
-                                        bg-dark-field"
-                                        id="cell-form-{{ $cell }}">
-                                            <form action="{{ route('parts.update', $part->id) }}" method="post"
-                                            class="relative w-full h-full">
-                                                @csrf
+                                        @switch($type)
+                                            @case('text')
                                                 <input type="{{ $key == 'date_stamp' ? 'date' : 'text' }}"
-                                                name="{{ $key }}" value="{{ $field['name'] }}"
-                                                class="w-full h-full bg-transparent cell-form-input">
-                                            </form>
-                                        </div>
+                                                    name="{{ $key }}" value="{{ $value }}"
+                                                    class="w-auto h-full bg-transparent border-none
+                                                    focus:ring-0 focus:outline-none editable-cell-text"
+                                                    part-id="{{ $part->id }}">
+                                                @break
+                                            @case('select')
+                                                <select name="{{ $key }}" class="field bg-transparent border-none
+                                                !ring-0 !w-[195px] focus:ring-0 focus:outline-none cursor-pointer"
+                                                id="{{ $part->id . '-status' }}">
+                                                    @foreach ($field['options'] as $key => $value)
+                                                        <option value="{{ $key }}"
+                                                        @if ($key == $part->status) selected @endif>
+                                                            {{ $value }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                                @break
+                                            @case('boolean')
+                                                <input type="checkbox" name="{{ $key }}"
+                                                    class="editable-cell-boolean"
+                                                    part-id="{{ $part->id }}" {{ $value ? 'checked' : '' }}
+                                                    {{ $part->checkboxEnabled($key) ? '' : 'disabled' }}>
+                                                @break
+                                        @endswitch
+                                    @else
+                                        @if (!empty($field['format']))
+                                            {{ $field['format'][$value] ?? '-' }}
+                                        @else
+                                            {{ $value ?? '-' }}
+                                        @endif
                                     @endif
 
                                 </span>

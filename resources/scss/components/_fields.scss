@@ -10,6 +10,16 @@
     }
 }
 
+input[type="checkbox"] {
+    @apply cursor-pointer border-gray-300 text-sky-700 shadow-sm;
+}
+input[type="checkbox"]:checked {
+    @apply hover:border-gray-300;
+}
+input[type="checkbox"]:disabled {
+    @apply border-gray-300 text-gray-400 shadow-sm cursor-default;
+}
+
 .label-dark {
     @apply block text-sm font-medium leading-6 text-white mb-1;
 }
@@ -37,6 +47,7 @@ hr {
 .grid-33-66 {
     grid-template-columns: 33.33% 66%;
 }
+
 .children-white {
     &:hover {
         dt, dd {
