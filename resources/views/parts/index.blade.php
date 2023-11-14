@@ -106,7 +106,24 @@
                                         @if (!empty($field['format']))
                                             {{ $field['format'][$value] ?? '-' }}
                                         @else
-                                            {{ $value ?? '-' }}
+                                            <div class="flex justify-start items-center gap-2">
+                                                @if ($key == 'submission->submission_code')
+                                                    <a href="{{ route(
+                                                        'zip.download',
+                                                        $part->submission->submission_code
+                                                    ) }}" class="max-w-fit !p-0" download>
+                                                        <x-icon.zip class="h-6 text-gray-300 hover:text-sky-700" />
+                                                    </a>
+                                                @elseif ($key == 'name')
+                                                    <a href="{{ route('submissions.view', [
+                                                        'id' => $part->submission->id,
+                                                        'part' => $part->id
+                                                    ]) }}" class="max-w-fit !p-0" target="_blank">
+                                                        <x-icon.part class="h-5 text-gray-300 hover:text-sky-700" />
+                                                    </a>
+                                                @endif
+                                                {{ $value ?? '-' }}
+                                            </div>
                                         @endif
                                     @endif
 
