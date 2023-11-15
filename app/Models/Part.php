@@ -35,6 +35,7 @@ class Part extends Model
         'treated_part_received',
         'treated_part_received_at',
         'submission_id',
+        'supplier_id',
     ];
 
     /*
@@ -57,6 +58,14 @@ class Part extends Model
     public function files(): HasMany
     {
         return $this->hasMany(File::class);
+    }
+
+    /**
+     * Get supplier for this part
+     */
+    public function supplier(): BelongsTo
+    {
+        return $this->belongsTo(Supplier::class);
     }
 
     /*
