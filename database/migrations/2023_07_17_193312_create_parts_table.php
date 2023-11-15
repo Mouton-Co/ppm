@@ -23,8 +23,13 @@ return new class extends Migration
             $table->string('manufactured_or_purchased')->nullable();
             $table->text('notes')->nullable();
             $table->string('po_number')->nullable();
-            $table->date('date_stamp')->nullable();
-            $table->string('status')->nullable();
+            $table->string('status')->default('design');
+            $table->boolean('part_ordered')->default(false);
+            $table->datetime('part_ordered_at')->nullable();
+            $table->boolean('raw_part_received')->default(false);
+            $table->datetime('raw_part_received_at')->nullable();
+            $table->boolean('treated_part_received')->default(false);
+            $table->datetime('treated_part_received_at')->nullable();
             $table->foreignId('submission_id');
             $table->timestamps();
         });

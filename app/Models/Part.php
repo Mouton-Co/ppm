@@ -26,6 +26,14 @@ class Part extends Model
         'process_type',
         'manufactured_or_purchased',
         'notes',
+        'po_number',
+        'status',
+        'part_ordered',
+        'part_ordered_at',
+        'raw_part_received',
+        'raw_part_received_at',
+        'treated_part_received',
+        'treated_part_received_at',
         'submission_id',
     ];
 
@@ -49,5 +57,39 @@ class Part extends Model
     public function files(): HasMany
     {
         return $this->hasMany(File::class);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Helpers
+    |--------------------------------------------------------------------------
+    */
+    public function checkboxEnabled($key)
+    {
+        $enabled = false;
+
+        if ($this->status == 'design' && $key == 'part_ordered') {
+            $enabled = true;
+        }
+
+        if (
+            $this->status == 'waiting_on_parts' &&
+            ($key == 'part_ordered' || $key == 'raw_part_received')
+        ) {
+            $enabled = true;
+        }
+        
+        if (
+            $this->status == 'waiting_on_treatment' &&
+            ($key == 'raw_part_received' || $key == 'treated_part_received')
+        ) {
+            $enabled = true;
+        }
+
+        if ($this->status == 'part_received' && $key == 'treated_part_received') {
+            $enabled = true;
+        }
+
+        return $enabled;
     }
 }

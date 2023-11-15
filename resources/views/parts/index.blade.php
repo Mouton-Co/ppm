@@ -1,12 +1,6 @@
 @extends('layouts.dashboard')
 
-@section('custom-scripts')
-    @vite(['resources/js/parts/cell-edit.js'])
-@endsection
-
 @section('dashboard-content')
-    {{-- cell form curtain --}}
-    <div id="cell-curtain" class="absolute w-full h-full bg-transparent z-40 hidden"></div>
 
     {{-- title and search --}}
     <div class="flex justify-between mb-3">
@@ -24,23 +18,23 @@
     </div>
 
     {{-- index table --}}
-    <div class="field-card mt-4 overflow-auto">
-        <table class="table-dark">
+    <div class="field-card mt-4 overflow-auto no-scrollbar">
+        <table class="table-dark no-scrollbar">
             <caption class="hidden">{{ __('Parts index table') }}</caption>
             <thead>
                 <tr>
-                    @foreach (config('models.parts.columns') as $field => $column)
+                    @foreach (config('models.parts.columns') as $key => $field)
                         <th>
                             <span class="flex items-center gap-2">
-                                {{ $column }}
+                                {{ $field['name'] }}
                                 <form action="{{ route('parts.index') }}" method="GET">
                                     <input type="hidden" name="search"
                                         value="{{ request()->query('search') ?? '' }}">
-                                    <input type="hidden" name="order_by" value="{{ $field }}">
+                                    <input type="hidden" name="order_by" value="{{ $key }}">
                                     <input type="hidden" name="page" value="{{ request()->query('page') ?? 1 }}">
                                     <input type="hidden" name="order_direction"
                                         value="{{ !empty(request()->query('order_by')) &&
-                                        request()->query('order_by') == $field &&
+                                        request()->query('order_by') == $key &&
                                         request()->query('order_direction') == 'asc'
                                             ? 'desc'
                                             : 'asc' }}">
@@ -48,7 +42,7 @@
                                         <x-icon.up-arrow
                                             class="cursor-pointer h-[10px]
                                             {{ !empty(request()->query('order_by')) &&
-                                            request()->query('order_by') == $field &&
+                                            request()->query('order_by') == $key &&
                                             request()->query('order_direction') == 'asc'
                                                 ? 'rotate-180'
                                                 : '' }}" />
@@ -65,35 +59,72 @@
                 @endphp
                 @foreach ($parts as $part)
                     <tr>
-                        @foreach (config('models.parts.columns') as $field => $column)
-                            @php
-                                $editable = in_array($field, config('models.parts.editable'));
-                            @endphp
+                        @foreach (config('models.parts.columns') as $key => $field)
                             <td>
-                                <span id="cell-{{ $cell }}"
-                                class="relative w-full h-full
-                                {{ $editable ? 'cell-edit hover:bg-sky-700 cursor-text hover:shadow-inner' : '' }}
-                                {{ $field == 'date_stamp' ? 'min-w-[150px]' : '' }}">
+                                @php
+                                    $editable = !empty($field['editable']) && $field['editable'];
+                                    $type = !empty($field['type']) ? $field['type'] : 'text';
+                                @endphp
+                                <span id="{{ $part->id . '-' . $key }}" class="relative w-full h-full
+                                {{ $editable && $type == 'text' ?
+                                'cell-edit hover:bg-sky-700 cursor-text hover:shadow-inner' : '' }}">
                                     @php
-                                        $value = str_contains($field, '->')
-                                            ? App\Http\Services\ModelService::nestedValue($part, $field)
-                                            : $part->$field;
+                                        $value = str_contains($key, '->')
+                                            ? App\Http\Services\ModelService::nestedValue($part, $key)
+                                            : $part->$key;
                                     @endphp
-                                    {{ $value ?? '-' }}
 
-                                    {{-- editable field form --}}
-                                    @if (in_array($field, config('models.parts.editable')))
-                                        <div class="absolute top-0 left-0 w-full h-full hidden cell-form
-                                        bg-dark-field"
-                                        id="cell-form-{{ $cell }}">
-                                            <form action="{{ route('parts.update', $part->id) }}" method="post"
-                                            class="relative w-full h-full">
-                                                @csrf
-                                                <input type="{{ $field == 'date_stamp' ? 'date' : 'text' }}"
-                                                name="{{ $field }}" value="{{ $value }}"
-                                                class="w-full h-full bg-transparent cell-form-input">
-                                            </form>
-                                        </div>
+                                    @if ($editable)
+                                        @switch($type)
+                                            @case('text')
+                                                <input type="{{ $key == 'date_stamp' ? 'date' : 'text' }}"
+                                                    name="{{ $key }}" value="{{ $value }}"
+                                                    class="w-auto h-full bg-transparent border-none
+                                                    focus:ring-0 focus:outline-none editable-cell-text"
+                                                    part-id="{{ $part->id }}">
+                                                @break
+                                            @case('select')
+                                                <select name="{{ $key }}" class="field bg-transparent border-none
+                                                !ring-0 !w-[195px] focus:ring-0 focus:outline-none cursor-pointer"
+                                                id="{{ $part->id . '-status' }}">
+                                                    @foreach ($field['options'] as $key => $value)
+                                                        <option value="{{ $key }}"
+                                                        @if ($key == $part->status) selected @endif>
+                                                            {{ $value }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                                @break
+                                            @case('boolean')
+                                                <input type="checkbox" name="{{ $key }}"
+                                                    class="editable-cell-boolean"
+                                                    part-id="{{ $part->id }}" {{ $value ? 'checked' : '' }}
+                                                    {{ $part->checkboxEnabled($key) ? '' : 'disabled' }}>
+                                                @break
+                                        @endswitch
+                                    @else
+                                        @if (!empty($field['format']))
+                                            {{ $field['format'][$value] ?? '-' }}
+                                        @else
+                                            <div class="flex justify-start items-center gap-2">
+                                                @if ($key == 'submission->submission_code')
+                                                    <a href="{{ route(
+                                                        'zip.download',
+                                                        $part->submission->submission_code
+                                                    ) }}" class="max-w-fit !p-0" download>
+                                                        <x-icon.zip class="h-6 text-gray-300 hover:text-sky-700" />
+                                                    </a>
+                                                @elseif ($key == 'name')
+                                                    <a href="{{ route('submissions.view', [
+                                                        'id' => $part->submission->id,
+                                                        'part' => $part->id
+                                                    ]) }}" class="max-w-fit !p-0" target="_blank">
+                                                        <x-icon.part class="h-5 text-gray-300 hover:text-sky-700" />
+                                                    </a>
+                                                @endif
+                                                {{ $value ?? '-' }}
+                                            </div>
+                                        @endif
                                     @endif
 
                                 </span>

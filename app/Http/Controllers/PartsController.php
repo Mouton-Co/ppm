@@ -7,6 +7,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\BomExcel;
 use App\Http\Helpers\UploadFilesHelper;
 use App\Http\Requests\Parts\IndexRequest;
+use App\Http\Requests\Parts\UpdateCheckboxRequest;
 use App\Http\Requests\Parts\UpdateRequest;
 use App\Models\Part;
 
@@ -91,13 +92,63 @@ class PartsController extends Controller
     {
         $part = Part::find($request->get('id'));
         
-        $part->po_number  = $request->get('po_number') ?? $part->po_number;
-        $part->date_stamp = $request->get('date_stamp') ?? $part->date_stamp;
-        $part->status     = $request->get('status') ?? $part->status;
-        $part->save();
+        if (!empty($request->get('field'))) {
+            $field = $request->get('field');
+            $part->$field = $request->get('value');
+            $part->save();
 
-        return redirect()->back()->with([
-            'message' => 'Part updated successfully'
+            return response()->json([
+                'success' => true,
+                'message' => 'Part updated successfully'
+            ]);
+        }
+        
+        return response()->json([
+            'success' => false,
+            'message' => 'Part could not be updated'
+        ]);
+    }
+
+    /**
+     * Update checkbox ajax
+     */
+    public function updateCheckbox(UpdateCheckboxRequest $request)
+    {
+        $part = Part::find($request->get('id'));
+
+        if (!empty($request->get('field'))) {
+            $field = $request->get('field');
+            $part->$field = $request->get('value');
+            $fieldAt = $field . '_at';
+            $part->$fieldAt = $part->$field ? now() : null;
+            switch ($field) {
+                case 'part_ordered':
+                    $part->status = $part->$field ? 'waiting_on_parts' : 'design';
+                    break;
+                case 'raw_part_received':
+                    $part->status = $part->$field ? 'waiting_on_treatment' : 'waiting_on_parts';
+                    break;
+                case 'treated_part_received':
+                    $part->status = $part->$field ? 'part_received' : 'waiting_on_treatment';
+                    break;
+                default:
+                    $part->status = 'design';
+                    break;
+            }
+            $part->save();
+
+            return response()->json([
+                'success'     => true,
+                'part_id'     => $part->id,
+                'status'      => config('models.parts.columns.status.format')[$part->status],
+                'stamp_field' => $fieldAt,
+                'stamp_value' => !empty($part->$fieldAt) ? $part->$fieldAt->format('Y-m-d H:i:s') : '-',
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Part could not be updated'
         ]);
     }
 }

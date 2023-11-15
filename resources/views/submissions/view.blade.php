@@ -90,13 +90,16 @@
     <div class="field-card mt-5 text-white">
         <dl class="divide-y divide-dark-field-border">
             <h2 class="pb-6 text-left">{{ __('Submission parts') }}</h2>
-
+            
             @foreach ($submission->parts as $part)
                 <div id="part-name-{{ $part->id }}" class="details-list hover:bg-sky-700 children-white
-                    cursor-pointer pl-1 sm:pl-1 md:pl-1">
+                    cursor-pointer pl-1 sm:pl-1 md:pl-1 {{ app('request')->input('part') == $part->id ?
+                    'bg-sky-700' : ''}}">
                     <dt class="details-list-title flex items-center gap-1">
-                        <svg id="arrow-right-{{ $part->id }}" class="w-5 aspect-square" viewBox="0 0 24 24"
-                            fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <svg id="arrow-right-{{ $part->id }}" viewBox="0 0 24 24" fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="w-5 aspect-square {{ app('request')->input('part') == $part->id
+                            ? 'hidden' : '' }}">
                             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                             <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
                             <g id="SVGRepo_iconCarrier"> <path d="M10.25 16.25C10.1493 16.2466 10.0503 16.2227
@@ -110,8 +113,10 @@
                                 10.25 16.25Z" fill="currentColor"></path>
                             </g>
                         </svg>
-                        <svg id="arrow-up-{{ $part->id }}" class="hidden w-5 aspect-square" viewBox="0 0 24 24"
-                            fill="none" xmlns="http://www.w3.org/2000/svg" transform="rotate(90)">
+                        <svg id="arrow-up-{{ $part->id }}" viewBox="0 0 24 24" fill="none"
+                            xmlns="http://www.w3.org/2000/svg" transform="rotate(90)"
+                            class="w-5 aspect-square {{ app('request')->input('part') == $part->id
+                                ? '' : 'hidden' }}">
                             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                             <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
                             <g id="SVGRepo_iconCarrier"> <path d="M10.25 16.25C10.1493 16.2466 10.0503 16.2227 9.95921
@@ -127,10 +132,15 @@
                         </svg>
                         {{ __('Part') }}
                     </dt>
-                    <dd class="details-list-value">{{ $part->name ?? 'N/A' }}</dd>
+                    <dd class="details-list-value {{ app('request')->input('part') == $part->id ?
+                        '!text-white' : ''}}">
+                        {{ $part->name ?? 'N/A' }}
+                    </dd>
                 </div>
-                <div id="part-info-{{ $part->id }}" aria-expanded="false"
-                    class="divide-y divide-dark-field-border hidden parts-info-closed">
+                <div id="part-info-{{ $part->id }}"
+                    aria-expanded="{{ app('request')->input('part') == $part->id ? 'true' : 'false' }}"
+                    class="divide-y divide-dark-field-border {{ app('request')->input('part') == $part->id
+                    ? 'parts-info-expanded' : 'hidden parts-info-closed' }}">
                     <div class="details-list pl-4 sm:pl-4 md:pl-4">
                         <dt class="details-list-title">{{ __('Quantity') }}</dt>
                         <dd class="details-list-value">{{ $part->quantity ?? 'N/A' }}</dd>
@@ -204,5 +214,14 @@
             @endforeach
         </dl>
     </div>
+
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", () => {
+            console.log("#<?= 'part-name-' . app('request')->input('part') ?>");
+            document.querySelector("#<?= 'part-name-' . app('request')->input('part') ?>").scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    </script>
 
 @endsection
