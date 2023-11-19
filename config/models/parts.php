@@ -21,6 +21,16 @@ return [
             'editable' => true,
             'type' => 'boolean',
         ],
+        'supplier->name' => [
+            'name' => 'Supplier',
+            'editable' => true,
+            'type' => 'select',
+            'options' => [
+                'model' => 'App\Models\Supplier',
+                'value' => 'id',
+                'label' => 'name',
+            ],
+        ],
         'submission->submission_code' => [
             'name' => 'Submission',
         ],
