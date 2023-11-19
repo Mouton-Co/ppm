@@ -94,6 +94,11 @@ class PartsController extends Controller
         
         if (!empty($request->get('field'))) {
             $field = $request->get('field');
+
+            if (str_contains($field, '->')) {
+                $field = explode('->', $field)['0'] . '_id';
+            }
+
             $part->$field = $request->get('value');
             $part->save();
 

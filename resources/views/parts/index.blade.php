@@ -84,13 +84,20 @@
                                                     part-id="{{ $part->id }}">
                                                 @break
                                             @case('select')
+                                                @php
+                                                    $options = $field['options']['model']::all()->pluck(
+                                                        $field['options']['label'],
+                                                        $field['options']['value']
+                                                    );
+                                                @endphp
                                                 <select name="{{ $key }}" class="field bg-transparent border-none
-                                                !ring-0 !w-[195px] focus:ring-0 focus:outline-none cursor-pointer"
-                                                id="{{ $part->id . '-status' }}">
-                                                    @foreach ($field['options'] as $key => $value)
-                                                        <option value="{{ $key }}"
-                                                        @if ($key == $part->status) selected @endif>
-                                                            {{ $value }}
+                                                !ring-0 !w-[195px] focus:ring-0 focus:outline-none cursor-pointer
+                                                editable-cell-dropdown"
+                                                part-id="{{ $part->id }}">
+                                                    @foreach ($options as $optionKey => $optionValue)
+                                                        <option value="{{ $optionKey }}"
+                                                        @if ($optionKey == $part->supplier_id) selected @endif>
+                                                            {{ $optionValue }}
                                                         </option>
                                                     @endforeach
                                                 </select>

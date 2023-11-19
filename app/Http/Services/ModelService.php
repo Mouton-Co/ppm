@@ -13,11 +13,11 @@ class ModelService
     {
         $nesters = explode('->', $value);
         $nester  = $nesters[0];
-        $field   = $resource->$nester;
+        $field   = $resource->$nester ?? null;
 
         for ($i = 1; $i < count($nesters); $i++) {
             $nester = $nesters[$i];
-            $field  = $field->$nester;
+            $field  = $field->$nester ?? null;
         }
 
         return $field;

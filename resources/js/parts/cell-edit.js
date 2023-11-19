@@ -65,4 +65,24 @@ export function cellEdit() {
             });
         }, 200);
     });
+
+    // Editable dropdown cell
+    $(".editable-cell-dropdown").on("change", function () {
+        let value = $(this).val();
+        let field = $(this).attr('name');
+        let id    = $(this).attr('part-id');
+
+        setTimeout(function () {
+            $.ajax({ // route('parts.update', $part->id)
+                type: 'POST',
+                url: '/parts/update/' + id,
+                data: {
+                    _token: $('meta[name="csrf-token"]').attr('content'),
+                    id: id,
+                    field: field,
+                    value: value
+                }
+            });
+        }, 200);
+    });
 }
