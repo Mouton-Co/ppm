@@ -32,11 +32,11 @@ class ClearAllSubmissions extends Command
         Storage::disk('local')->deleteDirectory('files');
         info('All files cleared');
 
-        Submission::truncate();
-        info('All submissions cleared');
-
         Part::truncate();
         info('All parts cleared');
+
+        Submission::truncate();
+        info('All submissions cleared');
 
         File::truncate();
         info('All files cleared');

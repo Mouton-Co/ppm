@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->string('phone_1')->nullable();
             $table->string('phone_2')->nullable();
-            $table->foreignId('supplier_id')->nullable()->constrained('suppliers');
+            $table->foreignId('supplier_id')->nullable();
             $table->timestamps();
         });
     }

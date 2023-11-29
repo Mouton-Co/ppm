@@ -30,8 +30,8 @@ return new class extends Migration
             $table->datetime('raw_part_received_at')->nullable();
             $table->boolean('treated_part_received')->default(false);
             $table->datetime('treated_part_received_at')->nullable();
-            $table->foreignId('submission_id')->constrained();
-            $table->foreignId('supplier_id')->nullable()->constrained();
+            $table->foreignId('submission_id');
+            $table->foreignId('supplier_id')->nullable();
             $table->timestamps();
         });
     }
