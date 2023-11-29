@@ -25,29 +25,39 @@
                 <tr>
                     @foreach (config('models.parts.columns') as $key => $field)
                         <th>
-                            <span class="flex items-center gap-2">
-                                {{ $field['name'] }}
-                                <form action="{{ route('parts.index') }}" method="GET">
-                                    <input type="hidden" name="search"
-                                        value="{{ request()->query('search') ?? '' }}">
-                                    <input type="hidden" name="order_by" value="{{ $key }}">
-                                    <input type="hidden" name="page" value="{{ request()->query('page') ?? 1 }}">
-                                    <input type="hidden" name="order_direction"
-                                        value="{{ !empty(request()->query('order_by')) &&
-                                        request()->query('order_by') == $key &&
-                                        request()->query('order_direction') == 'asc'
-                                            ? 'desc'
-                                            : 'asc' }}">
-                                    <button type="submit">
-                                        <x-icon.up-arrow
-                                            class="cursor-pointer h-[10px]
-                                            {{ !empty(request()->query('order_by')) &&
+                            <span class="flex justify-between">
+                                <span class="flex items-center gap-2">
+                                    {{ $field['name'] }}
+                                    <form action="{{ route('parts.index') }}" method="GET">
+                                        <input type="hidden" name="search"
+                                            value="{{ request()->query('search') ?? '' }}">
+                                        <input type="hidden" name="order_by" value="{{ $key }}">
+                                        <input type="hidden" name="page" value="{{ request()->query('page') ?? 1 }}">
+                                        <input type="hidden" name="order_direction"
+                                            value="{{ !empty(request()->query('order_by')) &&
                                             request()->query('order_by') == $key &&
                                             request()->query('order_direction') == 'asc'
-                                                ? 'rotate-180'
-                                                : '' }}" />
-                                    </button>
-                                </form>
+                                                ? 'desc'
+                                                : 'asc' }}">
+                                        <button type="submit">
+                                            <x-icon.up-arrow
+                                                class="cursor-pointer h-[10px]
+                                                {{ !empty(request()->query('order_by')) &&
+                                                request()->query('order_by') == $key &&
+                                                request()->query('order_direction') == 'asc'
+                                                    ? 'rotate-180'
+                                                    : '' }}" />
+                                        </button>
+                                    </form>
+                                </span>
+                                @if ($key == 'po_number')
+                                    <form action="{{ route('parts.generate-po-numbers') }}" method="post">
+                                        @csrf
+                                        <button type="submit" class="btn-sky">
+                                            {{ __('Generate') }}
+                                        </button>
+                                    </form>
+                                @endif
                             </span>
                         </th>
                     @endforeach
@@ -85,10 +95,20 @@
                                                 @break
                                             @case('select')
                                                 @php
+
                                                     $options = $field['options']['model']::all()->pluck(
                                                         $field['options']['label'],
                                                         $field['options']['value']
-                                                    );
+                                                    )->toArray();
+
+                                                    if (
+                                                        !empty($field['options']['nullable']) &&
+                                                        $field['options']['nullable']
+                                                    ) {
+                                                        array_unshift($options, '--Please Select--');
+                                                    }
+
+                                                    ds($options);
                                                 @endphp
                                                 <select name="{{ $key }}" class="field bg-transparent border-none
                                                 !ring-0 !w-[195px] focus:ring-0 focus:outline-none cursor-pointer
@@ -96,7 +116,7 @@
                                                 part-id="{{ $part->id }}">
                                                     @foreach ($options as $optionKey => $optionValue)
                                                         <option value="{{ $optionKey }}"
-                                                        @if ($optionKey == $part->supplier_id) selected @endif>
+                                                        @if ($optionKey === $part->supplier_id) selected @endif>
                                                             {{ $optionValue }}
                                                         </option>
                                                     @endforeach

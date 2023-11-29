@@ -26,9 +26,10 @@ return [
             'editable' => true,
             'type' => 'select',
             'options' => [
-                'model' => 'App\Models\Supplier',
-                'value' => 'id',
-                'label' => 'name',
+                'model'    => 'App\Models\Supplier',
+                'value'    => 'id',
+                'label'    => 'name',
+                'nullable' => true,
             ],
         ],
         'submission->submission_code' => [

@@ -99,7 +99,7 @@ class PartsController extends Controller
                 $field = explode('->', $field)['0'] . '_id';
             }
 
-            $part->$field = $request->get('value');
+            $part->$field = $request->get('value') == '0' ? null : $request->get('value');
             $part->save();
 
             return response()->json([
@@ -155,5 +155,40 @@ class PartsController extends Controller
             'success' => false,
             'message' => 'Part could not be updated'
         ]);
+    }
+
+    /**
+     * Generate PO numbers for all parts
+     */
+    public function generatePoNumbers()
+    {
+        // all parts grouped by submission with no PO number
+        $submissions = Part::where('po_number', null)->where('supplier_id', '!=', null)
+            ->get()->groupBy('submission_id');
+
+        foreach ($submissions as $parts) {
+            $suppliers = Part::where('po_number', null)->where('submission_id', $parts[0]->submission_id)
+                ->where('supplier_id', '!=', null)->get()->groupBy('supplier_id');
+
+            // get latest PO number and increment by 1
+            $poPrefix = str_pad($parts[0]->submission->machine_number, 2, '0', STR_PAD_LEFT) .
+                '-' . $parts[0]->submission->current_unit_number . '-';
+            $latestPo = Part::where('po_number', 'like', $poPrefix . '%')->orderBy('po_number', 'desc')->first();
+            $number   = !empty($latestPo) ? (int)explode('-', $latestPo->po_number)[2] + 1 : 1;
+            $poNumber = $poPrefix . str_pad($number, 4, '0', STR_PAD_LEFT);
+
+            foreach ($suppliers as $parts) {
+                foreach ($parts as $part) {
+                    $part->po_number = $poNumber;
+                    $part->save();
+                }
+
+                // increment PO number
+                $number++;
+                $poNumber = $poPrefix . str_pad($number, 4, '0', STR_PAD_LEFT);
+            }
+        }
+
+        return redirect()->back();
     }
 }
