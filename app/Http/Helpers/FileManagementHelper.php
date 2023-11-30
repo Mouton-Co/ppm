@@ -16,29 +16,28 @@ class FileManagementHelper
 
         foreach ($files as $fileName) {
             $newName = $fileName;
-            // if DWG file
-            if (str_contains($fileName, '.dwg')) {
-                $path = explode('.dwg', $fileName)[0];
-                if (in_array($path.'_R.dwg', $files)) {
-                    // don't store filename.dwg
-                    // if filename_R.dwg is present
-                    continue;
-                } else {
-                    // add _R to filename
-                    $newName = $path.'_R.dwg';
+
+            /*
+             * For dwg and dxf files
+             * - If there is a file with _R and one without _R, keep the one with _R
+             * - If there is no file with _R, append _R to it
+             */
+
+            if (
+                str_contains($fileName, '.dwg') ||
+                str_contains($fileName, '.dxf'))
+            {
+                $path = explode('.', $fileName)[0];
+                $suffix = explode('.', $fileName)[1];
+                if (!str_contains($path, '_R')) {
+                    if (in_array($path . '_R.' . $suffix, $files)) {
+                        continue;
+                    } else {
+                        $newName = $path . '_R.' . $suffix;
+                    }
                 }
             }
-            if (str_contains($fileName, '.dxf')) {
-                $path = explode('.dxf', $fileName)[0];
-                if (in_array($path.'_R.dxf', $files)) {
-                    // don't store filename.dxf
-                    // if filename_R.dxf is present
-                    continue;
-                } else {
-                    // add _R to filename
-                    $newName = $path.'_R.dxf';
-                }
-            }
+
             Storage::disk('local')->move(
                 $fileName,
                 str_replace('/temp', '', $newName),
