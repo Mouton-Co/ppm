@@ -107,8 +107,6 @@
                                                     ) {
                                                         array_unshift($options, '--Please Select--');
                                                     }
-
-                                                    ds($options);
                                                 @endphp
                                                 <select name="{{ $key }}" class="field bg-transparent border-none
                                                 !ring-0 !w-[195px] focus:ring-0 focus:outline-none cursor-pointer
