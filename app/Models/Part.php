@@ -71,6 +71,11 @@ class Part extends Model
         return $this->belongsTo(Supplier::class);
     }
 
+    public function pdf()
+    {
+        return $this->files()->where('file_type', 'pdf')->first();
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Helpers
