@@ -79,5 +79,20 @@ return [
             'name'     => 'Treated Part Received At',
             'sortable' => true,
         ],
+        'qc_failed' => [
+            'name'     => 'QC Failed',
+            'editable' => true,
+            'type'     => 'boolean',
+            'sortable' => false,
+        ],
+        'qc_failed_at' => [
+            'name'     => 'QC Failed At',
+            'sortable' => true,
+        ],
+        'qc_failed_reason' => [
+            'name'     => 'QC Failed Reason',
+            'editable' => true,
+            'sortable' => true,
+        ],
     ]
 ];

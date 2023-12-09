@@ -79,6 +79,8 @@ class PartsController extends Controller
                 ->orWhere('parts.raw_part_received_at', 'like', '%' . $request->get('search') . '%')
                 ->orWhere('parts.treated_part_received_at', 'like', '%' . $request->get('search') . '%')
                 ->orWhere('parts.status', 'like', '%' . $request->get('search') . '%')
+                ->orWhere('parts.qc_failed_at', 'like', '%' . $request->get('search') . '%')
+                ->orWhere('parts.qc_failed_reason', 'like', '%' . $request->get('search') . '%')
                 ->orWhere('submissions.submission_code', 'like', '%' . $request->get('search') . '%');
         }
 

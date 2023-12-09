@@ -36,6 +36,9 @@ class Part extends Model
         'treated_part_received_at',
         'submission_id',
         'supplier_id',
+        'qc_failed',
+        'qc_failed_at',
+        'qc_failed_reason',
     ];
 
     /*
@@ -96,6 +99,10 @@ class Part extends Model
         }
 
         if ($this->status == 'part_received' && $key == 'treated_part_received') {
+            $enabled = true;
+        }
+
+        if ($key == 'qc_failed') {
             $enabled = true;
         }
 
