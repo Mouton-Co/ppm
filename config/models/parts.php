@@ -3,76 +3,81 @@
 return [
     'columns' => [
         'po_number' => [
-            'name' => 'PO Number',
+            'name'     => 'PO Number',
             'editable' => true,
+            'sortable' => true,
         ],
         'part_ordered' => [
-            'name' => 'Part Ordered',
+            'name'     => 'Part Ordered',
             'editable' => true,
-            'type' => 'boolean',
-        ],
-        'raw_part_received' => [
-            'name' => 'Raw Part Received',
-            'editable' => true,
-            'type' => 'boolean',
-        ],
-        'treated_part_received' => [
-            'name' => 'Treated Part Received',
-            'editable' => true,
-            'type' => 'boolean',
+            'type'     => 'boolean',
+            'sortable' => false,
         ],
         'supplier->name' => [
-            'name' => 'Supplier',
+            'name'     => 'Supplier',
             'editable' => true,
-            'type' => 'select',
-            'options' => [
+            'type'     => 'select',
+            'sortable' => true,
+            'options'  => [
                 'model'    => 'App\Models\Supplier',
                 'value'    => 'id',
                 'label'    => 'name',
                 'nullable' => true,
             ],
         ],
-        'submission->submission_code' => [
-            'name' => 'Submission',
-        ],
         'name' => [
-            'name' => 'Name',
+            'name'     => 'Name',
+            'sortable' => true,
+        ],
+        'quantity' => [
+            'name'     => 'Quantity',
+            'sortable' => true,
+        ],
+        'material' => [
+            'name'     => 'Material',
+            'sortable' => true,
+        ],
+        'material_thickness' => [
+            'name'     => 'Material Thickness',
+            'sortable' => true,
+        ],
+        'finish' => [
+            'name'     => 'Finish',
+            'sortable' => true,
+        ],
+        'used_in_weldment' => [
+            'name'     => 'Used In Weldment',
+            'sortable' => true,
+        ],
+        'process_type' => [
+            'name'     => 'Process Type',
+            'sortable' => true,
+        ],
+        'submission->submission_code' => [
+            'name'     => 'Submission',
+            'sortable' => true,
         ],
         'status' => [
             'name'     => 'Status',
-            'format'  => [
+            'sortable' => true,
+            'format'   => [
                 'design'               => 'Design',
                 'waiting_on_parts'     => 'Waiting on Parts',
                 'waiting_on_treatment' => 'Waiting on Treatment',
                 'part_received'        => 'Part Received',
             ],
         ],
-        'quantity' => [
-            'name' => 'Quantity',
-        ],
-        'material' => [
-            'name' => 'Material',
-        ],
-        'material_thickness' => [
-            'name' => 'Material Thickness',
-        ],
-        'finish' => [
-            'name' => 'Finish',
-        ],
-        'used_in_weldment' => [
-            'name' => 'Used In Weldment',
-        ],
-        'process_type' => [
-            'name' => 'Process Type',
-        ],
         'part_ordered_at' => [
-            'name' => 'Part Ordered At',
+            'name'     => 'Part Ordered At',
+            'sortable' => true,
         ],
         'raw_part_received_at' => [
-            'name' => 'Raw Part Received At',
+            'name'     => 'Raw Part Received At',
+            'sortable' => true,
         ],
         'treated_part_received_at' => [
-            'name' => 'Treated Part Received At',
+            'name'     => 'Treated Part Received At',
+            'sortable' => true,
         ],
     ]
 ];

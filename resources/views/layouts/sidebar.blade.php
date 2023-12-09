@@ -31,7 +31,7 @@
                         <a class="nav-item-{{ request()->segment(1) == 'parts' ? 'active' : 'default' }}"
                         href="{{ route('parts.index') }}">
                             <x-icon.part class="h-6 w-6 shrink-0" />
-                            {{ __('Parts') }}
+                            {{ __('Procurement') }}
                         </a>
                     </li>
                 </ul>
