@@ -17,6 +17,16 @@
         </form>
     </div>
 
+    {{-- button row --}}
+    <div class="flex gap-3">
+        <form action="{{ route('parts.generate-po-numbers') }}" method="post">
+            @csrf
+            <button type="submit" class="btn-sky">
+                {{ __('Generate PO') }}
+            </button>
+        </form>
+    </div>
+
     {{-- index table --}}
     <div class="field-card mt-4 overflow-auto no-scrollbar">
         <table class="table-dark no-scrollbar">
@@ -50,14 +60,6 @@
                                         </button>
                                     </form>
                                 </span>
-                                @if ($key == 'po_number')
-                                    <form action="{{ route('parts.generate-po-numbers') }}" method="post">
-                                        @csrf
-                                        <button type="submit" class="btn-sky">
-                                            {{ __('Generate') }}
-                                        </button>
-                                    </form>
-                                @endif
                             </span>
                         </th>
                     @endforeach
