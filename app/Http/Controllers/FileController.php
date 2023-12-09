@@ -66,6 +66,15 @@ class FileController extends Controller
     }
 
     /**
+     * Opens the file in the browser
+     */
+    public function open($id)
+    {
+        $file = File::find($id);
+        return response()->file(storage_path().'/app/'.$file->location);
+    }
+
+    /**
      * Downloads the zip for a submission
      */
     public function downloadZip($id)

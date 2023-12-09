@@ -152,6 +152,12 @@
                                                         <x-icon.part class="h-5 text-gray-300 hover:text-sky-700" />
                                                     </a>
                                                 @endif
+                                                @if ($key == 'name' && !empty($part->pdf()))
+                                                    <a href="{{ route('file.open', $part->pdf()->id) }}"
+                                                    target="_blank" class="max-w-fit !p-0">
+                                                        <x-icon.pdf class="h-6 text-gray-300 hover:text-sky-700" />
+                                                    </a>
+                                                @endif
                                                 {{ $value ?? '-' }}
                                             </div>
                                         @endif
