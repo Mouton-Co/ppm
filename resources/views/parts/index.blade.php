@@ -38,27 +38,30 @@
                             <span class="flex justify-between">
                                 <span class="flex items-center gap-2">
                                     {{ $field['name'] }}
-                                    <form action="{{ route('parts.index') }}" method="GET">
-                                        <input type="hidden" name="search"
-                                            value="{{ request()->query('search') ?? '' }}">
-                                        <input type="hidden" name="order_by" value="{{ $key }}">
-                                        <input type="hidden" name="page" value="{{ request()->query('page') ?? 1 }}">
-                                        <input type="hidden" name="order_direction"
-                                            value="{{ !empty(request()->query('order_by')) &&
-                                            request()->query('order_by') == $key &&
-                                            request()->query('order_direction') == 'asc'
-                                                ? 'desc'
-                                                : 'asc' }}">
-                                        <button type="submit">
-                                            <x-icon.up-arrow
-                                                class="cursor-pointer h-[10px]
-                                                {{ !empty(request()->query('order_by')) &&
+                                    @if ($field['sortable'])
+                                        <form action="{{ route('parts.index') }}" method="GET">
+                                            <input type="hidden" name="search"
+                                                value="{{ request()->query('search') ?? '' }}">
+                                            <input type="hidden" name="order_by" value="{{ $key }}">
+                                            <input type="hidden" name="page"
+                                                value="{{ request()->query('page') ?? 1 }}">
+                                            <input type="hidden" name="order_direction"
+                                                value="{{ !empty(request()->query('order_by')) &&
                                                 request()->query('order_by') == $key &&
                                                 request()->query('order_direction') == 'asc'
-                                                    ? 'rotate-180'
-                                                    : '' }}" />
-                                        </button>
-                                    </form>
+                                                    ? 'desc'
+                                                    : 'asc' }}">
+                                            <button type="submit">
+                                                <x-icon.up-arrow
+                                                    class="cursor-pointer h-[10px]
+                                                    {{ !empty(request()->query('order_by')) &&
+                                                    request()->query('order_by') == $key &&
+                                                    request()->query('order_direction') == 'asc'
+                                                        ? 'rotate-180'
+                                                        : '' }}" />
+                                            </button>
+                                        </form>
+                                    @endif
                                 </span>
                             </span>
                         </th>
@@ -79,7 +82,8 @@
                                 @endphp
                                 <span id="{{ $part->id . '-' . $key }}" class="relative w-full h-full
                                 {{ $editable && $type == 'text' ?
-                                'cell-edit hover:bg-sky-700 cursor-text hover:shadow-inner' : '' }}">
+                                'cell-edit hover:bg-sky-700 cursor-text hover:shadow-inner' : '' }}
+                                {{ $key == 'po_number' ? '!w-[140px]' : '' }}">
                                     @php
                                         $value = str_contains($key, '->')
                                             ? App\Http\Services\ModelService::nestedValue($part, $key)
@@ -141,7 +145,6 @@
                                                     ) }}" class="max-w-fit !p-0" download>
                                                         <x-icon.zip class="h-6 text-gray-300 hover:text-sky-700" />
                                                     </a>
-                                                @elseif ($key == 'name')
                                                     <a href="{{ route('submissions.view', [
                                                         'id' => $part->submission->id,
                                                         'part' => $part->id

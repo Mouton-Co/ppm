@@ -75,7 +75,9 @@ class PartsController extends Controller
                 ->orWhere('parts.process_type', 'like', '%' . $request->get('search') . '%')
                 ->orWhere('parts.manufactured_or_purchased', 'like', '%' . $request->get('search') . '%')
                 ->orWhere('parts.po_number', 'like', '%' . $request->get('search') . '%')
-                ->orWhere('parts.date_stamp', 'like', '%' . $request->get('search') . '%')
+                ->orWhere('parts.part_ordered_at', 'like', '%' . $request->get('search') . '%')
+                ->orWhere('parts.raw_part_received_at', 'like', '%' . $request->get('search') . '%')
+                ->orWhere('parts.treated_part_received_at', 'like', '%' . $request->get('search') . '%')
                 ->orWhere('parts.status', 'like', '%' . $request->get('search') . '%')
                 ->orWhere('submissions.submission_code', 'like', '%' . $request->get('search') . '%');
         }
