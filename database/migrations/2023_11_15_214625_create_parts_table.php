@@ -32,6 +32,9 @@ return new class extends Migration
             $table->datetime('treated_part_received_at')->nullable();
             $table->foreignId('submission_id');
             $table->foreignId('supplier_id')->nullable();
+            $table->boolean('qc_failed')->default(false);
+            $table->datetime('qc_failed_at')->nullable();
+            $table->string('qc_failed_reason')->nullable();
             $table->timestamps();
         });
     }
