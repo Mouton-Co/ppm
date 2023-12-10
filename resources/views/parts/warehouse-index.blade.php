@@ -4,8 +4,8 @@
 
     {{-- title and search --}}
     <div class="flex justify-between mb-3">
-        <h2>{{ __('Parts') }}</h2>
-        <form action="{{ route('parts.index') }}" method="GET" class="relative">
+        <h2>{{ __('Warehouse') }}</h2>
+        <form action="{{ route('parts.warehouse.index') }}" method="GET" class="relative">
             <input type="text" name="search" placeholder="Search..." value="{{ request()->query('search') ?? '' }}"
                 class="field-dark min-w-[300px]">
             <input type="hidden" name="order_by" value="{{ request()->query('order_by') ?? 'created_at' }}">
@@ -17,29 +17,19 @@
         </form>
     </div>
 
-    {{-- button row --}}
-    <div class="flex gap-3">
-        <form action="{{ route('parts.generate-po-numbers') }}" method="post">
-            @csrf
-            <button type="submit" class="btn-sky">
-                {{ __('Generate PO') }}
-            </button>
-        </form>
-    </div>
-
     {{-- index table --}}
     <div class="field-card mt-4 overflow-auto no-scrollbar">
         <table class="table-dark no-scrollbar">
             <caption class="hidden">{{ __('Parts index table') }}</caption>
             <thead>
                 <tr>
-                    @foreach (config('models.parts.columns') as $key => $field)
+                    @foreach (config('models.parts-warehouse.columns') as $key => $field)
                         <th>
                             <span class="flex justify-between">
                                 <span class="flex items-center gap-2">
                                     {{ $field['name'] }}
                                     @if ($field['sortable'])
-                                        <form action="{{ route('parts.index') }}" method="GET">
+                                        <form action="{{ route('parts.warehouse.index') }}" method="GET">
                                             <input type="hidden" name="search"
                                                 value="{{ request()->query('search') ?? '' }}">
                                             <input type="hidden" name="order_by" value="{{ $key }}">
@@ -74,7 +64,7 @@
                 @endphp
                 @foreach ($parts as $part)
                     <tr>
-                        @foreach (config('models.parts.columns') as $key => $field)
+                        @foreach (config('models.parts-warehouse.columns') as $key => $field)
                             <td>
                                 @php
                                     $editable = !empty($field['editable']) && $field['editable'];

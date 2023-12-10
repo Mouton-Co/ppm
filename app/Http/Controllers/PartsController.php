@@ -84,7 +84,53 @@ class PartsController extends Controller
                 ->orWhere('submissions.submission_code', 'like', '%' . $request->get('search') . '%');
         }
 
-        return view('parts.index')->with([
+        return view('parts.procurement-index')->with([
+            'parts' => $parts->paginate(10)
+        ]);
+    }
+
+    /**
+     * Index table for warehouse table
+     */
+    public function warehouseIndex(IndexRequest $request)
+    {
+        $parts = Part::select(['parts.*', 'submissions.submission_code'])
+            ->join('submissions', 'submissions.id', '=', 'parts.submission_id');
+
+        if (!empty($request->get('order_by')) && $request->get('order_by') == 'submission->submission_code') {
+            $parts = $parts->orderBy(
+                'submissions.submission_code',
+                $request->get('order_direction') ?? 'asc'
+            );
+        } else {
+            $parts = $parts->orderBy(
+                $request->get('order_by') ?? 'parts.created_at',
+                $request->get('order_direction') ?? 'asc'
+            );
+        }
+
+        if (!empty($request->get('search'))) {
+            $parts = $parts->where('parts.name', 'like', '%' . $request->get('search') . '%')
+                ->orWhere('parts.quantity', 'like', '%' . $request->get('search') . '%')
+                ->orWhere('parts.material', 'like', '%' . $request->get('search') . '%')
+                ->orWhere('parts.material_thickness', 'like', '%' . $request->get('search') . '%')
+                ->orWhere('parts.finish', 'like', '%' . $request->get('search') . '%')
+                ->orWhere('parts.used_in_weldment', 'like', '%' . $request->get('search') . '%')
+                ->orWhere('parts.process_type', 'like', '%' . $request->get('search') . '%')
+                ->orWhere('parts.manufactured_or_purchased', 'like', '%' . $request->get('search') . '%')
+                ->orWhere('parts.po_number', 'like', '%' . $request->get('search') . '%')
+                ->orWhere('parts.part_ordered_at', 'like', '%' . $request->get('search') . '%')
+                ->orWhere('parts.raw_part_received_at', 'like', '%' . $request->get('search') . '%')
+                ->orWhere('parts.treated_part_received_at', 'like', '%' . $request->get('search') . '%')
+                ->orWhere('parts.status', 'like', '%' . $request->get('search') . '%')
+                ->orWhere('parts.qc_failed_at', 'like', '%' . $request->get('search') . '%')
+                ->orWhere('parts.qc_failed_reason', 'like', '%' . $request->get('search') . '%')
+                ->orWhere('submissions.submission_code', 'like', '%' . $request->get('search') . '%');
+        }
+
+        $parts = $parts->where('parts.part_ordered_at', '!=', null);
+
+        return view('parts.warehouse-index')->with([
             'parts' => $parts->paginate(10)
         ]);
     }

@@ -28,10 +28,17 @@
                         </a>
                     </li>
                     <li>
-                        <a class="nav-item-{{ request()->segment(1) == 'parts' ? 'active' : 'default' }}"
-                        href="{{ route('parts.index') }}">
-                            <x-icon.part class="h-6 w-6 shrink-0" />
+                        <a class="nav-item-{{ request()->segment(2) == 'procurement' ? 'active' : 'default' }}"
+                        href="{{ route('parts.procurement.index') }}">
+                            <x-icon.procurement class="h-6 w-6 shrink-0" />
                             {{ __('Procurement') }}
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-item-{{ request()->segment(2) == 'warehouse' ? 'active' : 'default' }}"
+                        href="{{ route('parts.warehouse.index') }}">
+                            <x-icon.warehouse class="h-6 w-6 shrink-0" />
+                            {{ __('Warehouse') }}
                         </a>
                     </li>
                 </ul>
