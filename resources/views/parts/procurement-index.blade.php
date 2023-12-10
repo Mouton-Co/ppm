@@ -25,6 +25,42 @@
                 {{ __('Generate PO') }}
             </button>
         </form>
+
+        <form action="{{ route('parts.autofill-suppliers') }}" method="post" class="flex gap-3 items-center">
+            @csrf
+            <button type="submit" class="btn-sky">
+                {{ __('Autofill suppliers') }}
+            </button>
+
+            @php
+            $options = App\Models\Supplier::all()->pluck(
+                'name',
+                'id'
+            )->toArray();
+            array_unshift($options, '--Please Select--');
+            @endphp
+
+            <label for="lc_supplier" class="min-w-fit text-white">Lasercut Supplier</label>
+            <select name="lc_supplier" class="field bg-transparent border-none
+            !ring-0 !w-[195px] focus:ring-0 focus:outline-none cursor-pointer
+            editable-cell-dropdown">
+                @foreach ($options as $optionKey => $optionValue)
+                    <option value="{{ $optionKey }}">
+                        {{ $optionValue }}
+                    </option>
+                @endforeach
+            </select>
+            <label for="part_supplier" class="min-w-fit text-white">Part Supplier</label>
+            <select name="part_supplier" class="field bg-transparent border-none
+            !ring-0 !w-[195px] focus:ring-0 focus:outline-none cursor-pointer
+            editable-cell-dropdown">
+                @foreach ($options as $optionKey => $optionValue)
+                    <option value="{{ $optionKey }}">
+                        {{ $optionValue }}
+                    </option>
+                @endforeach
+            </select>
+        </form>
     </div>
 
     {{-- index table --}}
