@@ -10,6 +10,8 @@ use App\Http\Requests\Parts\IndexRequest;
 use App\Http\Requests\Parts\UpdateCheckboxRequest;
 use App\Http\Requests\Parts\UpdateRequest;
 use App\Models\Part;
+use App\Models\Supplier;
+use Illuminate\Http\Request;
 
 class PartsController extends Controller
 {
@@ -236,6 +238,47 @@ class PartsController extends Controller
                 // increment PO number
                 $number++;
                 $poNumber = $poPrefix . str_pad($number, 4, '0', STR_PAD_LEFT);
+            }
+        }
+
+        return redirect()->back();
+    }
+
+    /**
+     * Autofill suppliers for all parts
+     */
+    public function autofillSuppliers(Request $request)
+    {
+        /**
+         * all parts with no supplier and that's not ordered yet
+         */
+        $parts = Part::where('supplier_id', null)->where('part_ordered', false)->get();
+
+        foreach ($parts as $part) {
+            switch ($part->process_type) {
+                case 'LC':
+                case 'LCB':
+                case 'LCM':
+                case 'LCBM':
+                case 'LCBW':
+                    if (!empty($request->input('lc_supplier'))) {
+                        $part->supplier_id = $request->input('lc_supplier');
+                        $part->save();
+                    }
+                    break;
+                case 'MCH':
+                    if (!empty($request->input('part_supplier'))) {
+                        $part->supplier_id = $request->input('part_supplier');
+                        $part->save();
+                    }
+                    break;
+                case 'TLC':
+                case 'TLCM':
+                    $part->supplier_id = Supplier::where('name', 'Schuurman Tube')->first()->id;
+                    $part->save();
+                    break;
+                default:
+                    break;
             }
         }
 
