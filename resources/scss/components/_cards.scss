@@ -5,3 +5,24 @@
     @apply bg-dark-field border border-solid border-dark-field-border shadow-md p-6
     rounded-md md:rounded-xl;
 }
+
+.order-card {
+    @apply bg-dark-field rounded-lg shadow-sm ring-1 ring-dark-field-border text-white
+    divide-y-2 divide-dark-field-border flex flex-col text-sm;
+
+    .order-card-header {
+        @apply flex items-center justify-between px-5 py-3;
+    }
+    .order-card-body {
+        @apply px-5 py-3 flex flex-col;
+        .order-card-body-item {
+            @apply flex items-center py-1 gap-3 text-gray-300 truncate;
+        }
+    }
+    .order-card-footer {
+        @apply flex items-center cursor-pointer rounded-b-lg hover:bg-sky-700;
+        a {
+            @apply px-5 py-3 w-full h-full;
+        }
+    }
+}

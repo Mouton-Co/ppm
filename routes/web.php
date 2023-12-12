@@ -21,6 +21,7 @@ Route::middleware('auth')->group(function () {
     include_once 'parts.php';
     include_once 'users.php';
     include_once 'files.php';
+    include_once 'orders.php';
 });
 
 include_once __DIR__ . '/auth.php';
