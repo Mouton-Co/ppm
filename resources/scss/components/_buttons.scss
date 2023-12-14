@@ -8,7 +8,7 @@
     &-sky-light {
         @apply btn bg-transparent border-sky-700 border text-sky-700 cursor-pointer focus-visible:outline
         focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500
-        hover:bg-[#313841];
+        hover:bg-sky-700 hover:text-white;
     }
     &-disabled {
         @apply btn bg-dark-field text-gray-400 cursor-default;

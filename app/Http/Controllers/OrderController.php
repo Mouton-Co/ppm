@@ -4,17 +4,29 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Order\StoreRequest;
 use App\Http\Requests\Order\UpdateRequest;
+use App\Http\Requests\Order\IndexRequest;
 use App\Models\Order;
-use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(IndexRequest $request)
     {
-        $orders = Order::paginate(10);
+        $orders = Order::
+            when($request->status, function ($query) use ($request) {
+                return $query->where('status', $request->status);
+            })
+            ->when($request->supplier, function ($query) use ($request) {
+                return $query->where('supplier_id', $request->supplier);
+            })
+            ->when($request->search, function ($query) use ($request) {
+                return $query->where('po_number', 'like', '%' . $request->search . '%')
+                    ->orWhere('submission_code', 'like', '%' . $request->search . '%');
+            })
+            ->orderBy('created_at', 'desc')
+            ->paginate(8);
 
         return view('orders.index', compact('orders'));
     }

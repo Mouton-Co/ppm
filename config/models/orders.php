@@ -2,11 +2,7 @@
 
 return [
     'status' => [
-        'pending',
-        'processing',
-        'completed',
-        'declined',
-        'refunded',
-        'cancelled'
+        'pending' => 'Pending',
+        'ordered' => 'Ordered',
     ],
 ];

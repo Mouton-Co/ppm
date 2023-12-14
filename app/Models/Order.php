@@ -13,5 +13,21 @@ class Order extends Model
         'po_number',
         'notes',
         'status',
+        'submission_code',
+        'supplier_id',
     ];
+
+    /*
+    |--------------------------------------------------------------------------
+    | Relationships
+    |--------------------------------------------------------------------------
+    */
+    
+    /**
+     * Get the supplier that the order belongs to
+     */
+    public function supplier()
+    {
+        return $this->belongsTo(Supplier::class);
+    }
 }

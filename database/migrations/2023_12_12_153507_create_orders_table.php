@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('po_number');
             $table->string('notes')->nullable();
             $table->string('status')->default('processing');
+            $table->string('submission_code')->nullable();
+            $table->foreignId('supplier_id')->nullable();
             $table->timestamps();
         });
     }
