@@ -71,7 +71,7 @@
 
     <ul role="list" class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         @foreach ($orders as $order)
-            <div class="order-card">
+            <div class="order-card-{{$order->status}}">
                 <div class="order-card-header">
                     <span>{{ $order->po_number }}</span>
                     <x-order.status :status="$order->status" />
@@ -102,6 +102,9 @@
                     <a href="#">
                         Part summary <span aria-hidden="true">&rarr;</span>
                     </a>
+                    @if ($order->status == 'ordered')
+                        <x-icon.checkmark class="w-5 text-green-500" />
+                    @endif
                 </div>
             </div>
         @endforeach

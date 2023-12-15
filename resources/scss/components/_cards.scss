@@ -7,8 +7,16 @@
 }
 
 .order-card {
-    @apply bg-dark-field rounded-lg shadow-sm ring-1 ring-dark-field-border text-white
+    @apply bg-dark-field rounded-lg shadow-sm ring-1 text-white
     divide-y-2 divide-dark-field-border flex flex-col text-sm;
+
+    &-pending {
+        @apply order-card ring-dark-field-border;
+    }
+
+    &-ordered {
+        @apply order-card ring-green-500;
+    }
 
     .order-card-header {
         @apply flex items-center justify-between px-5 py-3;
@@ -20,9 +28,9 @@
         }
     }
     .order-card-footer {
-        @apply flex items-center cursor-pointer rounded-b-lg hover:bg-sky-700;
+        @apply flex px-5 items-center justify-between cursor-pointer rounded-b-lg hover:bg-sky-700;
         a {
-            @apply px-5 py-3 w-full h-full;
+            @apply py-3 w-full h-full;
         }
     }
 }
