@@ -2,8 +2,12 @@
 
 @section('dashboard-content')
     {{-- title --}}
-    <div class="flex justify-between mb-3">
+    <div class="flex mb-3 items-center gap-3">
         <h2>{{ __('Purchase Orders') }}</h2>
+
+        <a href="{{ route('orders.generate') }}" class="btn-sky max-w-fit">
+            {{ __('Generate orders') }}
+        </a>
     </div>
 
     {{-- filters --}}
@@ -73,7 +77,7 @@
         @foreach ($orders as $order)
             <div class="order-card-{{$order->status}}">
                 <div class="order-card-header">
-                    <span>{{ $order->po_number }}</span>
+                    <span>PO {{ $order->po_number }}</span>
                     <x-order.status :status="$order->status" />
                 </div>
                 <div class="order-card-body">
@@ -86,12 +90,12 @@
                         <span>{{ $order->supplier->representatives()->first()->email }}</span>
                     </div>
                     <div class="order-card-body-item">
-                        <a href=""><x-icon.submission class="w-5 hover:text-sky-700" /></a>
-                        <span>{{ $order->submission_code }}</span>
+                        <x-icon.submission class="w-5" />
+                        <span>{{ $order->submission->submission_code }}</span>
                     </div>
                     <div class="order-card-body-item">
                         <x-icon.spanner class="w-5" />
-                        <span>Total parts: 48</span>
+                        <span>Total parts: {{ $order->total_parts }}</span>
                     </div>
                     <div class="order-card-body-item">
                         <x-icon.datetime class="w-5" />
@@ -99,9 +103,9 @@
                     </div>
                 </div>
                 <div class="order-card-footer">
-                    <a href="#">
+                    <div>
                         Part summary <span aria-hidden="true">&rarr;</span>
-                    </a>
+                    </div>
                     @if ($order->status == 'ordered')
                         <x-icon.checkmark class="w-5 text-green-500" />
                     @endif

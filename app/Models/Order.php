@@ -13,8 +13,9 @@ class Order extends Model
         'po_number',
         'notes',
         'status',
-        'submission_code',
+        'total_parts',
         'supplier_id',
+        'submission_id',
     ];
 
     /*
@@ -29,5 +30,13 @@ class Order extends Model
     public function supplier()
     {
         return $this->belongsTo(Supplier::class);
+    }
+
+    /**
+     * Get the submission that the order belongs to
+     */
+    public function submission()
+    {
+        return $this->belongsTo(Submission::class);
     }
 }

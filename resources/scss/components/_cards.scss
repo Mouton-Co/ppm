@@ -7,10 +7,11 @@
 }
 
 .order-card {
-    @apply bg-dark-field rounded-lg shadow-sm ring-1 text-white
-    divide-y-2 divide-dark-field-border flex flex-col text-sm;
+    @apply bg-dark-field rounded-lg shadow-sm ring-1 text-white cursor-pointer
+    divide-y-2 divide-dark-field-border flex flex-col text-sm hover:ring-sky-700
+    hover:opacity-90;
 
-    &-pending {
+    &-processing {
         @apply order-card ring-dark-field-border;
     }
 
@@ -28,8 +29,8 @@
         }
     }
     .order-card-footer {
-        @apply flex px-5 items-center justify-between cursor-pointer rounded-b-lg hover:bg-sky-700;
-        a {
+        @apply flex px-5 items-center justify-between rounded-b-lg;
+        div {
             @apply py-3 w-full h-full;
         }
     }

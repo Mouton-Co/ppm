@@ -6,6 +6,7 @@ use App\Http\Requests\Order\StoreRequest;
 use App\Http\Requests\Order\UpdateRequest;
 use App\Http\Requests\Order\IndexRequest;
 use App\Models\Order;
+use App\Models\Part;
 
 class OrderController extends Controller
 {
@@ -90,4 +91,50 @@ class OrderController extends Controller
     {
         //
     }
+
+    /**
+     * Generate all oustanding orders from the procurement table.
+     * Orders are generated for all the parts that have PO numbers, suppliers and haven't been ordered yet.
+     */
+    public function generate()
+    {
+        $poNumbers = Part::whereNotNull('po_number')
+            ->whereNotNull('supplier_id')
+            ->where('part_ordered', false)
+            ->get()
+            ->groupBy('po_number');
+            
+        foreach ($poNumbers as $poNumber => $parts) {
+            // get total parts
+            $totalParts = 0;
+            foreach ($parts as $part) {
+                $totalParts += $part->quantity;
+            }
+
+            $order = Order::where('po_number', $poNumber)->first();
+
+            if (!empty($order)) {
+                $order->update([
+                    'total_parts'   => $totalParts,
+                    'status'        => 'processing',
+                    'supplier_id'   => $parts[0]->supplier_id,
+                    'submission_id' => $parts[0]->submission_id,
+                ]);
+                continue;
+            }
+
+            // create order
+            Order::create([
+                'po_number'     => $poNumber,
+                'supplier_id'   => $parts[0]->supplier_id,
+                'submission_id' => $parts[0]->submission_id,
+                'total_parts'   => $totalParts,
+            ]);
+        }
+
+        return redirect()->route('orders.index')->withSuccess(
+            'Orders generated.'
+        );
+    }
+
 }
