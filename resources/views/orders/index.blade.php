@@ -10,6 +10,9 @@
         </a>
     </div>
 
+    {{-- curtain --}}
+    <div id="modal-curtain" class="hidden"></div>
+
     {{-- filters --}}
     <hr>
     <form action="" method="get">
@@ -73,9 +76,11 @@
     </form>
     <hr class="mb-3">
 
+    {{-- list of orders --}}
     <ul role="list" class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         @foreach ($orders as $order)
-            <div class="order-card-{{$order->status}}">
+            {{-- order card --}}
+            <div id="order-card-{{ $order->id }}" class="order-card-{{$order->status}} order-card-hover">
                 <div class="order-card-header">
                     <span>PO {{ $order->po_number }}</span>
                     <x-order.status :status="$order->status" />
@@ -109,6 +114,30 @@
                     @if ($order->status == 'ordered')
                         <x-icon.checkmark class="w-5 text-green-500" />
                     @endif
+                </div>
+            </div>
+
+            {{-- order modal --}}
+            <div id="order-modal-{{ $order->id }}" class="hidden purchase-order-modal smaller-than-572:px-4">
+                <div class="order-card-{{$order->status}} min-w-[34rem] smaller-than-572:min-w-full">
+                    <div class="order-card-header">
+                        <span>PO {{ $order->po_number }}</span>
+                        <x-order.status :status="$order->status" />
+                    </div>
+                    <div class="order-card-body">
+                        @foreach ($order->submission->parts as $part)
+                            <div class="order-card-body-item w-full justify-between">
+                                <span>{{ $part->name }}</span>
+                                <span>{{ $part->quantity }}</span>
+                            </div>
+                        @endforeach
+                    </div>
+                    <div class="order-card-footer hover:text-sky-600">
+                        <div>
+                            <span>Order parts</span>
+                            <span aria-hidden="true">&rarr;</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         @endforeach

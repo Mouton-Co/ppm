@@ -8,8 +8,7 @@
 
 .order-card {
     @apply bg-dark-field rounded-lg shadow-sm ring-1 text-white cursor-pointer
-    divide-y-2 divide-dark-field-border flex flex-col text-sm hover:ring-sky-700
-    hover:opacity-90;
+    divide-y-2 divide-dark-field-border flex flex-col text-sm ;
 
     &-processing {
         @apply order-card ring-dark-field-border;
@@ -34,4 +33,8 @@
             @apply py-3 w-full h-full;
         }
     }
+}
+
+.order-card-hover {
+    @apply hover:ring-sky-700 hover:opacity-90
 }
