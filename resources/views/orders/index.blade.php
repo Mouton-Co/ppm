@@ -133,10 +133,10 @@
                         @endforeach
                     </div>
                     <div class="order-card-footer hover:text-sky-600">
-                        <div>
-                            <span>Order parts</span>
+                        <a href="{{ route('email.purchase-order.render', $order->id) }}">
+                            <span>{{ __('Prepare email') }}</span>
                             <span aria-hidden="true">&rarr;</span>
-                        </div>
+                        </a>
                     </div>
                 </div>
             </div>

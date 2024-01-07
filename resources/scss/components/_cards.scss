@@ -29,7 +29,7 @@
     }
     .order-card-footer {
         @apply flex px-5 items-center justify-between rounded-b-lg;
-        div {
+        div, a {
             @apply py-3 w-full h-full;
         }
     }
