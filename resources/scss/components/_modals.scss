@@ -1,0 +1,7 @@
+#modal-curtain {
+    @apply fixed inset-0 bg-gray-900/90 w-full h-full z-40;
+}
+
+.purchase-order-modal {
+    @apply z-50 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2;
+}

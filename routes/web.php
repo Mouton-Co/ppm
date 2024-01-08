@@ -17,10 +17,12 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth')->group(function () {
     Route::get('/', [DashboardController::class, 'dashboard'])->name('dashboard');
 
-    include_once 'submissions.php';
-    include_once 'parts.php';
-    include_once 'users.php';
-    include_once 'files.php';
+    include 'submissions.php';
+    include 'parts.php';
+    include 'users.php';
+    include 'files.php';
+    include 'orders.php';
+    include 'emails.php';
 });
 
-include_once __DIR__ . '/auth.php';
+include __DIR__ . '/auth.php';

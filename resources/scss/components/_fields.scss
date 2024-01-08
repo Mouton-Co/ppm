@@ -55,3 +55,82 @@ hr {
         }
     }
 }
+
+.tox-tinymce {
+    @apply w-full;
+    border: 1px solid #3d4652 !important;
+    .tox-editor-container {
+        .tox-editor-header {
+            background: #2a3441 !important;
+            .tox-toolbar__primary {
+                background: #2a3441 !important;
+                .tox-toolbar__group {
+                    button {
+                        span {
+                            svg {
+                                fill: white !important;
+                            }
+                        }
+                        &:hover {
+                            background: #3e4c59 !important;
+                        }
+                    }
+                    .tox-tbtn--enabled {
+                        background: #3e4c59 !important;
+                    }
+                    .tox-tbtn--select {
+                        background: #2a3441 !important;
+                        border: 1px solid #3d4652 !important;
+                        span {
+                            color: white !important;
+                        }
+                        .tox-tbtn__select-chevron {
+                            svg {
+                                fill: white !important;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .tox-edit-area {
+            iframe {
+                background: #2a3441 !important;
+                border-top: 1px solid #3d4652 !important;
+                color: white;
+            }
+        }
+        .tox-statusbar {
+            background: #2a3441 !important;
+            border-top: 1px solid #3d4652 !important;
+            .tox-statusbar__path-item {
+                color: white !important;
+            }
+            .tox-statusbar__right-container {
+                .tox-statusbar__branding {
+                    a {
+                        svg {
+                            fill: white !important;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+.tox {
+    .tox-menu {
+        background: #2a3441 !important;
+        .tox-collection__item {
+            color: white !important;
+            &--enabled, &--active, &:hover {
+                color: #2a3441 !important;
+                .tox-collection__item-label {
+                    p, h1, h2, h3, h4, h5, h6, pre {
+                        color: #2a3441 !important;
+                    }
+                }
+            }
+        }
+    }
+}

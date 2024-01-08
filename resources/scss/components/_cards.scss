@@ -5,3 +5,36 @@
     @apply bg-dark-field border border-solid border-dark-field-border shadow-md p-6
     rounded-md md:rounded-xl;
 }
+
+.order-card {
+    @apply bg-dark-field rounded-lg shadow-sm ring-1 text-white cursor-pointer
+    divide-y-2 divide-dark-field-border flex flex-col text-sm ;
+
+    &-processing {
+        @apply order-card ring-dark-field-border;
+    }
+
+    &-ordered {
+        @apply order-card ring-green-500;
+    }
+
+    .order-card-header {
+        @apply flex items-center justify-between px-5 py-3;
+    }
+    .order-card-body {
+        @apply px-5 py-3 flex flex-col;
+        .order-card-body-item {
+            @apply flex items-center py-1 gap-3 text-gray-300 truncate;
+        }
+    }
+    .order-card-footer {
+        @apply flex px-5 items-center justify-between rounded-b-lg;
+        div, a {
+            @apply py-3 w-full h-full;
+        }
+    }
+}
+
+.order-card-hover {
+    @apply hover:ring-sky-700 hover:opacity-90
+}

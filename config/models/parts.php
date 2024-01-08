@@ -29,6 +29,10 @@ return [
             'name'     => 'Name',
             'sortable' => true,
         ],
+        'process_type' => [
+            'name'     => 'Process Type',
+            'sortable' => true,
+        ],
         'quantity' => [
             'name'     => 'Quantity',
             'sortable' => true,
@@ -47,10 +51,6 @@ return [
         ],
         'used_in_weldment' => [
             'name'     => 'Used In Weldment',
-            'sortable' => true,
-        ],
-        'process_type' => [
-            'name'     => 'Process Type',
             'sortable' => true,
         ],
         'submission->submission_code' => [
