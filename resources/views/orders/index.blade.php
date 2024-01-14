@@ -119,13 +119,14 @@
 
             {{-- order modal --}}
             <div id="order-modal-{{ $order->id }}" class="hidden purchase-order-modal smaller-than-572:px-4">
-                <div class="order-card-{{$order->status}} min-w-[34rem] smaller-than-572:min-w-full">
+                <div class="order-card-{{$order->status}} min-w-[34rem] smaller-than-572:min-w-full
+                max-h-[700px] overflow-y-scroll">
                     <div class="order-card-header">
                         <span>PO {{ $order->po_number }}</span>
                         <x-order.status :status="$order->status" />
                     </div>
                     <div class="order-card-body">
-                        @foreach ($order->submission->parts as $part)
+                        @foreach ($order->parts()->get() as $part)
                             <div class="order-card-body-item w-full justify-between">
                                 <span>{{ $part->name }}</span>
                                 <span>{{ $part->quantity }}</span>
