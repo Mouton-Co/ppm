@@ -39,4 +39,12 @@ class Order extends Model
     {
         return $this->belongsTo(Submission::class);
     }
+
+    /**
+     * Get the parts in the order
+     */
+    public function parts()
+    {
+        return Part::where('po_number', $this->po_number);
+    }
 }
