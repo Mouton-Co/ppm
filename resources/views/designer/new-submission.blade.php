@@ -54,8 +54,8 @@
                 </form>
             </div>
 
-            <div class="w-full">
-                <label class="label-dark !flex gap-3">
+            <div class="w-full flex flex-col items-end">
+                <label class="w-full label-dark !flex gap-3">
                     {{ __('Feedback') }}
                     <svg class="h-5 cursor-pointer hover:text-gray-400" viewBox="0 0 24 24"
                     fill="none" xmlns="http://www.w3.org/2000/svg" id="refresh-feedback">
@@ -71,37 +71,35 @@
                         </g>
                     </svg>
                 </label>
-                <div id="submission-feedback" class="field-card min-h-[155px]">
+                <div id="submission-feedback" class="w-full field-card min-h-[155px] mb-3">
                     <hr class='my-2'>
                     <h3 class='flex items-center gap-2 h-[58px]'>
                         {{ __('Waiting on Excel sheet') }}
                     </h3>
                 </div>
-            </div>
-        </div>
-
-        <div class="pb-12 mt-10 flex justify-end mx-auto">
-            <button type="button" id="submit-button" disabled class="btn-disabled gap-2 max-w-none md:max-w-fit !px-10">
-                Submit
-                <svg class="hidden w-5 h-auto" id="dots" width="132px" height="58px" viewBox="0 0 132 58"
-                    version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                    xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
-                    <title>dots</title>
-                    <desc>Created with Sketch.</desc>
-                    <defs></defs>
-                    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"
-                        sketch:type="MSPage">
-                        <g id="dots" sketch:type="MSArtboardGroup" fill="#A3A3A3">
-                            <circle id="dot1" sketch:type="MSShapeGroup" cx="25" cy="30" r="13">
-                            </circle>
-                            <circle id="dot2" sketch:type="MSShapeGroup" cx="65" cy="30" r="13">
-                            </circle>
-                            <circle id="dot3" sketch:type="MSShapeGroup" cx="105" cy="30" r="13">
-                            </circle>
+                <button type="button" id="submit-button" disabled
+                class="btn-disabled gap-2 max-w-none md:max-w-fit !px-10">
+                    {{ __('Submit') }}
+                    <svg class="hidden w-5 h-auto" id="dots" width="132px" height="58px" viewBox="0 0 132 58"
+                        version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                        xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+                        <title>dots</title>
+                        <desc>Created with Sketch.</desc>
+                        <defs></defs>
+                        <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"
+                            sketch:type="MSPage">
+                            <g id="dots" sketch:type="MSArtboardGroup" fill="#A3A3A3">
+                                <circle id="dot1" sketch:type="MSShapeGroup" cx="25" cy="30" r="13">
+                                </circle>
+                                <circle id="dot2" sketch:type="MSShapeGroup" cx="65" cy="30" r="13">
+                                </circle>
+                                <circle id="dot3" sketch:type="MSShapeGroup" cx="105" cy="30" r="13">
+                                </circle>
+                            </g>
                         </g>
-                    </g>
-                </svg>
-            </button>
+                    </svg>
+                </button>
+            </div>
         </div>
     </div>
 @endsection

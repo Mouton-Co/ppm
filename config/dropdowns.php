@@ -2,10 +2,10 @@
 
 return [
     'submission_types' => [
-        'replacement'        => 'Replacement',
-        'new_bom'            => 'New BOM',
-        'correction'         => 'Correction',
         'additional_project' => 'Additional Project',
+        'correction'         => 'Correction',
+        'new_bom'            => 'New BOM',
+        'replacement'        => 'Replacement',
     ],
     'unit_numbers' => [
         '00' => 'Common Parts',

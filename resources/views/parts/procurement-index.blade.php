@@ -5,30 +5,21 @@
     {{-- title and search --}}
     <div class="flex justify-between mb-3">
         <h2>{{ __('Procurement') }}</h2>
-        <form action="{{ route('parts.procurement.index') }}" method="GET" class="relative">
-            <input type="text" name="search" placeholder="Search..." value="{{ request()->query('search') ?? '' }}"
-                class="field-dark min-w-[300px]">
-            <input type="hidden" name="order_by" value="{{ request()->query('order_by') ?? 'created_at' }}">
-            <input type="hidden" name="order_direction" value="{{ request()->query('order_direction') ?? 'asc' }}">
-            <input type="hidden" name="page" value="{{ request()->query('page') ?? 1 }}">
-            <button type="submit" class="text-light-gray absolute right-[4px] top-[4px]">
-                <x-icon.search />
-            </button>
-        </form>
     </div>
 
     {{-- button row --}}
-    <div class="flex gap-3">
+    <hr>
+    <div class="flex gap-3 my-2 overflow-x-scroll">
         <form action="{{ route('parts.generate-po-numbers') }}" method="post">
             @csrf
-            <button type="submit" class="btn-sky">
-                {{ __('Generate PO') }}
+            <button type="submit" class="btn-sky min-w-fit text-nowrap">
+            {{ __('Generate PO') }}
             </button>
         </form>
 
         <form action="{{ route('parts.autofill-suppliers') }}" method="post" class="flex gap-3 items-center">
             @csrf
-            <button type="submit" class="btn-sky">
+            <button type="submit" class="btn-sky min-w-fit max-w-fit text-nowrap">
                 {{ __('Autofill suppliers') }}
             </button>
 
@@ -41,8 +32,8 @@
             @endphp
 
             <label for="lc_supplier" class="min-w-fit text-white">Lasercut Supplier</label>
-            <select name="lc_supplier" class="field bg-transparent border-none
-            !ring-0 !w-[195px] focus:ring-0 focus:outline-none cursor-pointer
+            <select name="lc_supplier" class="field-dark bg-transparent border-none
+            !w-[195px] focus:outline-none cursor-pointer
             editable-cell-dropdown">
                 @foreach ($options as $optionKey => $optionValue)
                     <option value="{{ $optionKey }}">
@@ -51,8 +42,8 @@
                 @endforeach
             </select>
             <label for="part_supplier" class="min-w-fit text-white">Part Supplier</label>
-            <select name="part_supplier" class="field bg-transparent border-none
-            !ring-0 !w-[195px] focus:ring-0 focus:outline-none cursor-pointer
+            <select name="part_supplier" class="field-dark bg-transparent border-none
+            !w-[195px] focus:outline-none cursor-pointer
             editable-cell-dropdown">
                 @foreach ($options as $optionKey => $optionValue)
                     <option value="{{ $optionKey }}">
@@ -62,6 +53,88 @@
             </select>
         </form>
     </div>
+    {{-- filters --}}
+    <hr>
+    <form action="{{ route('parts.procurement.index') }}" method="get">
+
+        <div class="grid grid-cols-2 gap-2 my-2 items-center justify-start
+        smaller-than-1090:grid-cols-1">
+        
+            {{-- status --}}
+            <div class="flex items-center justify-start gap-2 smaller-than-711:flex-col smaller-than-711:items-start">
+                @php
+                    $options = config('models.parts.columns.status.format');
+                    $options['-'] = 'All';
+                    ksort($options);
+                @endphp
+                <label for="status" class="min-w-[95px] text-white">{{ __('Status') }}</label>
+                <select name="status" class="field-dark bg-transparent border-none focus:outline-none cursor-pointer">
+                    @foreach ($options as $optionKey => $optionValue)
+                        <option value="{{ $optionKey }}"
+                        @if (
+                            !empty(request()->query('status')) &&
+                            request()->query('status') == $optionKey
+                        ) selected @endif>
+                            {{ $optionValue }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+        
+            {{-- supplier --}}
+            <div class="flex items-center justify-start gap-2 smaller-than-711:flex-col smaller-than-711:items-start">
+                @php
+                    $options = App\Models\Supplier::all()->pluck(
+                        'name',
+                        'id'
+                    )->toArray();
+                    $options['-'] = 'All';
+                    ksort($options);
+                @endphp
+                <label for="supplier_id" class="min-w-[95px] text-white">{{ __('Supplier') }}</label>
+                <select name="supplier_id" class="field-dark bg-transparent border-none focus:outline-none
+                cursor-pointer">
+                    @foreach ($options as $optionKey => $optionValue)
+                        <option value="{{ $optionKey }}"
+                        @if (
+                            !empty(request()->query('supplier_id')) &&
+                            request()->query('supplier_id') == $optionKey
+                        ) selected @endif>
+                            {{ $optionValue }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            {{-- submission --}}
+            <div class="flex items-center justify-start gap-2 smaller-than-711:flex-col smaller-than-711:items-start">
+                <label for="submission" class="min-w-[95px] text-white">{{ __('Submission') }}</label>
+                <input type="text" name="submission" placeholder="Submission..."
+                value="{{ request()->query('submission') ?? '' }}" class="field-dark">
+            </div>
+
+            {{-- search --}}
+            <div class="flex items-center justify-start gap-2 smaller-than-711:flex-col smaller-than-711:items-start">
+                <label for="search" class="min-w-[95px] text-white">{{ __('Search') }}</label>
+                <input type="text" name="search" placeholder="Search..." value="{{ request()->query('search') ?? '' }}"
+                    class="field-dark">
+            </div>
+            
+            {{-- buttons --}}
+            <div class="smaller-than-1090:hidden"></div>
+            <div class="flex items-center justify-end gap-3">
+                <input type="hidden" name="page" value="{{ request()->query('page') ?? 1 }}">
+                <button type="submit" class="btn-sky max-w-fit">
+                    {{ __('Filter') }}
+                </button>
+                <a href="{{ route('parts.procurement.index') }}" class="btn-sky-light max-w-fit">
+                    {{ __('Clear Filters') }}
+                </a>
+            </div>
+        </div>
+
+    </form>
+    <hr class="mb-3">
 
     {{-- index table --}}
     <div class="field-card mt-4 overflow-auto no-scrollbar">
@@ -72,8 +145,10 @@
                     @foreach (config('models.parts.columns') as $key => $field)
                         <th>
                             <span class="flex justify-between">
-                                <span class="flex items-center gap-2">
-                                    {{ $field['name'] }}
+                                <div class="flex items-center gap-2">
+                                    <span class="text-nowrap">
+                                        {{ $field['name'] }}
+                                    </span>
                                     @if ($field['sortable'])
                                         <form action="{{ route('parts.procurement.index') }}" method="GET">
                                             <input type="hidden" name="search"
@@ -81,10 +156,10 @@
                                             <input type="hidden" name="order_by" value="{{ $key }}">
                                             <input type="hidden" name="page"
                                                 value="{{ request()->query('page') ?? 1 }}">
-                                            <input type="hidden" name="order_direction"
+                                            <input type="hidden" name="order"
                                                 value="{{ !empty(request()->query('order_by')) &&
                                                 request()->query('order_by') == $key &&
-                                                request()->query('order_direction') == 'asc'
+                                                request()->query('order') == 'asc'
                                                     ? 'desc'
                                                     : 'asc' }}">
                                             <button type="submit">
@@ -92,13 +167,13 @@
                                                     class="cursor-pointer h-[10px]
                                                     {{ !empty(request()->query('order_by')) &&
                                                     request()->query('order_by') == $key &&
-                                                    request()->query('order_direction') == 'asc'
+                                                    request()->query('order') == 'asc'
                                                         ? 'rotate-180'
                                                         : '' }}" />
                                             </button>
                                         </form>
                                     @endif
-                                </span>
+                                </div>
                             </span>
                         </th>
                     @endforeach
@@ -215,6 +290,6 @@
     {{ $parts->appends([
         'search' => request()->query('search') ?? '',
         'order_by' => request()->query('order_by') ?? 'name',
-        'order_direction' => request()->query('order_direction') ?? 'asc',
+        'order' => request()->query('order') ?? 'asc',
     ])->links() }}
 @endsection

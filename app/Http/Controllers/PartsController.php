@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 
 class PartsController extends Controller
 {
+    public $request;
 
     /**
      * Store parts for the given submission
@@ -27,7 +28,7 @@ class PartsController extends Controller
         $matrix            = $uploadFilesHelper->cleanMatrix($matrix);
 
         if (!empty($matrix) && !empty($matrix['Item Number'])) {
-            for ($i=0; $i<count($matrix['Item Number'])-1; $i++) {
+            for ($i = 0; $i < count($matrix['Item Number']) - 1; $i++) {
                 $part                            = new Part();
                 $part->name                      = $matrix['File Name'][$i];
                 $part->quantity                  = $matrix['Quantity'][$i];
@@ -52,38 +53,67 @@ class PartsController extends Controller
      */
     public function index(IndexRequest $request)
     {
-        $parts = Part::select(['parts.*', 'submissions.submission_code'])
-            ->join('submissions', 'submissions.id', '=', 'parts.submission_id');
+        // all parts
+        $this->request = $request;
+        $parts = Part::with(['submission', 'supplier']);
 
-        if (!empty($request->get('order_by')) && $request->get('order_by') == 'submission->submission_code') {
-            $parts = $parts->orderBy(
-                'submissions.submission_code',
-                $request->get('order_direction') ?? 'asc'
-            );
-        } else {
-            $parts = $parts->orderBy(
-                $request->get('order_by') ?? 'parts.created_at',
-                $request->get('order_direction') ?? 'asc'
+        // order by
+        if (!empty($request->get('order_by'))) {
+            if ($request->get('order_by') == 'submission->submission_code') {
+                $parts = $parts->orderBy(
+                    Submission::select('submission_code')
+                        ->whereColumn('submission_id', 'submissions.id')
+                        ->orderBy('submission_code', $request->get('order') ?? 'asc')
+                        ->limit(1),
+                    $request->get('order') ?? 'asc'
+                );
+            } elseif ($request->get('order_by') == 'supplier->name') {
+                $parts = $parts->orderBy(
+                    Supplier::select('name')
+                        ->whereColumn('supplier_id', 'suppliers.id')
+                        ->orderBy('name', $request->get('order') ?? 'asc')
+                        ->limit(1),
+                    $request->get('order') ?? 'asc'
+                );
+            } else {
+                $parts = $parts->orderBy($request->get('order_by'), $request->get('order') ?? 'asc');
+            }
+        }
+
+        // status
+        if (!empty($request->get('status')) && $request->get('status') != '-') {
+            $parts = $parts->where('status', $request->get('status'));
+        }
+
+        // supplier
+        if (!empty($request->get('supplier_id')) && $request->get('supplier_id') != '-') {
+            $parts = $parts->where('supplier_id', $request->get('supplier_id'));
+        }
+
+        // submission
+        if (!empty($request->get('submission'))) {
+            $parts = $parts->where(
+                Submission::select('submission_code')
+                    ->whereColumn('submission_id', 'submissions.id')
+                    ->where('submission_code', 'like', '%' . $request->get('submission') . '%')
+                    ->limit(1),
+                'like',
+                '%' . $request->get('submission') . '%'
             );
         }
 
+        // search
         if (!empty($request->get('search'))) {
-            $parts = $parts->where('parts.name', 'like', '%' . $request->get('search') . '%')
-                ->orWhere('parts.quantity', 'like', '%' . $request->get('search') . '%')
-                ->orWhere('parts.material', 'like', '%' . $request->get('search') . '%')
-                ->orWhere('parts.material_thickness', 'like', '%' . $request->get('search') . '%')
-                ->orWhere('parts.finish', 'like', '%' . $request->get('search') . '%')
-                ->orWhere('parts.used_in_weldment', 'like', '%' . $request->get('search') . '%')
-                ->orWhere('parts.process_type', 'like', '%' . $request->get('search') . '%')
-                ->orWhere('parts.manufactured_or_purchased', 'like', '%' . $request->get('search') . '%')
-                ->orWhere('parts.po_number', 'like', '%' . $request->get('search') . '%')
-                ->orWhere('parts.part_ordered_at', 'like', '%' . $request->get('search') . '%')
-                ->orWhere('parts.raw_part_received_at', 'like', '%' . $request->get('search') . '%')
-                ->orWhere('parts.treated_part_received_at', 'like', '%' . $request->get('search') . '%')
-                ->orWhere('parts.status', 'like', '%' . $request->get('search') . '%')
-                ->orWhere('parts.qc_failed_at', 'like', '%' . $request->get('search') . '%')
-                ->orWhere('parts.qc_failed_reason', 'like', '%' . $request->get('search') . '%')
-                ->orWhere('submissions.submission_code', 'like', '%' . $request->get('search') . '%');
+            $parts = $parts->where(function ($query) {
+                $query->where('parts.po_number', 'like', '%' . $this->request->get('search') . '%')
+                    ->orWhere('parts.name', 'like', '%' . $this->request->get('search') . '%')
+                    ->orWhere('parts.process_type', 'like', '%' . $this->request->get('search') . '%')
+                    ->orWhere('parts.quantity', 'like', '%' . $this->request->get('search') . '%')
+                    ->orWhere('parts.material', 'like', '%' . $this->request->get('search') . '%')
+                    ->orWhere('parts.material_thickness', 'like', '%' . $this->request->get('search') . '%')
+                    ->orWhere('parts.finish', 'like', '%' . $this->request->get('search') . '%')
+                    ->orWhere('parts.used_in_weldment', 'like', '%' . $this->request->get('search') . '%');
+            });
         }
 
         return view('parts.procurement-index')->with([
@@ -96,54 +126,81 @@ class PartsController extends Controller
      */
     public function warehouseIndex(IndexRequest $request)
     {
-        $parts = Part::select(['parts.*', 'submissions.submission_code'])
-            ->join('submissions', 'submissions.id', '=', 'parts.submission_id');
+        // all parts
+        $this->request = $request;
+        $parts = Part::with(['submission', 'supplier']);
 
-        if (!empty($request->get('order_by')) && $request->get('order_by') == 'submission->submission_code') {
-            $parts = $parts->orderBy(
-                'submissions.submission_code',
-                $request->get('order_direction') ?? 'asc'
-            );
-        } else {
-            $parts = $parts->orderBy(
-                $request->get('order_by') ?? 'parts.created_at',
-                $request->get('order_direction') ?? 'asc'
+        // order by
+        if (!empty($request->get('order_by'))) {
+            if ($request->get('order_by') == 'submission->submission_code') {
+                $parts = $parts->orderBy(
+                    Submission::select('submission_code')
+                        ->whereColumn('submission_id', 'submissions.id')
+                        ->orderBy('submission_code', $request->get('order') ?? 'asc')
+                        ->limit(1),
+                    $request->get('order') ?? 'asc'
+                );
+            } elseif ($request->get('order_by') == 'supplier->name') {
+                $parts = $parts->orderBy(
+                    Supplier::select('name')
+                        ->whereColumn('supplier_id', 'suppliers.id')
+                        ->orderBy('name', $request->get('order') ?? 'asc')
+                        ->limit(1),
+                    $request->get('order') ?? 'asc'
+                );
+            } else {
+                $parts = $parts->orderBy($request->get('order_by'), $request->get('order') ?? 'asc');
+            }
+        }
+
+        // status
+        if (!empty($request->get('status')) && $request->get('status') != '-') {
+            $parts = $parts->where('status', $request->get('status'));
+        }
+
+        // supplier
+        if (!empty($request->get('supplier_id')) && $request->get('supplier_id') != '-') {
+            $parts = $parts->where('supplier_id', $request->get('supplier_id'));
+        }
+
+        // submission
+        if (!empty($request->get('submission'))) {
+            $parts = $parts->where(
+                Submission::select('submission_code')
+                    ->whereColumn('submission_id', 'submissions.id')
+                    ->where('submission_code', 'like', '%' . $request->get('submission') . '%')
+                    ->limit(1),
+                'like',
+                '%' . $request->get('submission') . '%'
             );
         }
 
+        // search
         if (!empty($request->get('search'))) {
-            $parts = $parts->where('parts.name', 'like', '%' . $request->get('search') . '%')
-                ->orWhere('parts.quantity', 'like', '%' . $request->get('search') . '%')
-                ->orWhere('parts.material', 'like', '%' . $request->get('search') . '%')
-                ->orWhere('parts.material_thickness', 'like', '%' . $request->get('search') . '%')
-                ->orWhere('parts.finish', 'like', '%' . $request->get('search') . '%')
-                ->orWhere('parts.used_in_weldment', 'like', '%' . $request->get('search') . '%')
-                ->orWhere('parts.process_type', 'like', '%' . $request->get('search') . '%')
-                ->orWhere('parts.manufactured_or_purchased', 'like', '%' . $request->get('search') . '%')
-                ->orWhere('parts.po_number', 'like', '%' . $request->get('search') . '%')
-                ->orWhere('parts.part_ordered_at', 'like', '%' . $request->get('search') . '%')
-                ->orWhere('parts.raw_part_received_at', 'like', '%' . $request->get('search') . '%')
-                ->orWhere('parts.treated_part_received_at', 'like', '%' . $request->get('search') . '%')
-                ->orWhere('parts.status', 'like', '%' . $request->get('search') . '%')
-                ->orWhere('parts.qc_failed_at', 'like', '%' . $request->get('search') . '%')
-                ->orWhere('parts.qc_failed_reason', 'like', '%' . $request->get('search') . '%')
-                ->orWhere('submissions.submission_code', 'like', '%' . $request->get('search') . '%');
+            $parts = $parts->where(function ($query) {
+                $query->where('parts.po_number', 'like', '%' . $this->request->get('search') . '%')
+                    ->orWhere('parts.name', 'like', '%' . $this->request->get('search') . '%')
+                    ->orWhere('parts.process_type', 'like', '%' . $this->request->get('search') . '%')
+                    ->orWhere('parts.quantity', 'like', '%' . $this->request->get('search') . '%')
+                    ->orWhere('parts.material', 'like', '%' . $this->request->get('search') . '%')
+                    ->orWhere('parts.material_thickness', 'like', '%' . $this->request->get('search') . '%')
+                    ->orWhere('parts.finish', 'like', '%' . $this->request->get('search') . '%')
+                    ->orWhere('parts.used_in_weldment', 'like', '%' . $this->request->get('search') . '%');
+            });
         }
-
-        $parts = $parts->where('parts.part_ordered_at', '!=', null);
 
         return view('parts.warehouse-index')->with([
             'parts' => $parts->paginate(10)
         ]);
     }
-    
+
     /**
      * Update a part
      */
     public function update(UpdateRequest $request)
     {
         $part = Part::find($request->get('id'));
-        
+
         if (!empty($request->get('field'))) {
             $field = $request->get('field');
 
@@ -159,7 +216,7 @@ class PartsController extends Controller
                 'message' => 'Part updated successfully'
             ]);
         }
-        
+
         return response()->json([
             'success' => false,
             'message' => 'Part could not be updated'
