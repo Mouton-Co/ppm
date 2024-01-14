@@ -20,14 +20,14 @@
                     </li>
                     <li>
                         <a class="nav-item-{{ request()->segment(2) == 'procurement' ? 'active' : 'default' }}"
-                        href="{{ route('parts.procurement.index') }}">
+                        href="{{ route('parts.procurement.index', ['status' => 'design']) }}">
                             <x-icon.procurement class="h-6 w-6 shrink-0" />
                             {{ __('Procurement') }}
                         </a>
                     </li>
                     <li>
                         <a class="nav-item-{{ request()->segment(2) == 'warehouse' ? 'active' : 'default' }}"
-                        href="{{ route('parts.warehouse.index') }}">
+                        href="{{ route('parts.warehouse.index', ['status' => 'waiting_on_parts']) }}">
                             <x-icon.warehouse class="h-6 w-6 shrink-0" />
                             {{ __('Warehouse') }}
                         </a>

@@ -12,6 +12,8 @@ use Illuminate\Http\Request;
 
 class SubmissionController extends Controller
 {
+    public $request;
+
     /**
      * View for creating a new submission
      *
@@ -88,13 +90,48 @@ class SubmissionController extends Controller
      *
      * @return View
      */
-    public function index()
+    public function index(Request $request)
     {
-        $submissions = Submission::where('submitted', 1)->orderBy('created_at', 'desc')->get();
+        // get all submissions
+        $this->request = $request;
+        $submissions = Submission::select(['submissions.*', 'users.name as user_name'])
+            ->join('users', 'users.id', '=', 'submissions.user_id')
+            ->where('submitted', 1);
+            
+        // order by
+        if (!empty($request->get('order_by'))) {
+            if ($request->get('order_by') == 'user->name') {
+                $submissions = $submissions->orderBy('users.name', $request->get('order') ?? 'asc');
+            } else {
+                $submissions = $submissions->orderBy($request->get('order_by'), $request->get('order') ?? 'asc');
+            }
+        }
+
+        // unit number
+        if (!empty($request->get('current_unit_number')) && $request->get('current_unit_number') != '-') {
+            $submissions = $submissions->where('current_unit_number', $request->get('current_unit_number'));
+        }
+
+        // submission type
+        if (!empty($request->get('submission_type')) && $request->get('submission_type') != '-') {
+            $submissions = $submissions->where('submission_type', $request->get('submission_type'));
+        }
+
+        // search
+        if (!empty($request->get('search'))) {
+            $submissions = $submissions
+                ->where(function($query)
+                {
+                    $query->where('assembly_name', 'like', '%'.$this->request->get('search').'%')
+                    ->orWhere('submission_code', 'like', '%'.$this->request->get('search').'%')
+                    ->orWhere('users.name', 'like', '%'.$this->request->get('search').'%');
+                });
+        }
         
         return view('submissions.index')->with([
             'current'     => 'view-submissions',
-            'submissions' => $submissions,
+            'submissions' => $submissions->paginate(10),
+            'fields'      => config('models.submissions.columns'),
         ]);
     }
 
