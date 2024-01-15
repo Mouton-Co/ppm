@@ -40,25 +40,36 @@ export function cellEdit() {
                     $("#" + data['part_id'] + "-" + data['stamp_field']).html(data['stamp_value']);
                     
                     switch (data['status']) {
-                        case 'Design':
-                            $("#" + data['part_id'] + "-part_ordered input").removeAttr('disabled');
+                        // warehouse index page
+                        case 'Waiting on Raw Part':
+                            $("#" + data['part_id'] + "-raw_part_received input").removeAttr('disabled');
+                            $("#" + data['part_id'] + "-treatment_1_part_received input").attr('disabled', true);
+                            $("#" + data['part_id'] + "-treatment_2_part_received input").attr('disabled', true);
+                            $("#" + data['part_id'] + "-completed_part_received input").attr('disabled', true);
+                            break;
+                        case 'Waiting on Treatment 1':
+                            $("#" + data['part_id'] + "-raw_part_received input").removeAttr('disabled');
+                            $("#" + data['part_id'] + "-treatment_1_part_received input").removeAttr('disabled');
+                            $("#" + data['part_id'] + "-treatment_2_part_received input").attr('disabled', true);
+                            $("#" + data['part_id'] + "-completed_part_received input").attr('disabled', true);
+                            break;
+                        case 'Waiting on Treatment 2':
                             $("#" + data['part_id'] + "-raw_part_received input").attr('disabled', true);
-                            $("#" + data['part_id'] + "-treated_part_received input").attr('disabled', true);
+                            $("#" + data['part_id'] + "-treatment_1_part_received input").removeAttr('disabled');
+                            $("#" + data['part_id'] + "-treatment_2_part_received input").removeAttr('disabled');
+                            $("#" + data['part_id'] + "-completed_part_received input").attr('disabled', true);
                             break;
-                        case 'Waiting on Parts':
-                            $("#" + data['part_id'] + "-part_ordered input").removeAttr('disabled');
-                            $("#" + data['part_id'] + "-raw_part_received input").removeAttr('disabled');
-                            $("#" + data['part_id'] + "-treated_part_received input").attr('disabled', true);
-                            break;
-                        case 'Waiting on Treatment':
-                            $("#" + data['part_id'] + "-part_ordered input").attr('disabled', true);
-                            $("#" + data['part_id'] + "-raw_part_received input").removeAttr('disabled');
-                            $("#" + data['part_id'] + "-treated_part_received input").removeAttr('disabled');
+                        case 'Waiting on Final Part':
+                            $("#" + data['part_id'] + "-raw_part_received input").attr('disabled', true);
+                            $("#" + data['part_id'] + "-treatment_1_part_received input").attr('disabled', true);
+                            $("#" + data['part_id'] + "-treatment_2_part_received input").removeAttr('disabled');
+                            $("#" + data['part_id'] + "-completed_part_received input").removeAttr('disabled');
                             break;
                         case 'Part Received':
-                            $("#" + data['part_id'] + "-part_ordered input").attr('disabled', true);
                             $("#" + data['part_id'] + "-raw_part_received input").attr('disabled', true);
-                            $("#" + data['part_id'] + "-treated_part_received input").removeAttr('disabled');
+                            $("#" + data['part_id'] + "-treatment_1_part_received input").attr('disabled', true);
+                            $("#" + data['part_id'] + "-treatment_2_part_received input").attr('disabled', true);
+                            $("#" + data['part_id'] + "-completed_part_received input").removeAttr('disabled');
                             break;
                     }
                 }

@@ -81,7 +81,7 @@
                 <button type="submit" class="btn-sky max-w-fit">
                     {{ __('Filter') }}
                 </button>
-                <a href="{{ route('parts.warehouse.index', ['status' => 'waiting_on_parts']) }}"
+                <a href="{{ route('parts.warehouse.index') }}"
                 class="btn-sky-light max-w-fit">
                     {{ __('Clear Filters') }}
                 </a>
@@ -167,18 +167,12 @@
                                                 @break
                                             @case('select')
                                                 @php
-
-                                                    $options = $field['options']['model']::all()->pluck(
-                                                        $field['options']['label'],
-                                                        $field['options']['value']
-                                                    )->toArray();
-
-                                                    if (
-                                                        !empty($field['options']['nullable']) &&
-                                                        $field['options']['nullable']
-                                                    ) {
-                                                        array_unshift($options, '--Please Select--');
+                                                    $options = [];
+                                                    $options['-'] = '--Please select--';
+                                                    foreach ($field['options'] as $option) {
+                                                        $options[$option] = $option;
                                                     }
+                                                    ksort($options);
                                                 @endphp
                                                 <select name="{{ $key }}" class="field bg-transparent border-none
                                                 !ring-0 !w-[195px] focus:ring-0 focus:outline-none cursor-pointer
@@ -186,7 +180,7 @@
                                                 part-id="{{ $part->id }}">
                                                     @foreach ($options as $optionKey => $optionValue)
                                                         <option value="{{ $optionKey }}"
-                                                        @if ($optionKey === $part->supplier_id) selected @endif>
+                                                        @if ($optionKey === $part->$key) selected @endif>
                                                             {{ $optionValue }}
                                                         </option>
                                                     @endforeach
@@ -197,6 +191,22 @@
                                                     class="editable-cell-boolean"
                                                     part-id="{{ $part->id }}" {{ $value ? 'checked' : '' }}
                                                     {{ $part->checkboxEnabled($key) ? '' : 'disabled' }}>
+                                                @break
+                                            @case('life-cycle')
+                                                @foreach (config(
+                                                    'models.parts-warehouse.columns.part_lifecycle.options'
+                                                ) as $optionKey => $optionValue)
+                                                    <div class="flex justify-between gap-3"
+                                                    id="{{ $part->id . '-' . $optionKey }}">
+                                                        <label>{{ $optionValue }}</label>
+                                                        <input type="checkbox" name="{{ $optionKey }}"
+                                                            class="editable-cell-boolean"
+                                                            part-id="{{ $part->id }}"
+                                                            value="{{ $optionKey }}"
+                                                            {{ $part->$optionKey ? 'checked' : '' }}
+                                                            {{ $part->checkboxEnabled($optionKey) ? '' : 'disabled' }}>
+                                                    </div>
+                                                @endforeach
                                                 @break
                                         @endswitch
                                     @else
@@ -224,7 +234,23 @@
                                                         <x-icon.pdf class="h-6 text-gray-300 hover:text-sky-700" />
                                                     </a>
                                                 @endif
-                                                {{ $value ?? '-' }}
+                                                @if ($type == 'life-cycle-stamps')
+                                                    <div>
+                                                        @foreach (config(
+                                                        'models.parts-warehouse.columns.part_lifecycle_stamps.options'
+                                                        ) as $optionKey => $optionValue)
+                                                        <div class="flex justify-evenly gap-3">
+                                                            <span class="!p-0">{{ $optionValue }}</span>
+                                                            <span class="!p-0">{{ __('@') }}</span>
+                                                            <span class="!p-0" id="{{ $part->id . '-' . $optionKey }}">
+                                                                {{ $part->$optionKey }}
+                                                            </span>
+                                                        </div>
+                                                        @endforeach
+                                                    </div>
+                                                @else
+                                                    {{ $value ?? '-' }}
+                                                @endif
                                             </div>
                                         @endif
                                     @endif

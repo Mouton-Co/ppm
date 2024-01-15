@@ -156,6 +156,8 @@ class PartsController extends Controller
         // status
         if (!empty($request->get('status')) && $request->get('status') != '-') {
             $parts = $parts->where('status', $request->get('status'));
+        } else {
+            $parts = $parts->where('status', '!=', 'design');
         }
 
         // supplier
@@ -237,24 +239,29 @@ class PartsController extends Controller
             $part->$fieldAt = $part->$field ? now() : null;
             switch ($field) {
                 case 'part_ordered':
-                    $part->status = $part->$field ? 'waiting_on_parts' : 'design';
+                    $part->status = $part->$field ? 'waiting_on_raw_part' : 'design';
                     break;
                 case 'raw_part_received':
-                    $part->status = $part->$field ? 'waiting_on_treatment' : 'waiting_on_parts';
+                    $part->status = $part->$field ? 'waiting_on_treatment_1' : 'waiting_on_raw_part';
                     break;
-                case 'treated_part_received':
-                    $part->status = $part->$field ? 'part_received' : 'waiting_on_treatment';
+                case 'treatment_1_part_received':
+                    $part->status = $part->$field ? 'waiting_on_treatment_2' : 'waiting_on_treatment_1';
+                    break;
+                case 'treatment_2_part_received':
+                    $part->status = $part->$field ? 'waiting_on_final_part' : 'waiting_on_treatment_2';
+                    break;
+                case 'completed_part_received':
+                    $part->status = $part->$field ? 'part_received' : 'waiting_on_final_part';
                     break;
                 default:
-                    $part->status = 'design';
                     break;
             }
             $part->save();
-
+            
             return response()->json([
                 'success'     => true,
                 'part_id'     => $part->id,
-                'status'      => config('models.parts.columns.status.format')[$part->status],
+                'status'      => config('models.parts-warehouse.columns.status.format')[$part->status],
                 'stamp_field' => $fieldAt,
                 'stamp_value' => !empty($part->$fieldAt) ? $part->$fieldAt->format('Y-m-d H:i:s') : '-',
             ]);

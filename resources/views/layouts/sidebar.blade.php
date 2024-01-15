@@ -27,7 +27,7 @@
                     </li>
                     <li>
                         <a class="nav-item-{{ request()->segment(2) == 'warehouse' ? 'active' : 'default' }}"
-                        href="{{ route('parts.warehouse.index', ['status' => 'waiting_on_parts']) }}">
+                        href="{{ route('parts.warehouse.index') }}">
                             <x-icon.warehouse class="h-6 w-6 shrink-0" />
                             {{ __('Warehouse') }}
                         </a>
