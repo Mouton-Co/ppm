@@ -59,7 +59,7 @@ class PurchaseOrder extends Mailable
     {
         $attachments = [];
 
-        foreach ($this->order->submission->parts as $part) {
+        foreach ($this->order->parts()->get() as $part) {
             foreach ($part->files as $file) {
                 $attachments[] = Attachment::fromStorage($file->location)
                     ->as($file->name.'.'.$file->file_type)

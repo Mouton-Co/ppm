@@ -109,7 +109,7 @@
                 </div>
                 <div class="order-card-footer">
                     <div>
-                        Part summary <span aria-hidden="true">&rarr;</span>
+                        {{ __('Purchase order summary') }} <span aria-hidden="true">&rarr;</span>
                     </div>
                     @if ($order->status == 'ordered')
                         <x-icon.checkmark class="w-5 text-green-500" />
@@ -133,12 +133,28 @@
                             </div>
                         @endforeach
                     </div>
-                    <div class="order-card-footer hover:text-sky-600">
-                        <a href="{{ route('email.purchase-order.render', $order->id) }}">
-                            <span>{{ __('Prepare email') }}</span>
-                            <span aria-hidden="true">&rarr;</span>
-                        </a>
-                    </div>
+                    @if ($order->status == 'ordered')
+                        <div class="order-card-footer">
+                            <div class="flex gap-3">
+                                <span class="text-green-500">{{ __('Parts received') }}</span>
+                                <x-icon.checkmark class="w-5 text-green-500" />
+                            </div>
+                        </div>
+                    @elseif ($order->status == 'processing')
+                        <div class="order-card-footer hover:text-sky-600">
+                            <a href="{{ route('email.purchase-order.render', $order->id) }}">
+                                <span>{{ __('Prepare email') }}</span>
+                                <span aria-hidden="true">&rarr;</span>
+                            </a>
+                        </div>
+                    @elseif ($order->status == 'emailed')
+                        <div class="order-card-footer hover:text-sky-600">
+                            <a href="{{ route('orders.complete', $order->id) }}">
+                                <span>{{ __('Mark as ordered') }}</span>
+                                <span aria-hidden="true">&rarr;</span>
+                            </a>
+                        </div>
+                    @endif
                 </div>
             </div>
         @endforeach

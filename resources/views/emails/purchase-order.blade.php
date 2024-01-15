@@ -49,11 +49,16 @@
         <div class="flex gap-3 items-start">
             <label class="min-w-[100px] text-white">{{ __('Attachments') }}</label>
             <div>
-                @foreach ($order->submission->parts as $part)
+                @foreach ($order->parts()->get() as $part)
                     @foreach ($part->files as $file)
                         <div class="flex gap-3 items-center">
-                            <img class="h-6" src="{{ asset('images/' . $file->file_type . '.png') }}"
-                            alt="No image found">
+                            @if ($file->file_type == 'stp')
+                                <img class="h-6" src="{{ asset('images/step.png') }}"
+                                alt="No image found">
+                            @else
+                                <img class="h-6" src="{{ asset('images/' . $file->file_type . '.png') }}"
+                                alt="No image found">
+                            @endif
                             <span class="text-white">
                                 {{ $file->name . '.' . $file->file_type . ' (' . $file->size . ')'  }}
                             </span>
