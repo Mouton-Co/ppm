@@ -15,8 +15,8 @@ class OrderController extends Controller
      */
     public function index(IndexRequest $request)
     {
-        $orders = Order::
-            when($request->status, function ($query) use ($request) {
+        $orders = Order::query()
+            ->when($request->status, function ($query) use ($request) {
                 return $query->where('status', $request->status);
             })
             ->when($request->supplier, function ($query) use ($request) {
@@ -33,14 +33,6 @@ class OrderController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(StoreRequest $request)
@@ -50,22 +42,6 @@ class OrderController extends Controller
         return redirect()->route('orders.index')->withSuccess(
             'Order created.'
         );
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Order $order)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Order $order)
-    {
-        //
     }
 
     /**
@@ -82,14 +58,6 @@ class OrderController extends Controller
         return redirect()->route('orders.index')->withErrors(
             'Order not found.'
         );
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Order $order)
-    {
-        //
     }
 
     /**
@@ -134,6 +102,37 @@ class OrderController extends Controller
 
         return redirect()->route('orders.index')->withSuccess(
             'Orders generated.'
+        );
+    }
+
+    /**
+     * Mark the order as ordered.
+     */
+    public function markOrdered($id)
+    {
+        $order = Order::find($id);
+
+        if (empty($order)) {
+            return redirect()->route('orders.index')->withErrors(
+                'Order not found.'
+            );
+        }
+
+        $order->update([
+            'status' => 'ordered',
+        ]);
+
+        // mark all parts as complete
+        foreach ($order->parts()->get() as $part) {
+            $part->update([
+                'part_ordered'    => true,
+                'part_ordered_at' => now(),
+                'status'          => 'waiting_on_parts',
+            ]);
+        }
+
+        return redirect()->route('orders.index')->withSuccess(
+            'Parts marked as ordered.'
         );
     }
 

@@ -18,6 +18,10 @@
         @apply order-card ring-green-500;
     }
 
+    &-emailed {
+        @apply order-card ring-yellow-500;
+    }
+
     .order-card-header {
         @apply flex items-center justify-between px-5 py-3;
     }

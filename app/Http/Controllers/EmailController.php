@@ -21,6 +21,9 @@ class EmailController extends Controller
             ->cc(['orders@proproject.co.za', 'hanna@proproject.co.za'])
             ->send(new PurchaseOrder($order, $request->subject, $request->body));
 
+        $order->status = 'emailed';
+        $order->save();
+
         return redirect()->route('orders.index')->with('success', 'Email sent successfully!');
     }
 
@@ -46,7 +49,7 @@ class EmailController extends Controller
         $body .= "<td><strong>Qty</strong></td>";
         $body .= "<td><strong>Material</strong></td>";
         $body .= "<td><strong>Material Thickness</strong></td></tr>";
-        foreach ($order->submission->parts as $part) {
+        foreach ($order->parts()->get() as $part) {
             $body .= "<tr>";
             $body .= "<td>{$part->name}</td>";
             $body .= "<td>{$part->quantity}</td>";
