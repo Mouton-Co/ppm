@@ -136,7 +136,7 @@
                     @if ($order->status == 'ordered')
                         <div class="order-card-footer">
                             <div class="flex gap-3">
-                                <span class="text-green-500">{{ __('Parts received') }}</span>
+                                <span class="text-green-500">{{ __('Parts ordered') }}</span>
                                 <x-icon.checkmark class="w-5 text-green-500" />
                             </div>
                         </div>
