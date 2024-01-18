@@ -58,7 +58,7 @@ class SubmissionController extends Controller
         $submission = Submission::where('submission_code', $request->get('submission_code'))->first();
 
         if (empty($submission)) {
-            return redirect()->route('dashboard.designer')->with([
+            return redirect()->route('submissions.index')->with([
                 'error' => "Submission not found",
             ]);
         }

@@ -16,7 +16,7 @@ class FileController extends Controller
     {
         $files = $part->submission->files;
         foreach ($files as $fileLocation) {
-            if (str_contains($fileLocation, explode('.par', $part->name)[0])) {
+            if (str_contains($fileLocation, explode('.', $part->name)[0])) {
                 $split    = explode('.', $fileLocation);
                 $fileType = $split[count($split)-1];
                 array_pop($split);
