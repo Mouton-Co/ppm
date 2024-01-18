@@ -42,7 +42,7 @@ class EmailController extends Controller
         }
 
         $body = "<p>Good Day,</p>";
-        $body .= "<p>We would like to order the below items, using PO Number: 01-06-0001</p>";
+        $body .= "<p>We would like to order the below items, using PO Number: " . $order->po_number . "</p>";
         $body .= "<table style='border-collapse: collapse; width: 99.9915%;' border='1'><colgroup><col style='width: 25.0153%;'><col style='width: 25.0153%;'><col style='width: 25.0153%;'><col style='width: 25.0153%;'></colgroup>";
         $body .= "<tbody><tr>";
         $body .= "<td><strong>Part Name</strong></td>";
