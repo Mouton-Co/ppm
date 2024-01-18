@@ -128,9 +128,6 @@
             </thead>
             <tbody class="hover-row">
                 @foreach ($submissions as $submission)
-                @php
-                    ds($submission);
-                @endphp
                 <tr>
                     @foreach ($fields as $key => $value)
                         @if (str_contains($key, '->'))
