@@ -29,7 +29,7 @@ class UserSeeder extends Seeder
                 'role' => 'Admin',
             ],
             [
-                'email' => 'hannah@proproject.co.za',
+                'email' => 'hanna@proproject.co.za',
                 'name' => 'Hannah Caine',
                 'role' => 'Admin',
             ],
