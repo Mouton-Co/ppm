@@ -26,7 +26,7 @@
 <select {{ (!empty($edit) && $edit) && (auth()->user()->id == $user->id) ? 'disabled' : '' }}
     class="w-full {{ !empty($errors->get('role')) ? 'field-error' : 'field-dark' }} mb-5" name="role" id="role">
     @foreach ($roles as $role)
-        <option {{ $role->id == $user->role->id ? 'selected' : '' }}
+        <option {{ !empty($user->role->id) && $role->id == $user->role->id ? 'selected' : '' }}
         value="{{ $role->id }}">
             {{ $role->role }}
         </option>

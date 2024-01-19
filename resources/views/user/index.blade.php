@@ -8,7 +8,7 @@
 
     <div class="field-card mt-4 overflow-auto">
         <table class="table-dark">
-            <caption></caption>
+            <caption class="hidden">{{ __('User index table') }}</caption>
             <thead>
                 <tr>
                     <th>{{ __('Name') }}</th>
@@ -16,7 +16,7 @@
                     <th>{{ __('Role') }}</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="hover-row">
                 @foreach ($users as $user)
                 <tr>
                     <td>
