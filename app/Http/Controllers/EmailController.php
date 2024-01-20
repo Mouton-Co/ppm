@@ -24,6 +24,12 @@ class EmailController extends Controller
         $order->status = 'emailed';
         $order->save();
 
+        // Mark parts as email sent
+        foreach ($order->parts()->get() as $part) {
+            $part->status = 'email_sent';
+            $part->save();
+        }
+
         return redirect()->route('orders.index')->with('success', 'Email sent successfully!');
     }
 
