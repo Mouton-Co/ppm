@@ -60,14 +60,7 @@ return [
         'status' => [
             'name'     => 'Status',
             'sortable' => true,
-            'format'   => [
-                'design'                 => 'Design',
-                'waiting_on_raw_part'    => 'Waiting on Raw Part',
-                'waiting_on_treatment_1' => 'Waiting on Treatment 1',
-                'waiting_on_treatment_2' => 'Waiting on Treatment 2',
-                'waiting_on_final_part'  => 'Waiting on Final Part',
-                'part_received'          => 'Part Received',
-            ],
+            'format'   => \App\Models\Part::$statuses,
         ],
         'part_ordered_at' => [
             'name'     => 'Part Ordered At',

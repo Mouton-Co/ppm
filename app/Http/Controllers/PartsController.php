@@ -232,44 +232,44 @@ class PartsController extends Controller
     {
         $part = Part::find($request->get('id'));
 
-        if (!empty($request->get('field'))) {
-            $field = $request->get('field');
-            $part->$field = $request->get('value');
-            $fieldAt = $field . '_at';
-            $part->$fieldAt = $part->$field ? now() : null;
-            switch ($field) {
-                case 'part_ordered':
-                    $part->status = $part->$field ? 'waiting_on_raw_part' : 'design';
-                    break;
-                case 'raw_part_received':
-                    $part->status = $part->$field ? 'waiting_on_treatment_1' : 'waiting_on_raw_part';
-                    break;
-                case 'treatment_1_part_received':
-                    $part->status = $part->$field ? 'waiting_on_treatment_2' : 'waiting_on_treatment_1';
-                    break;
-                case 'treatment_2_part_received':
-                    $part->status = $part->$field ? 'waiting_on_final_part' : 'waiting_on_treatment_2';
-                    break;
-                case 'completed_part_received':
-                    $part->status = $part->$field ? 'part_received' : 'waiting_on_final_part';
-                    break;
-                default:
-                    break;
-            }
-            $part->save();
-            
+        if (empty($part) || empty($request->get('field'))) {
             return response()->json([
-                'success'     => true,
-                'part_id'     => $part->id,
-                'status'      => config('models.parts-warehouse.columns.status.format')[$part->status],
-                'stamp_field' => $fieldAt,
-                'stamp_value' => !empty($part->$fieldAt) ? $part->$fieldAt->format('Y-m-d H:i:s') : '-',
+                'success' => false,
+                'message' => 'Part could not be updated'
             ]);
         }
 
+        $field = $request->get('field');
+        $part->$field = $request->get('value');
+        $fieldAt = $field . '_at';
+        $part->$fieldAt = $part->$field ? now() : null;
+
+        switch ($field) {
+            case 'part_ordered':
+                $part->status = $part->$field ? 'supplier' : 'processing';
+                break;
+            case 'raw_part_received':
+                $part->status = $part->$field ? 'treatment' : 'supplier';
+                break;
+            case 'completed_part_received':
+                $part->status = $part->$field ? 'qc' : 'treatment';
+                break;
+            case 'qc_passed':
+                $part->status = $part->$field ? 'assembly' : 'qc';
+                break;
+            default:
+                break;
+        }
+
+        $part->save();
+        
         return response()->json([
-            'success' => false,
-            'message' => 'Part could not be updated'
+            'success'     => true,
+            'part_id'     => $part->id,
+            'status'      => Part::$statuses[$part->status],
+            'field'       => $field,
+            'stamp_field' => $fieldAt,
+            'stamp_value' => !empty($part->$fieldAt) ? $part->$fieldAt->format('Y-m-d H:i:s') : '',
         ]);
     }
 

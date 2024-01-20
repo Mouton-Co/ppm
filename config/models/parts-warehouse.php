@@ -39,6 +39,7 @@ return [
                 'treatment_1_part_received' => 'Treatment 1 Part Received',
                 'treatment_2_part_received' => 'Treatment 2 Part Received',
                 'completed_part_received'   => 'Completed Part Received',
+                'qc_passed'                 => 'QC Passed',
             ],
         ],
         'name' => [
@@ -94,14 +95,7 @@ return [
         'status' => [
             'name'     => 'Status',
             'sortable' => true,
-            'format'   => [
-                'design'                 => 'Design',
-                'waiting_on_raw_part'    => 'Waiting on Raw Part',
-                'waiting_on_treatment_1' => 'Waiting on Treatment 1',
-                'waiting_on_treatment_2' => 'Waiting on Treatment 2',
-                'waiting_on_final_part'  => 'Waiting on Final Part',
-                'part_received'          => 'Part Received',
-            ],
+            'format'   => \App\Models\Part::$statuses,
         ],
         'part_lifecycle_stamps' => [
             'name'     => 'Part Lifecycle Stamps',
@@ -112,30 +106,21 @@ return [
                 'treatment_1_part_received_at' => 'Treatment 1 Received At',
                 'treatment_2_part_received_at' => 'Treatment 2 Received At',
                 'completed_part_received_at'   => 'Completed Part Received At',
+                'qc_passed_at'                 => 'QC Passed At',
             ],
         ],
-        'qc_passed' => [
-            'name'     => 'QC Passed',
+        'qc_issue' => [
+            'name'     => 'QC Issue',
             'editable' => true,
             'type'     => 'boolean',
             'sortable' => false,
         ],
-        'qc_passed_at' => [
-            'name'     => 'QC Passed At',
+        'qc_issue_at' => [
+            'name'     => 'QC Issue logged at',
             'sortable' => true,
         ],
-        'qc_failed' => [
-            'name'     => 'QC Failed',
-            'editable' => true,
-            'type'     => 'boolean',
-            'sortable' => false,
-        ],
-        'qc_failed_at' => [
-            'name'     => 'QC Failed At',
-            'sortable' => true,
-        ],
-        'qc_failed_reason' => [
-            'name'     => 'QC Failed Reason',
+        'qc_issue_reason' => [
+            'name'     => 'QC Issue Reason',
             'editable' => true,
             'sortable' => true,
         ],

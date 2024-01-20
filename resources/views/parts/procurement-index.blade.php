@@ -53,6 +53,7 @@
             </select>
         </form>
     </div>
+
     {{-- filters --}}
     <hr>
     <form action="{{ route('parts.procurement.index') }}" method="get">
@@ -63,7 +64,7 @@
             {{-- status --}}
             <div class="flex items-center justify-start gap-2 smaller-than-711:flex-col smaller-than-711:items-start">
                 @php
-                    $options = config('models.parts.columns.status.format');
+                    $options = App\Models\Part::$statuses;
                     $options['-'] = 'All';
                     ksort($options);
                 @endphp

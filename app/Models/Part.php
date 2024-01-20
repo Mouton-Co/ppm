@@ -38,15 +38,25 @@ class Part extends Model
         'treatment_2_part_received_at',
         'completed_part_received',
         'completed_part_received_at',
-        'qc_passed',
-        'qc_passed_at',
-        'qc_failed',
-        'qc_failed_at',
-        'qc_failed_reason',
         'submission_id',
         'supplier_id',
+        'qc_passed',
+        'qc_passed_at',
+        'qc_issue',
+        'qc_issue_at',
+        'qc_issue_reason',
         'treatment_1',
         'treatment_2',
+    ];
+
+    public static $statuses = [
+        'design'     => 'Design',
+        'processing' => 'Processing',
+        'email_sent' => 'Email Sent',
+        'supplier'   => 'Supplier',
+        'treatment'  => 'Treatment',
+        'qc'         => 'QC',
+        'assembly'   => 'Assembly',
     ];
 
     /*
@@ -94,23 +104,23 @@ class Part extends Model
         $enabled = false;
 
         switch ($key) {
-            case 'part_ordered':
-                $enabled = $this->status == 'design' || $this->status == 'waiting_on_raw_part';
-                break;
             case 'raw_part_received':
-                $enabled = $this->status == 'waiting_on_raw_part' || $this->status == 'waiting_on_treatment_1';
+                $enabled = $this->part_ordered && !$this->treatment_1_part_received;
                 break;
             case 'treatment_1_part_received':
-                $enabled = $this->status == 'waiting_on_treatment_1' || $this->status == 'waiting_on_treatment_2';
+                $enabled = $this->raw_part_received && !$this->treatment_2_part_received;
                 break;
             case 'treatment_2_part_received':
-                $enabled = $this->status == 'waiting_on_treatment_2' || $this->status == 'waiting_on_final_part';
+                $enabled = $this->treatment_1_part_received && !$this->completed_part_received;
                 break;
             case 'completed_part_received':
-                $enabled = $this->status == 'waiting_on_final_part' || $this->status == 'part_received';
+                $enabled = $this->treatment_2_part_received && !$this->qc_passed;
                 break;
-            case 'qc_failed':
             case 'qc_passed':
+                $enabled = $this->completed_part_received;
+                break;
+            case 'part_ordered':
+            case 'qc_failed':
                 $enabled = true;
                 break;
             default:
