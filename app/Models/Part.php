@@ -120,7 +120,7 @@ class Part extends Model
                 $enabled = $this->completed_part_received;
                 break;
             case 'part_ordered':
-            case 'qc_failed':
+            case 'qc_issue':
                 $enabled = true;
                 break;
             default:

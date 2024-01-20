@@ -19,6 +19,7 @@
                 @php
                     $options = App\Models\Part::$statuses;
                     $options['-'] = 'All';
+                    $options['qc_issue'] = 'QC Issue';
                     ksort($options);
                 @endphp
                 <label for="status" class="min-w-[95px] text-white">{{ __('Status') }}</label>
@@ -211,7 +212,11 @@
                                         @endswitch
                                     @else
                                         @if (!empty($field['format']))
-                                            {{ $field['format'][$value] ?? '-' }}
+                                            @if ($key == 'status' && $part->qc_issue)
+                                                {{ 'QC Issue' }}
+                                            @else
+                                                {{ $field['format'][$value] ?? '-' }}
+                                            @endif
                                         @else
                                             <div class="flex justify-start items-center gap-2">
                                                 @if ($key == 'submission->submission_code')

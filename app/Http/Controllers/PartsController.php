@@ -81,8 +81,12 @@ class PartsController extends Controller
         }
 
         // status
-        if (!empty($request->get('status')) && $request->get('status') != '-') {
-            $parts = $parts->where('status', $request->get('status'));
+        if (!empty($request->get('status'))) {
+            if ($request->get('status') == 'qc_issue') {
+                $parts = $parts->where('qc_issue', true);
+            } elseif ($request->get('status') != '-') {
+                $parts = $parts->where('status', $request->get('status'))->where('qc_issue', false);
+            }
         }
 
         // supplier
@@ -154,10 +158,12 @@ class PartsController extends Controller
         }
 
         // status
-        if (!empty($request->get('status')) && $request->get('status') != '-') {
-            $parts = $parts->where('status', $request->get('status'));
-        } else {
-            $parts = $parts->where('status', '!=', 'design');
+        if (!empty($request->get('status'))) {
+            if ($request->get('status') == 'qc_issue') {
+                $parts = $parts->where('qc_issue', true);
+            } elseif ($request->get('status') != '-') {
+                $parts = $parts->where('status', $request->get('status'))->where('qc_issue', false);
+            }
         }
 
         // supplier

@@ -92,6 +92,11 @@ export function cellEdit() {
                                 $("#" + data['part_id'] + "-completed_part_received input").attr('disabled', true);
                             $("#" + data['part_id'] + "-qc_passed input").removeAttr('disabled');
                             break;
+                        case 'qc_issue':
+                            if (data['stamp_value'] != '') {
+                                $("#" + data['part_id'] + "-status").html('QC Issue');
+                            }
+                            break;
                     }
                 }
             });
