@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('manufactured_or_purchased')->nullable();
             $table->text('notes')->nullable();
             $table->string('po_number')->nullable();
-            $table->string('status')->default('design');
+            $table->string('status')->default('processing');
             $table->boolean('part_ordered')->default(false);
             $table->datetime('part_ordered_at')->nullable();
             $table->boolean('raw_part_received')->default(false);
@@ -38,9 +38,9 @@ return new class extends Migration
             $table->foreignId('supplier_id')->nullable();
             $table->boolean('qc_passed')->default(false);
             $table->datetime('qc_passed_at')->nullable();
-            $table->boolean('qc_failed')->default(false);
-            $table->datetime('qc_failed_at')->nullable();
-            $table->string('qc_failed_reason')->nullable();
+            $table->boolean('qc_issue')->default(false);
+            $table->datetime('qc_issue_at')->nullable();
+            $table->string('qc_issue_reason')->nullable();
             $table->string('treatment_1')->nullable();
             $table->string('treatment_2')->nullable();
             $table->timestamps();

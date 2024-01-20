@@ -26,7 +26,7 @@ class UpdateRequest extends FormRequest
             'id'         => 'required|integer|exists:parts,id',
             'po_number'  => 'string',
             'date_stamp' => 'date',
-            'status'     => 'string',
+            'status'     => 'in:'.implode(',', array_keys(\App\Models\Part::$statuses)),
         ];
     }
 }

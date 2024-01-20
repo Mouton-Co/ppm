@@ -24,9 +24,6 @@ class UpdateCheckboxRequest extends FormRequest
         $this->merge(['id' => $this->route('id')]);
         return [
             'id'                    => 'required|integer|exists:parts,id',
-            'part_ordered'          => 'boolean',
-            'raw_part_received'     => 'boolean',
-            'treated_part_received' => 'boolean',
         ];
     }
 }

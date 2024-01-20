@@ -53,6 +53,7 @@
             </select>
         </form>
     </div>
+
     {{-- filters --}}
     <hr>
     <form action="{{ route('parts.procurement.index') }}" method="get">
@@ -63,8 +64,9 @@
             {{-- status --}}
             <div class="flex items-center justify-start gap-2 smaller-than-711:flex-col smaller-than-711:items-start">
                 @php
-                    $options = config('models.parts.columns.status.format');
+                    $options = App\Models\Part::$statuses;
                     $options['-'] = 'All';
+                    $options['qc_issue'] = 'QC Issue';
                     ksort($options);
                 @endphp
                 <label for="status" class="min-w-[95px] text-white">{{ __('Status') }}</label>
@@ -246,7 +248,11 @@
                                         @endswitch
                                     @else
                                         @if (!empty($field['format']))
-                                            {{ $field['format'][$value] ?? '-' }}
+                                            @if ($key == 'status' && $part->qc_issue)
+                                                {{ 'QC Issue' }}
+                                            @else
+                                                {{ $field['format'][$value] ?? '-' }}
+                                            @endif
                                         @else
                                             <div class="flex justify-start items-center gap-2">
                                                 @if ($key == 'submission->submission_code')

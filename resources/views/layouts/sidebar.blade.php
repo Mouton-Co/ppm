@@ -15,19 +15,19 @@
                         <a class="nav-item-{{ request()->segment(1) == 'submisssions' ? 'active' : 'default' }}"
                         href="{{ route('submissions.index') }}">
                             <x-icon.submission class="h-6 w-6 shrink-0" />
-                            {{ __('Submisions') }}
+                            {{ __('Design') }}
                         </a>
                     </li>
                     <li>
                         <a class="nav-item-{{ request()->segment(2) == 'procurement' ? 'active' : 'default' }}"
-                        href="{{ route('parts.procurement.index', ['status' => 'design']) }}">
+                        href="{{ route('parts.procurement.index', ['status' => 'processing']) }}">
                             <x-icon.procurement class="h-6 w-6 shrink-0" />
                             {{ __('Procurement') }}
                         </a>
                     </li>
                     <li>
                         <a class="nav-item-{{ request()->segment(2) == 'warehouse' ? 'active' : 'default' }}"
-                        href="{{ route('parts.warehouse.index') }}">
+                        href="{{ route('parts.warehouse.index', ['status' => 'supplier']) }}">
                             <x-icon.warehouse class="h-6 w-6 shrink-0" />
                             {{ __('Warehouse') }}
                         </a>

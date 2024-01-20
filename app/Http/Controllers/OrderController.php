@@ -127,7 +127,7 @@ class OrderController extends Controller
             $part->update([
                 'part_ordered'    => true,
                 'part_ordered_at' => now(),
-                'status'          => 'waiting_on_raw_part',
+                'status'          => 'supplier',
             ]);
         }
 
