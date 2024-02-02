@@ -277,5 +277,8 @@
         'search' => request()->query('search') ?? '',
         'order_by' => request()->query('order_by') ?? 'name',
         'order' => request()->query('order') ?? 'asc',
+        'status' => request()->query('status') ?? '-',
+        'supplier_id' => request()->query('supplier_id') ?? '-',
+        'submission' => request()->query('submission') ?? '',
     ])->links() }}
 @endsection
