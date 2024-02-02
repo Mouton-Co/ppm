@@ -1,7 +1,7 @@
 @php
     $current = !empty($current) ? $current : '';
 @endphp
-<div class="flex grow flex-col gap-y-3 overflow-y-auto bg-gray-900 px-6 pb-4">
+<div class="flex grow flex-col gap-y-3 overflow-y-auto bg-gray-900 px-6 pb-4 z-50">
     <div class="flex h-16 shrink-0 items-center mt-5">
         <a href="{{ route('dashboard') }}">
             <img class="h-auto w-[6rem]" src="{{ asset('images/logo_notext.png') }}" alt="Your Company">
@@ -46,7 +46,8 @@
                     <div class="text-sm font-semibold leading-6 text-gray-400">{{ __("Administration") }}</div>
                     <ul role="list" class="-mx-2 mt-2 space-y-1">
                         <li>
-                            <a href="{{ route('user.index') }}" class="nav-item-default">
+                            <a class="nav-item-{{ request()->segment(1) == 'users' ? 'active' : 'default' }}"
+                            href="{{ route('user.index') }}">
                                 <svg class="h-6 w-6 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                                     stroke="currentColor" aria-hidden="true">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0
@@ -57,6 +58,20 @@
                                     2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
                                 </svg>
                                 <span class="truncate">{{ __('Users') }}</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="nav-item-{{ request()->segment(1) == 'suppliers' ? 'active' : 'default' }}"
+                            href="{{ route('suppliers.index') }}">
+                                <x-icon.suitcase class="h-6 w-6 shrink-0" />
+                                <span class="truncate">{{ __('Suppliers') }}</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="nav-item-{{ request()->segment(1) == 'representatives' ? 'active' : 'default' }}"
+                            href="{{ route('representatives.index') }}">
+                                <x-icon.representative class="h-6 w-6 shrink-0" />
+                                <span class="truncate">{{ __('Representatives') }}</span>
                             </a>
                         </li>
                     </ul>

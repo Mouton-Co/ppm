@@ -18,6 +18,8 @@
     @yield('custom-scripts')
 </head>
 <body class="h-full font-sans antialiased @yield('body-class')">
+    <div id="curtain" class="opacity-0 inset-0 bg-gray-900/80 z-40 curtain-closed"></div>
+
     @yield('content')
 
     @yield('end-body-scripts')

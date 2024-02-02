@@ -21,11 +21,11 @@
     @apply transition-opacity ease-linear duration-300;
 
     &-expanded {
-        @apply curtain opacity-100;
+        @apply curtain opacity-100 fixed;
     }
 
     &-closed {
-        @apply curtain opacity-0;
+        @apply curtain opacity-0 hidden;
     }
 }
 

@@ -42,7 +42,10 @@
                                 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75
                                 0 00-1.06-1.06L10 8.94 6.28 5.22z"/>
                             </svg>
-                            @include('components.delete-modal', ['user' => $user])
+                            @include('components.delete-modal', [
+                                'model' => $user,
+                                'route' => 'user',
+                            ])
                         </td>
                     @endif
                 </tr>

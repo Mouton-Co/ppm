@@ -10,7 +10,13 @@ class Representative extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'email', 'phone', 'supplier_id'];
+    protected $fillable = [
+        'name',
+        'email',
+        'phone_1',
+        'phone_2',
+        'supplier_id',
+    ];
 
     /*
     |--------------------------------------------------------------------------

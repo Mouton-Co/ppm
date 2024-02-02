@@ -12,8 +12,7 @@
     <div>
         {{-- mobile sidebar --}}
         <div id="mobile-nav" role="dialog" aria-modal="true" class="-z-10 relative">
-            <div id="curtain" class="opacity-0 fixed inset-0 bg-gray-900/80"></div>
-            <div class="fixed inset-0 flex">
+            <div class="fixed inset-0 flex z-50">
                 <div id="side-panel" class="-translate-x-full relative mr-16 flex w-full max-w-xs flex-1">
                     <div id="close-button" class="opacity-0 absolute left-full top-0 flex w-16 justify-center pt-5">
                         <button type="button" class="-m-2.5 p-2.5" id="close-menu">
