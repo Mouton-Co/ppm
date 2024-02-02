@@ -1,7 +1,7 @@
 @extends('layouts.dashboard')
 
 @section('dashboard-content')
-    <a href="{{ route('user.index') }}" class="btn btn-sky max-w-fit mb-5">
+    <a href="{{ route('suppliers.index') }}" class="btn btn-sky max-w-fit mb-5">
         <svg class="w-4 mr-2 aspect-square" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"
         fill="currentColor">
             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -12,34 +12,23 @@
                 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z"></path>
             </g>
         </svg>
-        {{ __('All users') }}
+        {{ __('All suppliers') }}
     </a>
-    @if ($user->id == auth()->user()->id)
-        <h2 class="mb-5 text-left">{{ __('Edit your details') }}</h2>
-    @else
-        <h2 class="mb-5 text-left">{{ __('Edit user') }}</h2>
-    @endif
+    <h2 class="mb-5 text-left">{{ __('Edit supplier') }}</h2>
 
     @include('components.error-message')
 
     <div class="field-card">
-        <form action="{{ route('user.update', $user->id) }}" method="POST" class="flex flex-col">
+        <form action="{{ route('suppliers.update', $supplier->id) }}" method="POST" class="flex flex-col">
+            @method('PUT')
             @csrf
         
-            @include('user.form')
+            @include('supplier.form', ['supplier' => $supplier])
 
             <div class="flex justify-center w-full gap-3 md:justify-end">
                 <input class="btn-sky max-w-none md:max-w-fit" type="submit" value="Update">
-                @if ($user->id != auth()->user()->id)
-                    <div id="delete-button-{{ $user->id }}"
-                    class="btn-sky-light w-full max-w-none md:max-w-fit">{{__('Delete')}}</div>
-                @endif
             </div>
         </form>
     </div>
     
-    @include('components.delete-modal', [
-        'model' => $user,
-        'route' => 'user',
-    ])
 @endsection

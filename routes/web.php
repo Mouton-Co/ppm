@@ -23,6 +23,7 @@ Route::middleware('auth')->group(function () {
     include 'files.php';
     include 'orders.php';
     include 'emails.php';
+    include 'suppliers.php';
 });
 
 include __DIR__ . '/auth.php';
