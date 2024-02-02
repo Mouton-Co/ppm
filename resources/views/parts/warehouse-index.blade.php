@@ -118,6 +118,12 @@
                                                 request()->query('order') == 'asc'
                                                     ? 'desc'
                                                     : 'asc' }}">
+                                            <input type="hidden" name="status"
+                                                value="{{ request()->query('status') ?? '-' }}">
+                                            <input type="hidden" name="supplier_id"
+                                                value="{{ request()->query('supplier_id') ?? '-' }}">
+                                            <input type="hidden" name="submission"
+                                                value="{{ request()->query('submission') ?? '-' }}">
                                             <button type="submit">
                                                 <x-icon.up-arrow
                                                     class="cursor-pointer h-[10px]
