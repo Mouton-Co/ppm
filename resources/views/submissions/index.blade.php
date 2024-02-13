@@ -124,40 +124,55 @@
                             </div>
                         </th>
                     @endforeach
+                    <th></th>
                 </tr>
             </thead>
             <tbody class="hover-row">
                 @foreach ($submissions as $submission)
-                <tr>
-                    @foreach ($fields as $key => $value)
-                        @if (str_contains($key, '->'))
-                            <td>
-                                <a href="{{ route('submissions.view', $submission->id) }}">
-                                    {{ App\Http\Services\ModelService::nestedValue($submission, $key) }}
-                                </a>
-                            </td>
-                        @elseif ($key == 'submission_type')
-                            <td>
-                                <a href="{{ route('submissions.view', $submission->id) }}">
-                                    {{ config('dropdowns.submission_types')[$submission->$key] }}
-                                </a>
-                            </td>
-                        @elseif ($key == 'current_unit_number')
-                            <td>
-                                <a href="{{ route('submissions.view', $submission->id) }}">
-                                    {{ $submission->$key . ' - ' .
-                                    config('dropdowns.unit_numbers')[$submission->$key] }}
-                                </a>
-                            </td>
-                        @else
-                            <td>
-                                <a href="{{ route('submissions.view', $submission->id) }}">
-                                    {{ $submission->$key }}
-                                </a>
-                            </td>
-                        @endif
-                    @endforeach
-                </tr>
+                    <tr>
+                        @foreach ($fields as $key => $value)
+                            @if (str_contains($key, '->'))
+                                <td>
+                                    <a href="{{ route('submissions.view', $submission->id) }}">
+                                        {{ App\Http\Services\ModelService::nestedValue($submission, $key) }}
+                                    </a>
+                                </td>
+                            @elseif ($key == 'submission_type')
+                                <td>
+                                    <a href="{{ route('submissions.view', $submission->id) }}">
+                                        {{ config('dropdowns.submission_types')[$submission->$key] }}
+                                    </a>
+                                </td>
+                            @elseif ($key == 'current_unit_number')
+                                <td>
+                                    <a href="{{ route('submissions.view', $submission->id) }}">
+                                        {{ $submission->$key . ' - ' .
+                                        config('dropdowns.unit_numbers')[$submission->$key] }}
+                                    </a>
+                                </td>
+                            @else
+                                <td>
+                                    <a href="{{ route('submissions.view', $submission->id) }}">
+                                        {{ $submission->$key }}
+                                    </a>
+                                </td>
+                            @endif
+                        @endforeach
+                        <td>
+                            <svg class="h-5 w-5 !cursor-pointer" viewBox="0 0 20 20"
+                            fill="currentColor" aria-hidden="true" id="delete-button-{{ $submission->id }}">
+                                <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0
+                                101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75
+                                0 00-1.06-1.06L10 8.94 6.28 5.22z"/>
+                            </svg>
+                            @include('components.delete-modal', [
+                                'model'   => $submission,
+                                'route'   => 'submissions',
+                                'method'  => 'DELETE',
+                                'message' => 'Are you sure you want to delete this submission?',
+                            ])
+                        </td>
+                    </tr>
                 @endforeach
             </tbody>
         </table>
