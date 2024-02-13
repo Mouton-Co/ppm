@@ -9,6 +9,7 @@ use App\Models\Submission;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class SubmissionController extends Controller
 {
@@ -152,6 +153,38 @@ class SubmissionController extends Controller
 
         return view('submissions.view')->with([
             'submission' => $submission,
+        ]);
+    }
+
+    /**
+     * Delete a submission
+     *
+     * @return Redirect
+     */
+    public function destroy($id)
+    {
+        $submission = Submission::find($id);
+
+        if (empty($submission)) {
+            return redirect()->route('submissions.index')->with([
+                'error' => "Submission $id not found",
+            ]);
+        }
+
+        // delete files for submission
+        Storage::disk('local')->deleteDirectory('files/' . $submission->submission_code);
+
+        // delete parts and files
+        foreach ($submission->parts as $part) {
+            $part->files()->delete();
+            $part->delete();
+        }
+
+        $code = $submission->submission_code;
+        $submission->delete();
+
+        return redirect()->route('submissions.index')->with([
+            'success' => "Submission $code deleted",
         ]);
     }
 }

@@ -18,3 +18,4 @@ Route::get('/submission', [SubmissionController::class, 'show'])->name('new.subm
 Route::post('/submission', [SubmissionController::class, 'store'])->name('store.submission');
 Route::get('/submisssions', [SubmissionController::class, 'index'])->name('submissions.index');
 Route::get('/submission/{id}', [SubmissionController::class, 'view'])->name('submissions.view');
+Route::delete('/submission/{id}', [SubmissionController::class, 'destroy'])->name('submissions.destroy');
