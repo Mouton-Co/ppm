@@ -298,6 +298,7 @@ class UploadFilesHelper
                 case 'LCM':
                 case 'LCB':
                 case 'LCBW':
+                case 'PLC':
                     // pdf and dwg
                     $files[] = $matrix['File Name'][$i].' - PDF';
                     $files[] = $matrix['File Name'][$i].' - DWG';
