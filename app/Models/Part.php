@@ -114,7 +114,11 @@ class Part extends Model
                 $enabled = $this->treatment_1_part_received && !$this->completed_part_received;
                 break;
             case 'completed_part_received':
-                $enabled = $this->treatment_2_part_received && !$this->qc_passed;
+                $enabled = (
+                    $this->treatment_2_part_received ||
+                    $this->treatment_1_part_received ||
+                    $this->raw_part_received
+                ) && !$this->qc_passed;
                 break;
             case 'qc_passed':
                 $enabled = $this->completed_part_received;
