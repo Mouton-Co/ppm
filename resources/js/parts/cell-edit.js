@@ -37,67 +37,27 @@ export function cellEdit() {
                 },
                 success: function (data) {
                     $("#" + data['part_id'] + "-status").html(data['status']);
-                    $("#" + data['part_id'] + "-" + data['stamp_field']).html(data['stamp_value']);
-                    
-                    switch (data['field']) {
-                        // warehouse index page
-                        case 'raw_part_received':
-                            $("#" + data['part_id'] + "-raw_part_received input").removeAttr('disabled');
-                            data['stamp_value'] == '' ?
-                            $("#" + data['part_id'] + "-treatment_1_part_received input").attr('disabled', true) :
-                                $("#" + data['part_id'] + "-treatment_1_part_received input").removeAttr('disabled');
-                            $("#" + data['part_id'] + "-treatment_2_part_received input").attr('disabled', true);
-                            $("#" + data['part_id'] + "-completed_part_received input").attr('disabled', true);
-                            $("#" + data['part_id'] + "-qc_passed input").attr('disabled', true);
-                            break;
-                        case 'treatment_1_part_received':
-                            data['stamp_value'] == '' ?
-                                $("#" + data['part_id'] + "-raw_part_received input").removeAttr('disabled') :
-                                $("#" + data['part_id'] + "-raw_part_received input").attr('disabled', true);
-                            $("#" + data['part_id'] + "-treatment_1_part_received input").removeAttr('disabled');
-                            data['stamp_value'] == '' ?
-                                $("#" + data['part_id'] + "-treatment_2_part_received input").attr('disabled', true) :
-                                $("#" + data['part_id'] + "-treatment_2_part_received input").removeAttr('disabled');
-                            $("#" + data['part_id'] + "-completed_part_received input").attr('disabled', true);
-                            $("#" + data['part_id'] + "-qc_passed input").attr('disabled', true);
-                            break;
-                        case 'treatment_2_part_received':
-                            $("#" + data['part_id'] + "-raw_part_received input").attr('disabled', true);
-                            data['stamp_value'] == '' ?
-                                $("#" + data['part_id'] + "-treatment_1_part_received input").removeAttr('disabled') :
-                                $("#" + data['part_id'] + "-treatment_1_part_received input").attr('disabled', true);
-                            $("#" + data['part_id'] + "-treatment_2_part_received input").removeAttr('disabled');
-                            data['stamp_value'] == '' ?
-                                $("#" + data['part_id'] + "-completed_part_received input").attr('disabled', true) :
-                                $("#" + data['part_id'] + "-completed_part_received input").removeAttr('disabled');
-                            $("#" + data['part_id'] + "-qc_passed input").attr('disabled', true);
-                            break;
-                        case 'completed_part_received':
-                            $("#" + data['part_id'] + "-raw_part_received input").attr('disabled', true);
-                            $("#" + data['part_id'] + "-treatment_1_part_received input").attr('disabled', true);
-                            data['stamp_value'] == '' ?
-                                $("#" + data['part_id'] + "-treatment_2_part_received input").removeAttr('disabled') :
-                                $("#" + data['part_id'] + "-treatment_2_part_received input").attr('disabled', true);
-                            $("#" + data['part_id'] + "-completed_part_received input").removeAttr('disabled');
-                            data['stamp_value'] == '' ?
-                                $("#" + data['part_id'] + "-qc_passed input").attr('disabled', true) :
-                                $("#" + data['part_id'] + "-qc_passed input").removeAttr('disabled');
-                            break;
-                        case 'qc_passed':
-                            $("#" + data['part_id'] + "-raw_part_received input").attr('disabled', true);
-                            $("#" + data['part_id'] + "-treatment_1_part_received input").attr('disabled', true);
-                            $("#" + data['part_id'] + "-treatment_2_part_received input").attr('disabled', true);
-                            data['stamp_value'] == '' ?
-                                $("#" + data['part_id'] + "-completed_part_received input").removeAttr('disabled') :
-                                $("#" + data['part_id'] + "-completed_part_received input").attr('disabled', true);
-                            $("#" + data['part_id'] + "-qc_passed input").removeAttr('disabled');
-                            break;
-                        case 'qc_issue':
-                            if (data['stamp_value'] != '') {
-                                $("#" + data['part_id'] + "-status").html('QC Issue');
-                            }
-                            break;
-                    }
+
+                    Object.entries(data['checkboxes']).forEach(checkbox => {
+                        const [field, checkboxValues] = checkbox;
+
+                        // set checkbox value
+                        if (checkboxValues['checked'] == 1) {
+                            $("#" + data['part_id'] + "-" + field + " input").prop('checked', true);
+                        } else {
+                            $("#" + data['part_id'] + "-" + field + " input").prop('checked', false);
+                        }
+
+                        // set checkbox disabled/enabled
+                        if (checkboxValues['enabled']) {
+                            $("#" + data['part_id'] + "-" + field + " input").removeAttr('disabled');
+                        } else {
+                            $("#" + data['part_id'] + "-" + field + " input").attr('disabled', true);
+                        }
+
+                        // set stamp value
+                        $("#" + data['part_id'] + "-" + field + "_at").html(checkboxValues['at']);
+                    });
                 }
             });
         }, 200);

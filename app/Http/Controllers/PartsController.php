@@ -11,11 +11,13 @@ use App\Http\Requests\Parts\UpdateCheckboxRequest;
 use App\Http\Requests\Parts\UpdateRequest;
 use App\Models\Part;
 use App\Models\Supplier;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class PartsController extends Controller
 {
     public $request;
+    protected $timestamp = 'Y-m-d H:i:s';
 
     /**
      * Store parts for the given submission
@@ -238,10 +240,10 @@ class PartsController extends Controller
     {
         $part = Part::find($request->get('id'));
 
-        if (empty($part) || empty($request->get('field'))) {
+        if (empty($part)) {
             return response()->json([
                 'success' => false,
-                'message' => 'Part could not be updated'
+                'message' => 'Part not found'
             ]);
         }
 
@@ -259,6 +261,13 @@ class PartsController extends Controller
                 break;
             case 'completed_part_received':
                 $part->status = $part->$field ? 'qc' : 'treatment';
+                if ($part->$field) {
+                    $part->treatment_1_part_received = 1;
+                    $part->treatment_2_part_received = 1;
+                } else {
+                    $part->treatment_1_part_received = $part->treatment_1_part_received_at ? 1 : 0;
+                    $part->treatment_2_part_received = $part->treatment_2_part_received_at ? 1 : 0;
+                }
                 break;
             case 'qc_passed':
                 $part->status = $part->$field ? 'assembly' : 'qc';
@@ -272,10 +281,53 @@ class PartsController extends Controller
         return response()->json([
             'success'     => true,
             'part_id'     => $part->id,
-            'status'      => Part::$statuses[$part->status],
-            'field'       => $field,
-            'stamp_field' => $fieldAt,
-            'stamp_value' => !empty($part->$fieldAt) ? $part->$fieldAt->format('Y-m-d H:i:s') : '',
+            'status'      => $field == 'qc_issue' && $part->$field ?
+                'QC Issue' :
+                Part::$statuses[$part->status],
+            'checkboxes' => [
+                'raw_part_received'         => [
+                    'checked' => $part->raw_part_received,
+                    'enabled' => $part->checkboxEnabled('raw_part_received'),
+                    'at' => !empty($part->raw_part_received_at) ?
+                        Carbon::parse($part->raw_part_received_at)->format('Y-m-d H:i:s') :
+                        ''
+                ],
+                'treatment_1_part_received' => [
+                    'checked' => $part->treatment_1_part_received,
+                    'enabled' => $part->checkboxEnabled('treatment_1_part_received'),
+                    'at' => !empty($part->treatment_1_part_received_at) ?
+                        Carbon::parse($part->treatment_1_part_received_at)->format('Y-m-d H:i:s') :
+                        ''
+                ],
+                'treatment_2_part_received' => [
+                    'checked' => $part->treatment_2_part_received,
+                    'enabled' => $part->checkboxEnabled('treatment_2_part_received'),
+                    'at' => !empty($part->treatment_2_part_received_at) ?
+                        Carbon::parse($part->treatment_2_part_received_at)->format('Y-m-d H:i:s') :
+                        ''
+                ],
+                'completed_part_received'   => [
+                    'checked' => $part->completed_part_received,
+                    'enabled' => $part->checkboxEnabled('completed_part_received'),
+                    'at' => !empty($part->completed_part_received_at) ?
+                        Carbon::parse($part->completed_part_received_at)->format('Y-m-d H:i:s') :
+                        ''
+                ],
+                'qc_passed'                 => [
+                    'checked' => $part->qc_passed,
+                    'enabled' => $part->checkboxEnabled('qc_passed'),
+                    'at' => !empty($part->qc_passed_at) ?
+                        Carbon::parse($part->qc_passed_at)->format('Y-m-d H:i:s') :
+                        ''
+                ],
+                'qc_issue'                  => [
+                    'checked' => $part->qc_issue,
+                    'enabled' => true,
+                    'at' => !empty($part->qc_issue_at) ?
+                        Carbon::parse($part->qc_issue_at)->format('Y-m-d H:i:s') :
+                        '-'
+                ],
+            ],
         ]);
     }
 
