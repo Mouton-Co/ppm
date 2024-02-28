@@ -26,7 +26,15 @@
         <div class="flex gap-3 items-center">
             <label class="min-w-[100px] text-white">{{ __('To') }}</label>
             <input type="email" name="to" placeholder="johndoe@gmail.com" class="field-dark max-w-full"
-            value="{{ $order->supplier->representatives()->first()->email }}">
+            value="{{ $to ?? '' }}">
+        </div>
+
+        <hr>
+
+        <div class="flex gap-3 items-center">
+            <label class="min-w-[100px] text-white">{{ __('cc') }}</label>
+            <input type="text" name="cc" class="field-dark max-w-full"
+            value="{{ $cc ?? '' }}">
         </div>
 
         <hr>
