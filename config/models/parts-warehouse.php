@@ -124,5 +124,20 @@ return [
             'editable' => true,
             'sortable' => true,
         ],
+        'comment_procurement' => [
+            'name'     => 'Procurement Comment',
+            'editable' => true,
+            'sortable' => true,
+        ],
+        'comment_warehouse' => [
+            'name'     => 'Warehouse Comment',
+            'editable' => true,
+            'sortable' => true,
+        ],
+        'comment_logistics' => [
+            'name'     => 'Logistics Comment',
+            'editable' => true,
+            'sortable' => true,
+        ],
     ]
 ];

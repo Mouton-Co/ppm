@@ -25,7 +25,7 @@ class UpdateCheckboxRequest extends FormRequest
         return [
             'id' => 'required|integer|exists:parts,id',
             'field' => 'required|string|in:raw_part_received,treatment_1_part_received,
-                treatment_2_part_received,completed_part_received,qc_passed,qc_issue',
+                treatment_2_part_received,completed_part_received,qc_passed,qc_issue,part_ordered',
             'value' => 'required|boolean',
         ];
     }

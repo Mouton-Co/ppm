@@ -47,6 +47,9 @@ class Part extends Model
         'qc_issue_reason',
         'treatment_1',
         'treatment_2',
+        'comment_procurement',
+        'comment_warehouse',
+        'comment_logistics',
     ];
 
     public static $statuses = [

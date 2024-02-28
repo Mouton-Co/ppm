@@ -97,7 +97,10 @@ class PartsController extends Controller
         }
 
         // submission
-        if (!empty($request->get('submission'))) {
+        if (
+            !empty($request->get('submission')) &&
+            $request->get('submission') != '-'
+        ) {
             $parts = $parts->where(
                 Submission::select('submission_code')
                     ->whereColumn('submission_id', 'submissions.id')
@@ -174,7 +177,10 @@ class PartsController extends Controller
         }
 
         // submission
-        if (!empty($request->get('submission'))) {
+        if (
+            !empty($request->get('submission')) &&
+            $request->get('submission') != '-'
+        ) {
             $parts = $parts->where(
                 Submission::select('submission_code')
                     ->whereColumn('submission_id', 'submissions.id')
