@@ -2,7 +2,7 @@
 
 return [
     'status' => [
-        'pending' => 'Processing',
+        'processing' => 'Processing',
         'emailed' => 'Email Sent',
         'ordered' => 'Ordered',
     ],
