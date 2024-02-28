@@ -18,7 +18,7 @@ class EmailController extends Controller
         }
         
         Mail::to($request->to)
-            ->cc(['orders@proproject.co.za', 'hanna@proproject.co.za'])
+            ->cc($request->has('cc') ? explode(',', str_replace(' ', '', $request->cc)) : [])
             ->send(new PurchaseOrder($order, $request->subject, $request->body));
 
         $order->status = 'emailed';
@@ -69,9 +69,19 @@ class EmailController extends Controller
         $body .= "<p><strong>PPM ERP System</strong></p>";
         $body .= "<pre>Pro Project Machinery (Pty) Ltd.</pre>";
 
+        $emails = array_merge(
+            $order->supplier->representatives()->pluck('email')->toArray(),
+            ['orders@proproject.co.za', 'hanna@proproject.co.za']
+        );
+
+        $to = $emails[0];
+        $cc = implode(", ", array_slice($emails, 1));
+
         return view('emails.purchase-order', [
-            'order' => $order,
-            'body'  => $body,
+            'order'  => $order,
+            'body'   => $body,
+            'to'     => $to,
+            'cc'     => $cc,
         ]);
     }
 }
