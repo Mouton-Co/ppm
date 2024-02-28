@@ -50,6 +50,8 @@ class Part extends Model
         'comment_procurement',
         'comment_warehouse',
         'comment_logistics',
+        'quantity_in_stock',
+        'quantity_ordered',
     ];
 
     public static $statuses = [
