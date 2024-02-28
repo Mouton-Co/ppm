@@ -34,8 +34,25 @@ return [
             'sortable' => true,
         ],
         'quantity' => [
-            'name'     => 'Quantity',
+            'name'     => 'Qty Needed',
+            'editable' => true,
             'sortable' => true,
+            'type'     => 'integer',
+            'min'      => 0,
+        ],
+        'quantity_in_stock' => [
+            'name'     => 'Qty In Stock',
+            'editable' => true,
+            'sortable' => true,
+            'type'     => 'integer',
+            'min'      => 0,
+        ],
+        'quantity_ordered' => [
+            'name'     => 'Qty Ordered',
+            'editable' => true,
+            'sortable' => true,
+            'type'     => 'integer',
+            'min'      => 0,
         ],
         'material' => [
             'name'     => 'Material',

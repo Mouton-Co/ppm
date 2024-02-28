@@ -251,6 +251,15 @@
                                                     part-id="{{ $part->id }}" {{ $value ? 'checked' : '' }}
                                                     {{ $part->checkboxEnabled($key) ? '' : 'disabled' }}>
                                                 @break
+                                            @case('integer')
+                                                <input type="number" name="{{ $key }}" value="{{ $value }}"
+                                                    class="w-auto h-full bg-transparent border-none
+                                                    focus:ring-0 focus:outline-none editable-cell-text"
+                                                    @if (!empty($field['min']) || $field['min'] == 0)
+                                                        min="{{ $field['min'] }}"
+                                                    @endif
+                                                    part-id="{{ $part->id }}">
+                                                @break
                                         @endswitch
                                     @else
                                         @if (!empty($field['format']))
