@@ -12,7 +12,7 @@ return [
         '01' => 'Main Frame',
         '02' => 'Unwind',
         '03' => 'Tapping Unit',
-        '04' => 'Glad Unit',
+        '04' => 'Gland Unit',
         '05' => 'Side Seal Unit',
         '06' => 'Punch Unit',
         '07' => 'Cross Seal 1',
