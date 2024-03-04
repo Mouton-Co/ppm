@@ -355,7 +355,7 @@ class PartsController extends Controller
                 '-' . $parts[0]->submission->current_unit_number . '-';
             $latestPo = Part::where('po_number', 'like', $poPrefix . '%')->orderBy('po_number', 'desc')->first();
             $number   = !empty($latestPo) ? (int)explode('-', $latestPo->po_number)[2] + 1 : 1;
-            $poNumber = $poPrefix . str_pad($number, 4, '0', STR_PAD_LEFT);
+            $poNumber = $poPrefix . str_pad($number, 3, '0', STR_PAD_LEFT);
 
             foreach ($suppliers as $parts) {
                 foreach ($parts as $part) {
@@ -365,7 +365,7 @@ class PartsController extends Controller
 
                 // increment PO number
                 $number++;
-                $poNumber = $poPrefix . str_pad($number, 4, '0', STR_PAD_LEFT);
+                $poNumber = $poPrefix . str_pad($number, 3, '0', STR_PAD_LEFT);
             }
         }
 
