@@ -331,10 +331,12 @@ class UploadFilesHelper
         foreach ($requiredFiles as $requiredFile) {
             $split = str_contains($requiredFile, '.par - ') ? '.par - ' : '.psm - ';
             list($fileName, $fileType) = explode($split, $requiredFile);
+            $fileName = str_replace(" ", "", $fileName);
             $fileType = strtolower($fileType);
             // check if above file exists
             foreach ($files as $file) {
                 $file = explode("$submissionCode/", $file)[1];
+                $file = str_replace(" ", "", $file);
                 switch ($fileType) {
                     case 'step':
                     case 'stp':
