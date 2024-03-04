@@ -7,6 +7,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\BomExcel;
 use App\Http\Helpers\UploadFilesHelper;
 use App\Http\Requests\Parts\IndexRequest;
+use App\Http\Requests\Parts\MarkAsRequest;
 use App\Http\Requests\Parts\UpdateCheckboxRequest;
 use App\Http\Requests\Parts\UpdateRequest;
 use App\Models\Part;
@@ -411,5 +412,121 @@ class PartsController extends Controller
         }
 
         return redirect()->back();
+    }
+
+    /**
+     * Mark parts as
+     */
+    public function markAs(MarkAsRequest $request)
+    {
+        $parts = Part::where('po_number', $request->get('po_number'))->get();
+
+        if ($parts->isEmpty()) {
+            return redirect()->back()->withErrors('No parts found with PO Number ' . $request->get('po_number'));
+        }
+        
+        foreach ($parts as $part) {
+            if ($request->get('mark_as') == 'raw_part_received') {
+                $part->raw_part_received = true;
+                $part->raw_part_received_at = now();
+                $part->status = 'treatment';
+
+                $part->treatment_1_part_received = false;
+                $part->treatment_2_part_received = false;
+                $part->completed_part_received = false;
+                $part->qc_passed = false;
+
+                $part->treatment_1_part_received_at = null;
+                $part->treatment_2_part_received_at = null;
+                $part->completed_part_received_at = null;
+                $part->qc_passed_at = null;
+            } elseif ($request->get('mark_as') == 'treatment_1_part_received') {
+                if (!$part->raw_part_received) {
+                    $part->raw_part_received = true;
+                    $part->raw_part_received_at = now();
+                }
+
+                $part->treatment_1_part_received = true;
+                $part->treatment_1_part_received_at = now();
+                $part->status = 'treatment';
+
+                $part->treatment_2_part_received = false;
+                $part->completed_part_received = false;
+                $part->qc_passed = false;
+
+                $part->treatment_2_part_received_at = null;
+                $part->completed_part_received_at = null;
+                $part->qc_passed_at = null;
+            } elseif ($request->get('mark_as') == 'treatment_2_part_received') {
+                if (!$part->raw_part_received) {
+                    $part->raw_part_received = true;
+                    $part->raw_part_received_at = now();
+                }
+
+                if (!$part->treatment_1_part_received) {
+                    $part->treatment_1_part_received = true;
+                    $part->treatment_1_part_received_at = now();
+                }
+
+                $part->treatment_2_part_received = true;
+                $part->treatment_2_part_received_at = now();
+                $part->status = 'treatment';
+
+                $part->completed_part_received = false;
+                $part->qc_passed = false;
+
+                $part->completed_part_received_at = null;
+                $part->qc_passed_at = null;
+            } elseif ($request->get('mark_as') == 'completed_part_received') {
+                if (!$part->raw_part_received) {
+                    $part->raw_part_received = true;
+                    $part->raw_part_received_at = now();
+                }
+
+                if (!$part->treatment_1_part_received) {
+                    $part->treatment_1_part_received = true;
+                    $part->treatment_1_part_received_at = now();
+                }
+
+                if (!$part->treatment_2_part_received) {
+                    $part->treatment_2_part_received = true;
+                    $part->treatment_2_part_received_at = now();
+                }
+
+                $part->completed_part_received = true;
+                $part->completed_part_received_at = now();
+                $part->status = 'qc';
+
+                $part->qc_passed = false;
+                $part->qc_passed_at = null;
+            } elseif ($request->get('mark_as') == 'qc_passed') {
+                if (!$part->raw_part_received) {
+                    $part->raw_part_received = true;
+                    $part->raw_part_received_at = now();
+                }
+
+                if (!$part->treatment_1_part_received) {
+                    $part->treatment_1_part_received = true;
+                    $part->treatment_1_part_received_at = now();
+                }
+
+                if (!$part->treatment_2_part_received) {
+                    $part->treatment_2_part_received = true;
+                    $part->treatment_2_part_received_at = now();
+                }
+
+                if (!$part->completed_part_received) {
+                    $part->completed_part_received = true;
+                    $part->completed_part_received_at = now();
+                }
+
+                $part->qc_passed = true;
+                $part->qc_passed_at = now();
+                $part->status = 'assembly';
+            }
+            $part->save();
+        }
+
+        return redirect()->back()->withSuccess('Parts marked as ' . Part::$markedAs[$request->get('mark_as')]);
     }
 }

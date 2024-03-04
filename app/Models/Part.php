@@ -64,6 +64,14 @@ class Part extends Model
         'assembly'   => 'Assembly',
     ];
 
+    public static $markedAs = [
+        'raw_part_received' => 'Raw Part Received',
+        'treatment_1_part_received' => 'Treatment 1 Part Received',
+        'treatment_2_part_received' => 'Treatment 2 Part Received',
+        'completed_part_received' => 'Completed Part Received',
+        'qc_passed' => 'QC Passed',
+    ];
+
     /*
     |--------------------------------------------------------------------------
     | Relationships

@@ -7,6 +7,53 @@
         <h2>{{ __('Warehouse') }}</h2>
     </div>
 
+    {{-- button row --}}
+    <hr>
+    <div class="flex flex-col gap-3 my-2 overflow-x-scroll">
+        <form action="{{ route('parts.mark-as') }}" method="post" class="flex gap-3 items-center">
+            @csrf
+
+            {{-- po number --}}
+            <div class="flex items-center justify-start gap-2">
+                <label for="po_number" class="min-w-[95px] text-white">{{ __('PO Number') }}</label>
+                <input type="text" name="po_number" placeholder="PO number..." class="field-dark min-w-[300px]">
+            </div>
+
+            @php
+            $options = App\Models\Part::$markedAs;
+            array_unshift($options, '--Please Select--');
+            @endphp
+
+            <label for="mark_as" class="min-w-fit text-white">{{ __("Mark as") }}</label>
+            <select name="mark_as" class="field-dark bg-transparent border-none
+            !w-[195px] focus:outline-none cursor-pointer
+            editable-cell-dropdown">
+                @foreach ($options as $optionKey => $optionValue)
+                    <option value="{{ $optionKey }}">
+                        {{ $optionValue }}
+                    </option>
+                @endforeach
+            </select>
+
+            <button type="submit" class="btn-sky min-w-fit max-w-fit text-nowrap">
+                {{ __('Apply') }}
+            </button>
+        </form>
+        {{-- form errors --}}
+        @if ($errors->any())
+            <div class="flex items-center gap-3">
+                <x-icon.warning class="h-6 text-red-500" />
+                <div class="text-red-500">
+                    <ul class="list-disc list-inside">
+                        @foreach ($errors->all() as $error)
+                            <li class="text-sm">{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+        @endif
+    </div>
+
     {{-- filters --}}
     <hr>
     <form action="{{ route('parts.warehouse.index') }}" method="get">
