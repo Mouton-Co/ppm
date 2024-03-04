@@ -140,16 +140,13 @@
                                 <x-icon.checkmark class="w-5 text-green-500" />
                             </div>
                         </div>
-                    @elseif ($order->status == 'processing')
-                        <div class="order-card-footer hover:text-sky-600">
-                            <a href="{{ route('email.purchase-order.render', $order->id) }}">
+                    @else
+                        <div class="order-card-footer flex justify-between items-center">
+                            <a href="{{ route('email.purchase-order.render', $order->id) }}" class="hover:text-sky-600">
                                 <span>{{ __('Prepare email') }}</span>
                                 <span aria-hidden="true">&rarr;</span>
                             </a>
-                        </div>
-                    @elseif ($order->status == 'emailed')
-                        <div class="order-card-footer hover:text-sky-600">
-                            <a href="{{ route('orders.complete', $order->id) }}">
+                            <a href="{{ route('orders.complete', $order->id) }}" class="hover:text-sky-600 text-right">
                                 <span>{{ __('Mark as ordered') }}</span>
                                 <span aria-hidden="true">&rarr;</span>
                             </a>
