@@ -2,6 +2,7 @@
 
 namespace App\Http\Helpers;
 
+use App\Models\ProcessType;
 use Illuminate\Support\Facades\Storage;
 
 class UploadFilesHelper
@@ -288,34 +289,11 @@ class UploadFilesHelper
         $files = [];
 
         for ($i = 0; $i < count($matrix['Item Number'])-1; $i++) {
-            switch ($matrix['Process Type'][$i]) {
-                case 'PM':
-                case 'LCBM':
-                    // pdf
-                    $files[] = $matrix['File Name'][$i].' - PDF';
-                    break;
-                case 'LC':
-                case 'LCM':
-                case 'LCB':
-                case 'LCBW':
-                case 'PLC':
-                    // pdf and dwg
-                    $files[] = $matrix['File Name'][$i].' - PDF';
-                    $files[] = $matrix['File Name'][$i].' - DWG';
-                    break;
-                case 'MCH':
-                case 'TLC':
-                case 'TLCM':
-                    // pdf and step
-                    $files[] = $matrix['File Name'][$i].' - PDF';
-                    $files[] = $matrix['File Name'][$i].' - STEP';
-                    break;
-                case 'LBWM':
-                    // (pdf | step) and dwg
-                    $files[] = $matrix['File Name'][$i].' - PDF/STEP';
-                    $files[] = $matrix['File Name'][$i].' - DWG';
-                    break;
-                default: break;
+            $processType = ProcessType::where('process_type', $matrix['Process Type'][$i])->first();
+            if (!empty($processType)) {
+                foreach (explode(',', $processType->required_files) as $file) {
+                    $files[] = $matrix['File Name'][$i].' - '.strtoupper($file);
+                }
             }
         }
 
@@ -347,8 +325,16 @@ class UploadFilesHelper
                         $exists = ($file == "$fileName.dwg") || ($file == "$fileName.dxf")
                             || ($file == $fileName."_R.dwg") || ($file == $fileName."_R.dxf");
                         break;
+                    case 'pdf/dwg':
+                        $exists = ($file == "$fileName.pdf") || ($file == "$fileName.dwg") ||
+                            ($file == "$fileName.dxf");
+                        break;
                     case 'pdf/step':
                         $exists = ($file == "$fileName.pdf") || ($file == "$fileName.step");
+                        break;
+                    case 'dwg/step':
+                        $exists = ($file == "$fileName.dwg") || ($file == "$fileName.dxf") ||
+                            ($file == "$fileName.step") || ($file == "$fileName.stp");
                         break;
                     default:
                         $exists = $file == "$fileName.$fileType";

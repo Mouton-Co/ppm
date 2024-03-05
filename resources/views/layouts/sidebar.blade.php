@@ -81,6 +81,13 @@
                                 <span class="truncate">{{ __('Autofill Suppliers') }}</span>
                             </a>
                         </li>
+                        <li>
+                            <a href="{{ route('process-types.index') }}"
+                            class="nav-item-{{ request()->segment(1) == 'process-types' ? 'active' : 'default' }}">
+                                <x-icon.process-type class="h-6 w-6 shrink-0" />
+                                <span class="truncate">{{ __('Process Types') }}</span>
+                            </a>
+                        </li>
                     </ul>
                 </li>
             @endif
