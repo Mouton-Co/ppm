@@ -10,6 +10,7 @@ use App\Http\Requests\Parts\IndexRequest;
 use App\Http\Requests\Parts\MarkAsRequest;
 use App\Http\Requests\Parts\UpdateCheckboxRequest;
 use App\Http\Requests\Parts\UpdateRequest;
+use App\Models\AutofillSupplier;
 use App\Models\Part;
 use App\Models\Supplier;
 use Carbon\Carbon;
@@ -378,6 +379,21 @@ class PartsController extends Controller
      */
     public function autofillSuppliers(Request $request)
     {
+        /**
+         * run through autofill suppliers table first and autofill them
+         */
+        foreach (AutofillSupplier::all() as $autofillSupplier) {
+            $parts = Part::where('supplier_id', null)
+                ->where('name', 'like', '%' . $autofillSupplier->text . '%')
+                ->where('part_ordered', false)
+                ->get();
+            
+            foreach ($parts as $part) {
+                $part->supplier_id = $autofillSupplier->supplier_id;
+                $part->save();
+            }
+        }
+
         /**
          * all parts with no supplier and that's not ordered yet
          */
