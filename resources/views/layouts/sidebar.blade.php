@@ -74,6 +74,13 @@
                                 <span class="truncate">{{ __('Representatives') }}</span>
                             </a>
                         </li>
+                        <li>
+                            <a href="{{ route('autofill-suppliers.index') }}"
+                            class="nav-item-{{ request()->segment(1) == 'autofill-suppliers' ? 'active' : 'default' }}">
+                                <x-icon.vlookup class="h-6 w-6 shrink-0" />
+                                <span class="truncate">{{ __('Autofill Suppliers') }}</span>
+                            </a>
+                        </li>
                     </ul>
                 </li>
             @endif
