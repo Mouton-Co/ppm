@@ -19,3 +19,5 @@ import { cellEdit } from "./parts/cell-edit.js";
 cellEdit();
 import { modals } from "./general/modals.js";
 modals();
+import { processTypes } from "./general/process-types.js";
+processTypes();
