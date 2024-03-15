@@ -7,6 +7,7 @@ use App\Http\Requests\Order\UpdateRequest;
 use App\Http\Requests\Order\IndexRequest;
 use App\Models\Order;
 use App\Models\Part;
+use App\Models\Submission;
 
 class OrderController extends Controller
 {
@@ -15,7 +16,7 @@ class OrderController extends Controller
      */
     public function index(IndexRequest $request)
     {
-        $orders = Order::query()
+        $orders = Order::with('submission')
             ->when($request->status, function ($query) use ($request) {
                 return $query->where('status', $request->status);
             })
@@ -24,7 +25,14 @@ class OrderController extends Controller
             })
             ->when($request->search, function ($query) use ($request) {
                 return $query->where('po_number', 'like', '%' . $request->search . '%')
-                    ->orWhere('submission_code', 'like', '%' . $request->search . '%');
+                    ->orWhere(
+                        Submission::select('submission_code')
+                            ->whereColumn('submission_id', 'submissions.id')
+                            ->where('submission_code', 'like', '%' . $request->search . '%')
+                            ->limit(1),
+                        'like',
+                        '%' . $request->search . '%'
+                    );
             })
             ->orderBy('created_at', 'desc')
             ->paginate(8);
