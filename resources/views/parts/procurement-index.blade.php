@@ -253,7 +253,7 @@
                                                 @break
                                             @case('integer')
                                                 <input type="number" name="{{ $key }}" value="{{ $value }}"
-                                                    class="w-auto h-full bg-transparent border-none
+                                                    class="max-w-[80px] h-full bg-transparent border-none
                                                     focus:ring-0 focus:outline-none editable-cell-text"
                                                     @if (!empty($field['min']) || $field['min'] == 0)
                                                         min="{{ $field['min'] }}"
