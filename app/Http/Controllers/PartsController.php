@@ -226,12 +226,33 @@ class PartsController extends Controller
                 $field = explode('->', $field)['0'] . '_id';
             }
 
-            $part->$field = $request->get('value') == '0' ? null : $request->get('value');
+            if (
+                $field == 'quantity' ||
+                $field == 'quantity_in_stock' ||
+                $field == 'quantity_ordered'
+            ) {
+                $part->$field = $request->get('value');
+            } else {
+                $part->$field = $request->get('value') == '0' ? null : $request->get('value');
+            }
+
+            $qtyUpdated = false;
+            if ($field == 'quantity_in_stock') {
+                $qtyUpdated = true;
+                if ($part->quantity - $request->get('value') < 0) {
+                    $part->quantity_ordered = 0;
+                } else {
+                    $part->quantity_ordered = $part->quantity - $request->get('value');
+                }
+            }
+
             $part->save();
 
             return response()->json([
                 'success' => true,
-                'message' => 'Part updated successfully'
+                'message' => 'Part updated successfully',
+                'qty_updated' => $qtyUpdated,
+                'quantity_ordered' => $part->quantity_ordered,
             ]);
         }
 

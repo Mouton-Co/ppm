@@ -14,6 +14,11 @@ export function cellEdit() {
                     id: id,
                     field: field,
                     value: value
+                },
+                success: function (data) {
+                    if (data.qty_updated) {
+                        $("#" + id + "-quantity_ordered").html(data.quantity_ordered);
+                    }
                 }
             });
         }, 200);
