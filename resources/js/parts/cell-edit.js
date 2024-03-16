@@ -17,7 +17,9 @@ export function cellEdit() {
                 },
                 success: function (data) {
                     if (data.qty_updated) {
-                        $("#" + id + "-quantity_ordered").html(data.quantity_ordered);
+                        $("#" + id + "-quantity input").val(data.quantity);
+                        $("#" + id + "-quantity_in_stock input").val(data.quantity_in_stock);
+                        $("#" + id + "-quantity_ordered input").val(data.quantity_ordered);
                     }
                 }
             });

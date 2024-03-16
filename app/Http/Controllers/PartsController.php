@@ -44,6 +44,13 @@ class PartsController extends Controller
                 $part->manufactured_or_purchased = $matrix['Manufactured or Purchased'][$i];
                 $part->notes                     = $matrix['Notes'][$i];
                 $part->submission_id             = $submission->id;
+
+                if (!is_numeric($part->quantity)) {
+                    $part->quantity = 0;
+                }
+                $part->quantity_in_stock = 0;
+                $part->quantity_ordered  = $part->quantity;
+
                 $part->save();
 
                 $fileController = new FileController();
@@ -237,12 +244,22 @@ class PartsController extends Controller
             }
 
             $qtyUpdated = false;
-            if ($field == 'quantity_in_stock') {
+            if (
+                $field == 'quantity' ||
+                $field == 'quantity_in_stock' ||
+                $field == 'quantity_ordered'
+            ) {
+                // update field
                 $qtyUpdated = true;
-                if ($part->quantity - $request->get('value') < 0) {
+                $part->$field = is_numeric($request->get('value')) && $request->get('value') >= 0 ?
+                    $request->get('value') :
+                    0;
+
+                // update stock and ordered
+                if ($part->quantity - $part->quantity_in_stock < 0) {
                     $part->quantity_ordered = 0;
                 } else {
-                    $part->quantity_ordered = $part->quantity - $request->get('value');
+                    $part->quantity_ordered = $part->quantity - $request->quantity_in_stock;
                 }
             }
 
@@ -252,6 +269,8 @@ class PartsController extends Controller
                 'success' => true,
                 'message' => 'Part updated successfully',
                 'qty_updated' => $qtyUpdated,
+                'quantity' => $part->quantity,
+                'quantity_in_stock' => $part->quantity_in_stock,
                 'quantity_ordered' => $part->quantity_ordered,
             ]);
         }
