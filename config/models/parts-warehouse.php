@@ -69,7 +69,11 @@ return [
             'sortable' => true,
         ],
         'quantity' => [
-            'name'     => 'Quantity',
+            'name'     => 'Qty Needed',
+            'sortable' => true,
+        ],
+        'quantity_ordered' => [
+            'name'     => 'Qty Ordered',
             'sortable' => true,
         ],
         'material' => [
