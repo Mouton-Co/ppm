@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Storage;
 
 class FileController extends Controller
 {
-
     /**
      * Store files for the given part
      */
@@ -17,18 +16,18 @@ class FileController extends Controller
         $files = $part->submission->files;
         foreach ($files as $fileLocation) {
             if (str_contains($fileLocation, explode('.', $part->name)[0])) {
-                $split    = explode('.', $fileLocation);
-                $fileType = $split[count($split)-1];
+                $split = explode('.', $fileLocation);
+                $fileType = $split[count($split) - 1];
                 array_pop($split);
-                $split    = implode('.', $split);
-                $fileName = explode('files/' . $part->submission->submission_code . '/', $split)[1];
+                $split = implode('.', $split);
+                $fileName = explode('files/'.$part->submission->submission_code.'/', $split)[1];
 
-                $file            = new File();
-                $file->name      = $fileName;
+                $file = new File();
+                $file->name = $fileName;
                 $file->file_type = $fileType;
-                $file->location  = $fileLocation;
-                $file->size      = $this->formatSizeUnits(Storage::size($fileLocation));
-                $file->part_id   = $part->id;
+                $file->location = $fileLocation;
+                $file->size = $this->formatSizeUnits(Storage::size($fileLocation));
+                $file->part_id = $part->id;
                 $file->save();
             }
         }
@@ -40,15 +39,15 @@ class FileController extends Controller
     public function formatSizeUnits($bytes)
     {
         if ($bytes >= 1073741824) {
-            $bytes = number_format($bytes / 1073741824, 2) . ' GB';
+            $bytes = number_format($bytes / 1073741824, 2).' GB';
         } elseif ($bytes >= 1048576) {
-            $bytes = number_format($bytes / 1048576, 2) . ' MB';
+            $bytes = number_format($bytes / 1048576, 2).' MB';
         } elseif ($bytes >= 1024) {
-            $bytes = number_format($bytes / 1024, 2) . ' KB';
+            $bytes = number_format($bytes / 1024, 2).' KB';
         } elseif ($bytes > 1) {
-            $bytes = $bytes . ' bytes';
+            $bytes = $bytes.' bytes';
         } elseif ($bytes == 1) {
-            $bytes = $bytes . ' byte';
+            $bytes = $bytes.' byte';
         } else {
             $bytes = '0 bytes';
         }
@@ -62,6 +61,7 @@ class FileController extends Controller
     public function download($id)
     {
         $file = File::find($id);
+
         return response()->download(storage_path().'/app/'.$file->location);
     }
 
@@ -71,6 +71,7 @@ class FileController extends Controller
     public function open($id)
     {
         $file = File::find($id);
+
         return response()->file(storage_path().'/app/'.$file->location);
     }
 

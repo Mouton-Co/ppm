@@ -29,4 +29,4 @@ Route::middleware('auth')->group(function () {
     include 'process-types.php';
 });
 
-include __DIR__ . '/auth.php';
+include __DIR__.'/auth.php';

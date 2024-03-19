@@ -23,7 +23,7 @@ class MarkAsRequest extends FormRequest
     {
         return [
             'po_number' => 'required|string',
-            'mark_as' => 'required|string|in:' . implode(',', array_keys(\App\Models\Part::$markedAs)),
+            'mark_as' => 'required|string|in:'.implode(',', array_keys(\App\Models\Part::$markedAs)),
         ];
     }
 

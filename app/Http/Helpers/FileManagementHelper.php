@@ -8,11 +8,10 @@ class FileManagementHelper
 {
     /**
      * Makes temp files permanent for a specific submission
-     * @param $submissionCode
      */
     public function makeFilesPermanent($submissionCode)
     {
-        $files = Storage::disk('local')->files('files/temp/' . $submissionCode);
+        $files = Storage::disk('local')->files('files/temp/'.$submissionCode);
 
         foreach ($files as $fileName) {
             $newName = $fileName;
@@ -25,15 +24,14 @@ class FileManagementHelper
 
             if (
                 str_contains($fileName, '.dwg') ||
-                str_contains($fileName, '.dxf'))
-            {
+                str_contains($fileName, '.dxf')) {
                 $path = explode('.', $fileName)[0];
                 $suffix = explode('.', $fileName)[1];
-                if (!str_contains($path, '_R')) {
-                    if (in_array($path . '_R.' . $suffix, $files)) {
+                if (! str_contains($path, '_R')) {
+                    if (in_array($path.'_R.'.$suffix, $files)) {
                         continue;
                     } else {
-                        $newName = $path . '_R.' . $suffix;
+                        $newName = $path.'_R.'.$suffix;
                     }
                 }
             }
@@ -49,7 +47,6 @@ class FileManagementHelper
 
     /**
      * Creates a zip file of the given submission files in the same folder
-     * @param $submissionCode
      */
     public function createZipFor($submissionCode)
     {

@@ -23,7 +23,7 @@ class Order extends Model
     | Relationships
     |--------------------------------------------------------------------------
     */
-    
+
     /**
      * Get the supplier that the order belongs to
      */

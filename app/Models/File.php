@@ -5,8 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\Storage;
 
 class File extends Model
 {
@@ -29,7 +27,7 @@ class File extends Model
     | Relationships
     |--------------------------------------------------------------------------
     */
-    
+
     /**
      * Get part that the file belongs to
      */

@@ -57,7 +57,7 @@ class SupplierController extends Controller
 
         if (empty($supplier)) {
             return redirect()->route('suppliers.index')->with([
-                'error' => "Supplier not found",
+                'error' => 'Supplier not found',
             ]);
         }
 
@@ -75,7 +75,7 @@ class SupplierController extends Controller
 
         if (empty($supplier)) {
             return redirect()->route('suppliers.index')->with([
-                'error' => "Supplier not found",
+                'error' => 'Supplier not found',
             ]);
         }
 
@@ -92,11 +92,11 @@ class SupplierController extends Controller
     public function destroy(string $id)
     {
         $supplier = Supplier::find($id);
-        $name     = $supplier->name;
+        $name = $supplier->name;
 
         if (empty($supplier)) {
             return redirect()->route('suppliers.index')->with([
-                'error' => "Supplier not found",
+                'error' => 'Supplier not found',
             ]);
         }
 

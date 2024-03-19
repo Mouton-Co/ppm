@@ -2,23 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Submission;
-use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\BomExcel;
 use App\Http\Helpers\UploadFilesHelper;
 use App\Http\Requests\Parts\IndexRequest;
 use App\Http\Requests\Parts\MarkAsRequest;
 use App\Http\Requests\Parts\UpdateCheckboxRequest;
 use App\Http\Requests\Parts\UpdateRequest;
+use App\Http\Services\PartService;
 use App\Models\AutofillSupplier;
 use App\Models\Part;
+use App\Models\Submission;
 use App\Models\Supplier;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PartsController extends Controller
 {
     public $request;
+
     protected $timestamp = 'Y-m-d H:i:s';
 
     /**
@@ -27,29 +29,29 @@ class PartsController extends Controller
     public function storeParts(Submission $submission)
     {
         $uploadFilesHelper = new UploadFilesHelper();
-        $excel             = $submission->excel_sheet;
-        $matrix            = Excel::toArray(new BomExcel, $excel)[0];
-        $matrix            = $uploadFilesHelper->cleanMatrix($matrix);
+        $excel = $submission->excel_sheet;
+        $matrix = Excel::toArray(new BomExcel, $excel)[0];
+        $matrix = $uploadFilesHelper->cleanMatrix($matrix);
 
-        if (!empty($matrix) && !empty($matrix['Item Number'])) {
+        if (! empty($matrix) && ! empty($matrix['Item Number'])) {
             for ($i = 0; $i < count($matrix['Item Number']) - 1; $i++) {
-                $part                            = new Part();
-                $part->name                      = $matrix['File Name'][$i];
-                $part->quantity                  = $matrix['Quantity'][$i];
-                $part->material                  = $matrix['Material'][$i];
-                $part->material_thickness        = $matrix['Material Thickness'][$i];
-                $part->finish                    = $matrix['Finish'][$i];
-                $part->used_in_weldment          = $matrix['Used In Weldment'][$i];
-                $part->process_type              = $matrix['Process Type'][$i];
+                $part = new Part();
+                $part->name = $matrix['File Name'][$i];
+                $part->quantity = $matrix['Quantity'][$i];
+                $part->material = $matrix['Material'][$i];
+                $part->material_thickness = $matrix['Material Thickness'][$i];
+                $part->finish = $matrix['Finish'][$i];
+                $part->used_in_weldment = $matrix['Used In Weldment'][$i];
+                $part->process_type = $matrix['Process Type'][$i];
                 $part->manufactured_or_purchased = $matrix['Manufactured or Purchased'][$i];
-                $part->notes                     = $matrix['Notes'][$i];
-                $part->submission_id             = $submission->id;
+                $part->notes = $matrix['Notes'][$i];
+                $part->submission_id = $submission->id;
 
-                if (!is_numeric($part->quantity)) {
+                if (! is_numeric($part->quantity)) {
                     $part->quantity = 0;
                 }
                 $part->quantity_in_stock = 0;
-                $part->quantity_ordered  = $part->quantity;
+                $part->quantity_ordered = $part->quantity;
 
                 $part->save();
 
@@ -69,7 +71,7 @@ class PartsController extends Controller
         $parts = Part::with(['submission', 'supplier']);
 
         // order by
-        if (!empty($request->get('order_by'))) {
+        if (! empty($request->get('order_by'))) {
             if ($request->get('order_by') == 'submission->submission_code') {
                 $parts = $parts->orderBy(
                     Submission::select('submission_code')
@@ -92,7 +94,7 @@ class PartsController extends Controller
         }
 
         // status
-        if (!empty($request->get('status'))) {
+        if (! empty($request->get('status'))) {
             if ($request->get('status') == 'qc_issue') {
                 $parts = $parts->where('qc_issue', true);
             } elseif ($request->get('status') != '-') {
@@ -101,41 +103,41 @@ class PartsController extends Controller
         }
 
         // supplier
-        if (!empty($request->get('supplier_id')) && $request->get('supplier_id') != '-') {
+        if (! empty($request->get('supplier_id')) && $request->get('supplier_id') != '-') {
             $parts = $parts->where('supplier_id', $request->get('supplier_id'));
         }
 
         // submission
         if (
-            !empty($request->get('submission')) &&
+            ! empty($request->get('submission')) &&
             $request->get('submission') != '-'
         ) {
             $parts = $parts->where(
                 Submission::select('submission_code')
                     ->whereColumn('submission_id', 'submissions.id')
-                    ->where('submission_code', 'like', '%' . $request->get('submission') . '%')
+                    ->where('submission_code', 'like', '%'.$request->get('submission').'%')
                     ->limit(1),
                 'like',
-                '%' . $request->get('submission') . '%'
+                '%'.$request->get('submission').'%'
             );
         }
 
         // search
-        if (!empty($request->get('search'))) {
+        if (! empty($request->get('search'))) {
             $parts = $parts->where(function ($query) {
-                $query->where('parts.po_number', 'like', '%' . $this->request->get('search') . '%')
-                    ->orWhere('parts.name', 'like', '%' . $this->request->get('search') . '%')
-                    ->orWhere('parts.process_type', 'like', '%' . $this->request->get('search') . '%')
-                    ->orWhere('parts.quantity', 'like', '%' . $this->request->get('search') . '%')
-                    ->orWhere('parts.material', 'like', '%' . $this->request->get('search') . '%')
-                    ->orWhere('parts.material_thickness', 'like', '%' . $this->request->get('search') . '%')
-                    ->orWhere('parts.finish', 'like', '%' . $this->request->get('search') . '%')
-                    ->orWhere('parts.used_in_weldment', 'like', '%' . $this->request->get('search') . '%');
+                $query->where('parts.po_number', 'like', '%'.$this->request->get('search').'%')
+                    ->orWhere('parts.name', 'like', '%'.$this->request->get('search').'%')
+                    ->orWhere('parts.process_type', 'like', '%'.$this->request->get('search').'%')
+                    ->orWhere('parts.quantity', 'like', '%'.$this->request->get('search').'%')
+                    ->orWhere('parts.material', 'like', '%'.$this->request->get('search').'%')
+                    ->orWhere('parts.material_thickness', 'like', '%'.$this->request->get('search').'%')
+                    ->orWhere('parts.finish', 'like', '%'.$this->request->get('search').'%')
+                    ->orWhere('parts.used_in_weldment', 'like', '%'.$this->request->get('search').'%');
             });
         }
 
         return view('parts.procurement-index')->with([
-            'parts' => $parts->paginate(10)
+            'parts' => $parts->paginate(10),
         ]);
     }
 
@@ -149,7 +151,7 @@ class PartsController extends Controller
         $parts = Part::with(['submission', 'supplier']);
 
         // order by
-        if (!empty($request->get('order_by'))) {
+        if (! empty($request->get('order_by'))) {
             if ($request->get('order_by') == 'submission->submission_code') {
                 $parts = $parts->orderBy(
                     Submission::select('submission_code')
@@ -172,7 +174,7 @@ class PartsController extends Controller
         }
 
         // status
-        if (!empty($request->get('status'))) {
+        if (! empty($request->get('status'))) {
             if ($request->get('status') == 'qc_issue') {
                 $parts = $parts->where('qc_issue', true);
             } elseif ($request->get('status') != '-') {
@@ -181,41 +183,41 @@ class PartsController extends Controller
         }
 
         // supplier
-        if (!empty($request->get('supplier_id')) && $request->get('supplier_id') != '-') {
+        if (! empty($request->get('supplier_id')) && $request->get('supplier_id') != '-') {
             $parts = $parts->where('supplier_id', $request->get('supplier_id'));
         }
 
         // submission
         if (
-            !empty($request->get('submission')) &&
+            ! empty($request->get('submission')) &&
             $request->get('submission') != '-'
         ) {
             $parts = $parts->where(
                 Submission::select('submission_code')
                     ->whereColumn('submission_id', 'submissions.id')
-                    ->where('submission_code', 'like', '%' . $request->get('submission') . '%')
+                    ->where('submission_code', 'like', '%'.$request->get('submission').'%')
                     ->limit(1),
                 'like',
-                '%' . $request->get('submission') . '%'
+                '%'.$request->get('submission').'%'
             );
         }
 
         // search
-        if (!empty($request->get('search'))) {
+        if (! empty($request->get('search'))) {
             $parts = $parts->where(function ($query) {
-                $query->where('parts.po_number', 'like', '%' . $this->request->get('search') . '%')
-                    ->orWhere('parts.name', 'like', '%' . $this->request->get('search') . '%')
-                    ->orWhere('parts.process_type', 'like', '%' . $this->request->get('search') . '%')
-                    ->orWhere('parts.quantity', 'like', '%' . $this->request->get('search') . '%')
-                    ->orWhere('parts.material', 'like', '%' . $this->request->get('search') . '%')
-                    ->orWhere('parts.material_thickness', 'like', '%' . $this->request->get('search') . '%')
-                    ->orWhere('parts.finish', 'like', '%' . $this->request->get('search') . '%')
-                    ->orWhere('parts.used_in_weldment', 'like', '%' . $this->request->get('search') . '%');
+                $query->where('parts.po_number', 'like', '%'.$this->request->get('search').'%')
+                    ->orWhere('parts.name', 'like', '%'.$this->request->get('search').'%')
+                    ->orWhere('parts.process_type', 'like', '%'.$this->request->get('search').'%')
+                    ->orWhere('parts.quantity', 'like', '%'.$this->request->get('search').'%')
+                    ->orWhere('parts.material', 'like', '%'.$this->request->get('search').'%')
+                    ->orWhere('parts.material_thickness', 'like', '%'.$this->request->get('search').'%')
+                    ->orWhere('parts.finish', 'like', '%'.$this->request->get('search').'%')
+                    ->orWhere('parts.used_in_weldment', 'like', '%'.$this->request->get('search').'%');
             });
         }
 
         return view('parts.warehouse-index')->with([
-            'parts' => $parts->paginate(10)
+            'parts' => $parts->paginate(10),
         ]);
     }
 
@@ -226,43 +228,16 @@ class PartsController extends Controller
     {
         $part = Part::find($request->get('id'));
 
-        if (!empty($request->get('field'))) {
+        if (! empty($request->get('field'))) {
+            $partService = new PartService($part);
             $field = $request->get('field');
 
             if (str_contains($field, '->')) {
-                $field = explode('->', $field)['0'] . '_id';
+                $field = explode('->', $field)['0'].'_id';
             }
 
-            if (
-                $field == 'quantity' ||
-                $field == 'quantity_in_stock' ||
-                $field == 'quantity_ordered'
-            ) {
-                $part->$field = $request->get('value');
-            } else {
-                $part->$field = $request->get('value') == '0' ? null : $request->get('value');
-            }
-
-            $qtyUpdated = false;
-            if (
-                $field == 'quantity' ||
-                $field == 'quantity_in_stock' ||
-                $field == 'quantity_ordered'
-            ) {
-                // update field
-                $qtyUpdated = true;
-                $part->$field = is_numeric($request->get('value')) && $request->get('value') >= 0 ?
-                    $request->get('value') :
-                    0;
-
-                // update stock and ordered
-                if ($part->quantity - $part->quantity_in_stock < 0) {
-                    $part->quantity_ordered = 0;
-                } else {
-                    $part->quantity_ordered = $part->quantity - $request->quantity_in_stock;
-                }
-            }
-
+            $part->$field = $request->get('value');
+            $qtyUpdated = $partService->updateQuantities($field, $request->get('value'));
             $part->save();
 
             return response()->json([
@@ -277,7 +252,7 @@ class PartsController extends Controller
 
         return response()->json([
             'success' => false,
-            'message' => 'Part could not be updated'
+            'message' => 'Part could not be updated',
         ]);
     }
 
@@ -291,13 +266,13 @@ class PartsController extends Controller
         if (empty($part)) {
             return response()->json([
                 'success' => false,
-                'message' => 'Part not found'
+                'message' => 'Part not found',
             ]);
         }
 
         $field = $request->get('field');
         $part->$field = $request->get('value');
-        $fieldAt = $field . '_at';
+        $fieldAt = $field.'_at';
         $part->$fieldAt = $part->$field ? now() : null;
 
         switch ($field) {
@@ -325,55 +300,55 @@ class PartsController extends Controller
         }
 
         $part->save();
-        
+
         return response()->json([
-            'success'     => true,
-            'part_id'     => $part->id,
-            'status'      => $field == 'qc_issue' && $part->$field ?
+            'success' => true,
+            'part_id' => $part->id,
+            'status' => $field == 'qc_issue' && $part->$field ?
                 'QC Issue' :
                 Part::$statuses[$part->status],
             'checkboxes' => [
-                'raw_part_received'         => [
+                'raw_part_received' => [
                     'checked' => $part->raw_part_received,
                     'enabled' => $part->checkboxEnabled('raw_part_received'),
-                    'at' => !empty($part->raw_part_received_at) ?
+                    'at' => ! empty($part->raw_part_received_at) ?
                         Carbon::parse($part->raw_part_received_at)->format('Y-m-d H:i:s') :
-                        ''
+                        '',
                 ],
                 'treatment_1_part_received' => [
                     'checked' => $part->treatment_1_part_received,
                     'enabled' => $part->checkboxEnabled('treatment_1_part_received'),
-                    'at' => !empty($part->treatment_1_part_received_at) ?
+                    'at' => ! empty($part->treatment_1_part_received_at) ?
                         Carbon::parse($part->treatment_1_part_received_at)->format('Y-m-d H:i:s') :
-                        ''
+                        '',
                 ],
                 'treatment_2_part_received' => [
                     'checked' => $part->treatment_2_part_received,
                     'enabled' => $part->checkboxEnabled('treatment_2_part_received'),
-                    'at' => !empty($part->treatment_2_part_received_at) ?
+                    'at' => ! empty($part->treatment_2_part_received_at) ?
                         Carbon::parse($part->treatment_2_part_received_at)->format('Y-m-d H:i:s') :
-                        ''
+                        '',
                 ],
-                'completed_part_received'   => [
+                'completed_part_received' => [
                     'checked' => $part->completed_part_received,
                     'enabled' => $part->checkboxEnabled('completed_part_received'),
-                    'at' => !empty($part->completed_part_received_at) ?
+                    'at' => ! empty($part->completed_part_received_at) ?
                         Carbon::parse($part->completed_part_received_at)->format('Y-m-d H:i:s') :
-                        ''
+                        '',
                 ],
-                'qc_passed'                 => [
+                'qc_passed' => [
                     'checked' => $part->qc_passed,
                     'enabled' => $part->checkboxEnabled('qc_passed'),
-                    'at' => !empty($part->qc_passed_at) ?
+                    'at' => ! empty($part->qc_passed_at) ?
                         Carbon::parse($part->qc_passed_at)->format('Y-m-d H:i:s') :
-                        ''
+                        '',
                 ],
-                'qc_issue'                  => [
+                'qc_issue' => [
                     'checked' => $part->qc_issue,
                     'enabled' => true,
-                    'at' => !empty($part->qc_issue_at) ?
+                    'at' => ! empty($part->qc_issue_at) ?
                         Carbon::parse($part->qc_issue_at)->format('Y-m-d H:i:s') :
-                        '-'
+                        '-',
                 ],
             ],
         ]);
@@ -393,11 +368,11 @@ class PartsController extends Controller
                 ->where('supplier_id', '!=', null)->get()->groupBy('supplier_id');
 
             // get latest PO number and increment by 1
-            $poPrefix = str_pad($parts[0]->submission->machine_number, 2, '0', STR_PAD_LEFT) .
-                '-' . $parts[0]->submission->current_unit_number . '-';
-            $latestPo = Part::where('po_number', 'like', $poPrefix . '%')->orderBy('po_number', 'desc')->first();
-            $number   = !empty($latestPo) ? (int)explode('-', $latestPo->po_number)[2] + 1 : 1;
-            $poNumber = $poPrefix . str_pad($number, 3, '0', STR_PAD_LEFT);
+            $poPrefix = str_pad($parts[0]->submission->machine_number, 2, '0', STR_PAD_LEFT).
+                '-'.$parts[0]->submission->current_unit_number.'-';
+            $latestPo = Part::where('po_number', 'like', $poPrefix.'%')->orderBy('po_number', 'desc')->first();
+            $number = ! empty($latestPo) ? (int) explode('-', $latestPo->po_number)[2] + 1 : 1;
+            $poNumber = $poPrefix.str_pad($number, 3, '0', STR_PAD_LEFT);
 
             foreach ($suppliers as $parts) {
                 foreach ($parts as $part) {
@@ -407,7 +382,7 @@ class PartsController extends Controller
 
                 // increment PO number
                 $number++;
-                $poNumber = $poPrefix . str_pad($number, 3, '0', STR_PAD_LEFT);
+                $poNumber = $poPrefix.str_pad($number, 3, '0', STR_PAD_LEFT);
             }
         }
 
@@ -424,10 +399,10 @@ class PartsController extends Controller
          */
         foreach (AutofillSupplier::all() as $autofillSupplier) {
             $parts = Part::where('supplier_id', null)
-                ->where('name', 'like', '%' . $autofillSupplier->text . '%')
+                ->where('name', 'like', '%'.$autofillSupplier->text.'%')
                 ->where('part_ordered', false)
                 ->get();
-            
+
             foreach ($parts as $part) {
                 $part->supplier_id = $autofillSupplier->supplier_id;
                 $part->save();
@@ -446,13 +421,13 @@ class PartsController extends Controller
                 case 'LCM':
                 case 'LCBM':
                 case 'LCBW':
-                    if (!empty($request->input('lc_supplier'))) {
+                    if (! empty($request->input('lc_supplier'))) {
                         $part->supplier_id = $request->input('lc_supplier');
                         $part->save();
                     }
                     break;
                 case 'MCH':
-                    if (!empty($request->input('part_supplier'))) {
+                    if (! empty($request->input('part_supplier'))) {
                         $part->supplier_id = $request->input('part_supplier');
                         $part->save();
                     }
@@ -478,9 +453,9 @@ class PartsController extends Controller
         $parts = Part::where('po_number', $request->get('po_number'))->get();
 
         if ($parts->isEmpty()) {
-            return redirect()->back()->withErrors('No parts found with PO Number ' . $request->get('po_number'));
+            return redirect()->back()->withErrors('No parts found with PO Number '.$request->get('po_number'));
         }
-        
+
         foreach ($parts as $part) {
             if ($request->get('mark_as') == 'raw_part_received') {
                 $part->raw_part_received = true;
@@ -497,7 +472,7 @@ class PartsController extends Controller
                 $part->completed_part_received_at = null;
                 $part->qc_passed_at = null;
             } elseif ($request->get('mark_as') == 'treatment_1_part_received') {
-                if (!$part->raw_part_received) {
+                if (! $part->raw_part_received) {
                     $part->raw_part_received = true;
                     $part->raw_part_received_at = now();
                 }
@@ -514,12 +489,12 @@ class PartsController extends Controller
                 $part->completed_part_received_at = null;
                 $part->qc_passed_at = null;
             } elseif ($request->get('mark_as') == 'treatment_2_part_received') {
-                if (!$part->raw_part_received) {
+                if (! $part->raw_part_received) {
                     $part->raw_part_received = true;
                     $part->raw_part_received_at = now();
                 }
 
-                if (!$part->treatment_1_part_received) {
+                if (! $part->treatment_1_part_received) {
                     $part->treatment_1_part_received = true;
                     $part->treatment_1_part_received_at = now();
                 }
@@ -534,17 +509,17 @@ class PartsController extends Controller
                 $part->completed_part_received_at = null;
                 $part->qc_passed_at = null;
             } elseif ($request->get('mark_as') == 'completed_part_received') {
-                if (!$part->raw_part_received) {
+                if (! $part->raw_part_received) {
                     $part->raw_part_received = true;
                     $part->raw_part_received_at = now();
                 }
 
-                if (!$part->treatment_1_part_received) {
+                if (! $part->treatment_1_part_received) {
                     $part->treatment_1_part_received = true;
                     $part->treatment_1_part_received_at = now();
                 }
 
-                if (!$part->treatment_2_part_received) {
+                if (! $part->treatment_2_part_received) {
                     $part->treatment_2_part_received = true;
                     $part->treatment_2_part_received_at = now();
                 }
@@ -556,22 +531,22 @@ class PartsController extends Controller
                 $part->qc_passed = false;
                 $part->qc_passed_at = null;
             } elseif ($request->get('mark_as') == 'qc_passed') {
-                if (!$part->raw_part_received) {
+                if (! $part->raw_part_received) {
                     $part->raw_part_received = true;
                     $part->raw_part_received_at = now();
                 }
 
-                if (!$part->treatment_1_part_received) {
+                if (! $part->treatment_1_part_received) {
                     $part->treatment_1_part_received = true;
                     $part->treatment_1_part_received_at = now();
                 }
 
-                if (!$part->treatment_2_part_received) {
+                if (! $part->treatment_2_part_received) {
                     $part->treatment_2_part_received = true;
                     $part->treatment_2_part_received_at = now();
                 }
 
-                if (!$part->completed_part_received) {
+                if (! $part->completed_part_received) {
                     $part->completed_part_received = true;
                     $part->completed_part_received_at = now();
                 }
@@ -583,6 +558,6 @@ class PartsController extends Controller
             $part->save();
         }
 
-        return redirect()->back()->withSuccess('Parts marked as ' . Part::$markedAs[$request->get('mark_as')]);
+        return redirect()->back()->withSuccess('Parts marked as '.Part::$markedAs[$request->get('mark_as')]);
     }
 }

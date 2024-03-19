@@ -6,7 +6,6 @@ use App\Http\Requests\User\UserStoreRequest;
 use App\Http\Requests\User\UserUpdateRequest;
 use App\Models\Role;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -19,7 +18,7 @@ class UserController extends Controller
         $users = User::all();
 
         return view('user.index')->with([
-            'users'  => $users,
+            'users' => $users,
         ]);
     }
 
@@ -31,7 +30,7 @@ class UserController extends Controller
         $roles = Role::all();
 
         return view('user.create')->with([
-            'roles'   => $roles,
+            'roles' => $roles,
         ]);
     }
 
@@ -41,10 +40,10 @@ class UserController extends Controller
     public function store(UserStoreRequest $request)
     {
         User::create([
-            'name'     => $request->name,
-            'email'    => $request->email,
+            'name' => $request->name,
+            'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role_id'  => $request->role,
+            'role_id' => $request->role,
         ]);
 
         return redirect()->route('user.index')->with([
@@ -57,7 +56,7 @@ class UserController extends Controller
      */
     public function edit(string $id)
     {
-        $user  = User::find($id);
+        $user = User::find($id);
         $roles = Role::all();
 
         // if user not found OR
@@ -71,9 +70,9 @@ class UserController extends Controller
         }
 
         return view('user.edit')->with([
-            'user'  => $user,
+            'user' => $user,
             'roles' => $roles,
-            'edit'  => true,
+            'edit' => true,
         ]);
     }
 
@@ -88,16 +87,16 @@ class UserController extends Controller
             return redirect()->route('dashboard');
         }
 
-        $user->name    = $request->name;
-        $user->email   = $request->email;
+        $user->name = $request->name;
+        $user->email = $request->email;
         $user->role_id = $request->role;
 
-        if (!empty($request->password) && !empty($request->confirm_password)) {
+        if (! empty($request->password) && ! empty($request->confirm_password)) {
             $user->password = Hash::make($request->password);
         }
 
         $user->save();
-        
+
         return redirect()->back()->with([
             'success' => 'User updated',
         ]);

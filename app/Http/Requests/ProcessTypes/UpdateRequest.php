@@ -14,7 +14,7 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'process_type' => 'required|unique:process_types,process_type,' . $this->get('process_type_id'),
+            'process_type' => 'required|unique:process_types,process_type,'.$this->get('process_type_id'),
             'required_files' => 'required|array',
         ];
     }

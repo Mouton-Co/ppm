@@ -14,8 +14,8 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'supplier_id'       => 'required|string|exists:suppliers,id',
-            'name'              => 'required|string',
+            'supplier_id' => 'required|string|exists:suppliers,id',
+            'name' => 'required|string',
             'average_lead_time' => 'string|nullable',
         ];
     }

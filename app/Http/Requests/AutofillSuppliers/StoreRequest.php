@@ -14,7 +14,7 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'text'       => 'required|unique:autofill_suppliers,text',
+            'text' => 'required|unique:autofill_suppliers,text',
             'supplier_id' => 'required|exists:suppliers,id',
         ];
     }

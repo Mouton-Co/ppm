@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Role;
 use App\Models\User;
-use App\Models\UserRole;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -65,13 +64,13 @@ class UserSeeder extends Seeder
             ],
         ];
 
-        foreach($users as $user) {
+        foreach ($users as $user) {
             $role = Role::where('role', $user['role'])->first();
             $user = User::create([
-                'name'     => $user['name'],
-                'email'    => $user['email'],
+                'name' => $user['name'],
+                'email' => $user['email'],
                 'password' => $password,
-                'role_id'  => $role->id,
+                'role_id' => $role->id,
             ]);
         }
     }
