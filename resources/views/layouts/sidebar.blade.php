@@ -12,6 +12,13 @@
             <li>
                 <ul role="list" class="-mx-2 space-y-1">
                     <li>
+                        <a class="nav-item-{{ request()->segment(1) == 'projects' ? 'active' : 'default' }}"
+                        href="{{ route('projects.index') }}">
+                            <x-icon.project class="h-6 w-6 shrink-0" />
+                            {{ __('Projects') }}
+                        </a>
+                    </li>
+                    <li>
                         <a class="nav-item-{{ request()->segment(1) == 'submisssions' ? 'active' : 'default' }}"
                         href="{{ route('submissions.index') }}">
                             <x-icon.submission class="h-6 w-6 shrink-0" />
