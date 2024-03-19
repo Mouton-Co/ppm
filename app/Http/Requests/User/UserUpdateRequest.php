@@ -3,7 +3,6 @@
 namespace App\Http\Requests\User;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class UserUpdateRequest extends FormRequest
 {
@@ -15,14 +14,14 @@ class UserUpdateRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'name'  => 'required',
-            'role'  => 'required',
+            'name' => 'required',
+            'role' => 'required',
             'email' => 'required|unique:users,email,'.$this->get('user_id'),
         ];
 
-        if (!empty($this->get('password')) || $this->get('confirm_password')) {
+        if (! empty($this->get('password')) || $this->get('confirm_password')) {
             $rules['password'] = "regex:/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{8,16}$/";
-            $rules['confirm_password'] = "same:password";
+            $rules['confirm_password'] = 'same:password';
         }
 
         return $rules;
@@ -36,9 +35,9 @@ class UserUpdateRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'regex'    => "Password must contain one digit, one lowercase, one uppercase,
-                one special character, no spaces, and be between 8-16 characters.",
-            'same'     => "Passwords don't match",
+            'regex' => 'Password must contain one digit, one lowercase, one uppercase,
+                one special character, no spaces, and be between 8-16 characters.',
+            'same' => "Passwords don't match",
         ];
     }
 }

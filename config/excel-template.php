@@ -15,35 +15,35 @@
 
 return [
     'Item Number' => [
-        "type"     => "int",
-        "unique"   => true,
-        "required" => true,
+        'type' => 'int',
+        'unique' => true,
+        'required' => true,
     ],
     'File Name' => [
-        "unique"   => true,
-        "required" => true,
+        'unique' => true,
+        'required' => true,
     ],
     'Quantity' => [
-        "type"   => "int",
-        "required" => true,
+        'type' => 'int',
+        'required' => true,
     ],
     'Material' => [
-        "required" => true,
+        'required' => true,
     ],
-    'Material Thickness' => "",
-    'Finish' => "",
+    'Material Thickness' => '',
+    'Finish' => '',
     'Used In Weldment' => [
-        "required" => true,
-        "allowed"  => [
+        'required' => true,
+        'allowed' => [
             'no',
             'yes',
             'lone weldment',
             '',
-        ]
+        ],
     ],
     'Process Type' => [
-        "required" => true,
-        "allowed"  => [
+        'required' => true,
+        'allowed' => [
             'lc',
             'lcm',
             'mch',
@@ -54,15 +54,15 @@ return [
             'tlcm',
             'tlc',
             'pm',
-            'p'
-        ]
+            'p',
+        ],
     ],
-    'Notes' => "",
-    "Manufactured or Purchased" => [
-        "allowed"  => [
-            "purchased",
-            "manufactured",
-            "purchased then manufactured",
+    'Notes' => '',
+    'Manufactured or Purchased' => [
+        'allowed' => [
+            'purchased',
+            'manufactured',
+            'purchased then manufactured',
         ],
     ],
 ];

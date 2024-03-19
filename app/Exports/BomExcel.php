@@ -8,8 +8,8 @@ use Maatwebsite\Excel\Concerns\ToCollection;
 class BomExcel implements ToCollection
 {
     /**
-    * @return \Illuminate\Support\Collection
-    */
+     * @return \Illuminate\Support\Collection
+     */
     public function collection(Collection $rows)
     {
         dd($rows);

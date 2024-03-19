@@ -63,13 +63,13 @@ class RepresentativeController extends Controller
 
         if (empty($representative)) {
             return redirect()->route('representatives.index')->with([
-                'error' => "Representative not found",
+                'error' => 'Representative not found',
             ]);
         }
 
         return view('representative.edit')->with([
             'representative' => $representative,
-            'suppliers'      => Supplier::orderBy('name')->get(),
+            'suppliers' => Supplier::orderBy('name')->get(),
         ]);
     }
 
@@ -82,7 +82,7 @@ class RepresentativeController extends Controller
 
         if (empty($representative)) {
             return redirect()->route('representatives.index')->with([
-                'error' => "Representative not found",
+                'error' => 'Representative not found',
             ]);
         }
 
@@ -99,11 +99,11 @@ class RepresentativeController extends Controller
     public function destroy(string $id)
     {
         $representative = Representative::find($id);
-        $name           = $representative->name;
+        $name = $representative->name;
 
         if (empty($representative)) {
             return redirect()->route('representatives.index')->with([
-                'error' => "Representative not found",
+                'error' => 'Representative not found',
             ]);
         }
 

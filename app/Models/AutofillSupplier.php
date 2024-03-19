@@ -13,8 +13,6 @@ class AutofillSupplier extends Model
 
     /**
      * Get the supplier that owns the AutofillSupplier
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function supplier(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {

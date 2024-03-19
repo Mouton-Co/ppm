@@ -5,8 +5,8 @@ namespace App\Mail;
 use App\Models\Order;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Address;
+use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
@@ -16,7 +16,9 @@ class PurchaseOrder extends Mailable
     use Queueable, SerializesModels;
 
     public $order;
+
     public $subject;
+
     public $body;
 
     /**
@@ -24,9 +26,9 @@ class PurchaseOrder extends Mailable
      */
     public function __construct(Order $order, $subject, $body)
     {
-        $this->order   = $order;
+        $this->order = $order;
         $this->subject = $subject;
-        $this->body    = $body;
+        $this->body = $body;
     }
 
     /**
@@ -63,7 +65,7 @@ class PurchaseOrder extends Mailable
             foreach ($part->files as $file) {
                 $attachments[] = Attachment::fromStorage($file->location)
                     ->as($file->name.'.'.$file->file_type)
-                    ->withMime('application/' . $file->file_type);
+                    ->withMime('application/'.$file->file_type);
             }
         }
 

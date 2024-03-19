@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Order\IndexRequest;
 use App\Http\Requests\Order\StoreRequest;
 use App\Http\Requests\Order\UpdateRequest;
-use App\Http\Requests\Order\IndexRequest;
 use App\Models\Order;
 use App\Models\Part;
 use App\Models\Submission;
@@ -24,14 +24,14 @@ class OrderController extends Controller
                 return $query->where('supplier_id', $request->supplier);
             })
             ->when($request->search, function ($query) use ($request) {
-                return $query->where('po_number', 'like', '%' . $request->search . '%')
+                return $query->where('po_number', 'like', '%'.$request->search.'%')
                     ->orWhere(
                         Submission::select('submission_code')
                             ->whereColumn('submission_id', 'submissions.id')
-                            ->where('submission_code', 'like', '%' . $request->search . '%')
+                            ->where('submission_code', 'like', '%'.$request->search.'%')
                             ->limit(1),
                         'like',
-                        '%' . $request->search . '%'
+                        '%'.$request->search.'%'
                     );
             })
             ->orderBy('created_at', 'desc')
@@ -59,7 +59,7 @@ class OrderController extends Controller
     {
         $order = Order::find($request->id);
 
-        if (!empty($order)) {
+        if (! empty($order)) {
             $order->update($request->validated());
         }
 
@@ -79,7 +79,7 @@ class OrderController extends Controller
             ->where('part_ordered', false)
             ->get()
             ->groupBy('po_number');
-            
+
         foreach ($poNumbers as $poNumber => $parts) {
             // get total parts
             $totalParts = 0;
@@ -89,22 +89,23 @@ class OrderController extends Controller
 
             $order = Order::where('po_number', $poNumber)->first();
 
-            if (!empty($order)) {
+            if (! empty($order)) {
                 $order->update([
-                    'total_parts'   => $totalParts,
-                    'status'        => 'processing',
-                    'supplier_id'   => $parts[0]->supplier_id,
+                    'total_parts' => $totalParts,
+                    'status' => 'processing',
+                    'supplier_id' => $parts[0]->supplier_id,
                     'submission_id' => $parts[0]->submission_id,
                 ]);
+
                 continue;
             }
 
             // create order
             Order::create([
-                'po_number'     => $poNumber,
-                'supplier_id'   => $parts[0]->supplier_id,
+                'po_number' => $poNumber,
+                'supplier_id' => $parts[0]->supplier_id,
                 'submission_id' => $parts[0]->submission_id,
-                'total_parts'   => $totalParts,
+                'total_parts' => $totalParts,
             ]);
         }
 
@@ -133,9 +134,9 @@ class OrderController extends Controller
         // mark all parts as complete
         foreach ($order->parts()->get() as $part) {
             $part->update([
-                'part_ordered'    => true,
+                'part_ordered' => true,
                 'part_ordered_at' => now(),
-                'status'          => 'supplier',
+                'status' => 'supplier',
             ]);
         }
 
@@ -143,5 +144,4 @@ class OrderController extends Controller
             'Parts marked as ordered.'
         );
     }
-
 }

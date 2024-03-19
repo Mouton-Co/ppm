@@ -19,10 +19,10 @@ class OrderFactory extends Factory
     public function definition(): array
     {
         return [
-            'po_number'       => Str::random(10),
-            'notes'           => $this->faker->sentence,
-            'status'          => $this->faker->randomElement(array_keys(config('models.orders.status'))),
-            'supplier_id'     => $this->faker->randomElement(Supplier::pluck('id')),
+            'po_number' => Str::random(10),
+            'notes' => $this->faker->sentence,
+            'status' => $this->faker->randomElement(array_keys(config('models.orders.status'))),
+            'supplier_id' => $this->faker->randomElement(Supplier::pluck('id')),
             'submission_code' => Str::random(10),
         ];
     }

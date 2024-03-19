@@ -9,7 +9,7 @@ use Illuminate\View\Component;
 class tinymceConfig extends Component
 {
     public $value;
-    
+
     /**
      * Create a new component instance.
      */

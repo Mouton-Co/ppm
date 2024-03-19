@@ -45,7 +45,7 @@ class ProcessTypeController extends Controller
             'required_files' => implode(',', $requiredFiles),
         ]);
 
-        if (!$created) {
+        if (! $created) {
             return redirect()->back()->withInput()->withError('Process type not created.');
         }
 
@@ -81,7 +81,7 @@ class ProcessTypeController extends Controller
             'required_files' => implode(',', $requiredFiles),
         ]);
 
-        if (!$updated) {
+        if (! $updated) {
             return redirect()->back()->withInput()->withError('Process type not updated.');
         }
 
@@ -95,7 +95,7 @@ class ProcessTypeController extends Controller
     {
         $deleted = $processType->delete();
 
-        if (!$deleted) {
+        if (! $deleted) {
             return redirect()->back()->withError('Process type not deleted.');
         }
 

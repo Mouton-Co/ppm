@@ -11,7 +11,7 @@ class ProcessType extends Model
 
     protected $fillable = [
         'process_type',
-        'required_files'
+        'required_files',
     ];
 
     public function isDisabled($field)

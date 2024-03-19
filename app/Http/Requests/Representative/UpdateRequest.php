@@ -15,11 +15,11 @@ class UpdateRequest extends FormRequest
     {
         return [
             'representative_id' => 'required|exists:representatives,id',
-            'name'              => 'required|string',
-            'email'             => 'required|email',
-            'phone_1'           => 'nullable|string',
-            'phone_2'           => 'nullable|string',
-            'supplier_id'       => 'required|exists:suppliers,id',
+            'name' => 'required|string',
+            'email' => 'required|email',
+            'phone_1' => 'nullable|string',
+            'phone_2' => 'nullable|string',
+            'supplier_id' => 'required|exists:suppliers,id',
         ];
     }
 }

@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Supplier extends Model
 {
@@ -13,7 +12,7 @@ class Supplier extends Model
 
     protected $fillable = [
         'name',
-        'average_lead_time'
+        'average_lead_time',
     ];
 
     /*

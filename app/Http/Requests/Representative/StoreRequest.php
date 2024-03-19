@@ -14,10 +14,10 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'        => 'required|string',
-            'email'       => 'required|email',
-            'phone_1'     => 'nullable|string',
-            'phone_2'     => 'nullable|string',
+            'name' => 'required|string',
+            'email' => 'required|email',
+            'phone_1' => 'nullable|string',
+            'phone_2' => 'nullable|string',
             'supplier_id' => 'required|exists:suppliers,id',
         ];
     }
