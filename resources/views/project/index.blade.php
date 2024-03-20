@@ -63,7 +63,7 @@
                             @if (! empty($project->submission->submission_code))
                                 {{ $project->submission->submission_code }}
                             @else
-                                <div class="w-full flex justify-center">
+                                <div class="w-full flex justify-start">
                                     <a href="{{ route('new.submission') }}" class="btn btn-sky max-w-fit !text-xs
                                     !py-1 !max-h-fit">
                                         {{ __('Link submission') }}
