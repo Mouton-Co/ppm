@@ -65,7 +65,7 @@
                             @else
                                 <div class="w-full flex justify-start">
                                     <a href="{{ route('new.submission') }}" class="btn btn-sky max-w-fit !text-xs
-                                    !py-1 !max-h-fit">
+                                    !py-1 !max-h-fit !rounded">
                                         {{ __('Link submission') }}
                                     </a>
                                 </div>
