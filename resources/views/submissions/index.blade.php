@@ -134,7 +134,7 @@
                             @if (str_contains($key, '->'))
                                 <td>
                                     <a href="{{ route('submissions.view', $submission->id) }}">
-                                        {{ App\Http\Services\ModelService::nestedValue($submission, $key) }}
+                                        {{ App\Http\Services\ModelService::nestedValue($submission, $key) ?? 'N/A' }}
                                     </a>
                                 </td>
                             @elseif ($key == 'submission_type')

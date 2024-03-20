@@ -24,7 +24,7 @@ class ProjectFactory extends Factory
             'proposed_solution' => $this->faker->text,
             'currently_responsible' => $this->faker->word,
             'status' => $this->faker->word,
-            'resolved_at' => $this->faker->word,
+            'resolved_at' => $this->faker->dateTime(),
             'related_po' => $this->faker->word,
             'customer_comment' => $this->faker->text,
             'commisioner_comment' => $this->faker->text,

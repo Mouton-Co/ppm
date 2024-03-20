@@ -18,16 +18,14 @@
 
     @include('components.error-message')
 
-    <div class="field-card">
-        <form action="{{ route('projects.store') }}" method="POST" class="flex flex-col">
-            @csrf
-        
-            @include('project.form')
+    <form action="{{ route('projects.store') }}" method="POST" class="flex flex-col">
+        @csrf
+    
+        @include('project.form')
 
-            <div class="flex justify-center w-full gap-3 md:justify-end">
-                <input class="btn-sky max-w-none md:max-w-fit" type="submit" value="Create">
-            </div>
-        </form>
-    </div>
+        <div class="flex justify-center w-full gap-3 md:justify-end">
+            <input class="btn-sky max-w-none md:max-w-fit" type="submit" value="Create">
+        </div>
+    </form>
     
 @endsection

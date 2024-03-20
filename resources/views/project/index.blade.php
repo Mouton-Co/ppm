@@ -32,6 +32,7 @@
                     <th class="text-nowrap">{{ __('Proposed Solution') }}</th>
                     <th class="text-nowrap">{{ __('Currently Responsible') }}</th>
                     <th class="text-nowrap">{{ __('Status') }}</th>
+                    <th class="text-nowrap">{{ __('Issues At') }}</th>
                     <th class="text-nowrap">{{ __('Resolved At') }}</th>
                     <th class="text-nowrap">{{ __('Related PO') }}</th>
                     <th class="text-nowrap">{{ __('Customer Comment') }}</th>
@@ -51,13 +52,24 @@
                         <td class="max-w-[280px] truncate px-3">{{ $project->proposed_solution }}</td>
                         <td class="max-w-[280px] truncate px-3">{{ $project->currently_responsible }}</td>
                         <td class="max-w-[280px] truncate px-3">{{ $project->status }}</td>
+                        <td class="max-w-[280px] truncate px-3">{{ $project->created_at }}</td>
                         <td class="max-w-[280px] truncate px-3">{{ $project->resolved_at }}</td>
                         <td class="max-w-[280px] truncate px-3">{{ $project->related_po }}</td>
                         <td class="max-w-[280px] truncate px-3">{{ $project->customer_comment }}</td>
                         <td class="max-w-[280px] truncate px-3">{{ $project->commisioner_comment }}</td>
                         <td class="max-w-[280px] truncate px-3">{{ $project->logistics_comment }}</td>
+                        {{-- show create button if empty --}}
                         <td class="max-w-[280px] truncate px-3">
-                            {{ $project->submission->submission_code ?? 'N/A' }}
+                            @if (! empty($project->submission->submission_code))
+                                {{ $project->submission->submission_code }}
+                            @else
+                                <div class="w-full flex justify-center">
+                                    <a href="{{ route('new.submission') }}" class="btn btn-sky max-w-fit !text-xs
+                                    !py-1 !max-h-fit">
+                                        {{ __('Link submission') }}
+                                    </a>
+                                </div>
+                            @endif
                         </td>
                         <td class="w-[150px]">
                             <div class="flex justify-end items-center gap-2">

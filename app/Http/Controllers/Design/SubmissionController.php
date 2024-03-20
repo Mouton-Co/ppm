@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Design;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\PartsController;
 use App\Http\Helpers\FileManagementHelper;
+use App\Models\Project;
 use App\Models\Submission;
 use App\Models\User;
 use Carbon\Carbon;
@@ -42,10 +43,13 @@ class SubmissionController extends Controller
             'user_id' => $user->id,
         ]);
 
+        $projects = Project::whereNull('submission_id')->orderBy('coc')->get();
+
         return view('designer.new-submission')->with([
             'submission' => $submission,
             'submission_types' => config('dropdowns.submission_types'),
             'unit_numbers' => config('dropdowns.unit_numbers'),
+            'projects' => $projects,
         ]);
     }
 
@@ -72,7 +76,15 @@ class SubmissionController extends Controller
         $submission->current_unit_number = $request->get('current_unit_number');
         $submission->notes = $request->get('notes');
         $submission->submitted = 1;
+        $submission->project_id = $request->get('project_id') ?? null;
         $submission->save();
+
+        // link the project to the submission
+        if (! empty($request->get('project_id'))) {
+            $project = Project::find($request->get('project_id'));
+            $project->submission_id = $submission->id;
+            $project->save();
+        }
 
         $fmh = new FileManagementHelper();
         $fmh->makeFilesPermanent($submission->submission_code);

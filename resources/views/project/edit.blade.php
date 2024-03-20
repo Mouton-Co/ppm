@@ -18,17 +18,15 @@
 
     @include('components.error-message')
 
-    <div class="field-card">
-        <form action="{{ route('projects.update', $project->id) }}" method="POST" class="flex flex-col">
-            @method('PUT')
-            @csrf
-        
-            @include('project.form', ['project' => $project])
+    <form action="{{ route('projects.update', $project->id) }}" method="POST" class="flex flex-col">
+        @method('PUT')
+        @csrf
+    
+        @include('project.form', ['project' => $project])
 
-            <div class="flex justify-center w-full gap-3 md:justify-end">
-                <input class="btn-sky max-w-none md:max-w-fit" type="submit" value="Update">
-            </div>
-        </form>
-    </div>
+        <div class="flex justify-center w-full gap-3 md:justify-end">
+            <input class="btn-sky max-w-none md:max-w-fit" type="submit" value="Update">
+        </div>
+    </form>
     
 @endsection
