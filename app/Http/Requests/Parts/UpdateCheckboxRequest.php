@@ -22,6 +22,7 @@ class UpdateCheckboxRequest extends FormRequest
     public function rules(): array
     {
         $this->merge(['id' => $this->route('id')]);
+
         return [
             'id' => 'required|integer|exists:parts,id',
             'field' => 'required|string|in:raw_part_received,treatment_1_part_received,

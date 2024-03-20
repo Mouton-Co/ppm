@@ -36,7 +36,7 @@ class AutofillSupplierController extends Controller
     {
         $created = AutofillSupplier::create($request->validated());
 
-        if (!$created) {
+        if (! $created) {
             return redirect()->back()->withInput()->withError('Autofill supplier not created.');
         }
 
@@ -61,7 +61,7 @@ class AutofillSupplierController extends Controller
     {
         $updated = $autofillSupplier->update($request->validated());
 
-        if (!$updated) {
+        if (! $updated) {
             return redirect()->back()->withInput()->withError('Autofill supplier not updated.');
         }
 
@@ -75,7 +75,7 @@ class AutofillSupplierController extends Controller
     {
         $deleted = $autofillSupplier->delete();
 
-        if (!$deleted) {
+        if (! $deleted) {
             return redirect()->back()->withError('Autofill supplier not deleted.');
         }
 

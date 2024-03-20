@@ -22,11 +22,12 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         $this->merge(['id' => $this->route('id')]);
+
         return [
-            'id'         => 'required|integer|exists:parts,id',
-            'po_number'  => 'string',
+            'id' => 'required|integer|exists:parts,id',
+            'po_number' => 'string',
             'date_stamp' => 'date',
-            'status'     => 'in:'.implode(',', array_keys(\App\Models\Part::$statuses)),
+            'status' => 'in:'.implode(',', array_keys(\App\Models\Part::$statuses)),
         ];
     }
 }

@@ -23,7 +23,7 @@ class IndexRequest extends FormRequest
     {
         return [
             'page' => 'nullable|integer|min:1',
-            'order_by' => 'nullable|string|in:' . implode(',', array_merge(
+            'order_by' => 'nullable|string|in:'.implode(',', array_merge(
                 array_keys(config('models.parts.columns')),
                 ['created_at']
             )),

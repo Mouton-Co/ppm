@@ -55,13 +55,13 @@ class Part extends Model
     ];
 
     public static $statuses = [
-        'design'     => 'Design',
+        'design' => 'Design',
         'processing' => 'Processing',
         'email_sent' => 'Email Sent',
-        'supplier'   => 'Supplier',
-        'treatment'  => 'Treatment',
-        'qc'         => 'QC',
-        'assembly'   => 'Assembly',
+        'supplier' => 'Supplier',
+        'treatment' => 'Treatment',
+        'qc' => 'QC',
+        'assembly' => 'Assembly',
     ];
 
     public static $markedAs = [
@@ -77,7 +77,7 @@ class Part extends Model
     | Relationships
     |--------------------------------------------------------------------------
     */
-    
+
     /**
      * Get submission that the part belongs to
      */
@@ -85,7 +85,7 @@ class Part extends Model
     {
         return $this->belongsTo(Submission::class);
     }
-    
+
     /**
      * Get file for this part
      */
@@ -118,20 +118,20 @@ class Part extends Model
 
         switch ($key) {
             case 'raw_part_received':
-                $enabled = $this->part_ordered && !$this->treatment_1_part_received;
+                $enabled = $this->part_ordered && ! $this->treatment_1_part_received;
                 break;
             case 'treatment_1_part_received':
-                $enabled = $this->raw_part_received && !$this->treatment_2_part_received;
+                $enabled = $this->raw_part_received && ! $this->treatment_2_part_received;
                 break;
             case 'treatment_2_part_received':
-                $enabled = $this->treatment_1_part_received && !$this->completed_part_received;
+                $enabled = $this->treatment_1_part_received && ! $this->completed_part_received;
                 break;
             case 'completed_part_received':
                 $enabled = (
                     $this->treatment_2_part_received ||
                     $this->treatment_1_part_received ||
                     $this->raw_part_received
-                ) && !$this->qc_passed;
+                ) && ! $this->qc_passed;
                 break;
             case 'qc_passed':
                 $enabled = $this->completed_part_received;

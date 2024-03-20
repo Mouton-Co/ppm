@@ -2,7 +2,6 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,4 +18,3 @@ class Admin
         return auth()->user()->role->role == 'Admin' ? $next($request) : redirect()->route('dashboard');
     }
 }
-

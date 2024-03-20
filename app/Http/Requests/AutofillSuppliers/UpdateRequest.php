@@ -14,7 +14,7 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'text'       => 'required|unique:autofill_suppliers,text,'.$this->get('autofill_supplier_id'),
+            'text' => 'required|unique:autofill_suppliers,text,'.$this->get('autofill_supplier_id'),
             'supplier_id' => 'required|exists:suppliers,id',
         ];
     }

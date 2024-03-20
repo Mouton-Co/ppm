@@ -3,9 +3,9 @@
 return [
     'submission_types' => [
         'additional_project' => 'Additional Project',
-        'correction'         => 'Correction',
-        'new_bom'            => 'New BOM',
-        'replacement'        => 'Replacement',
+        'correction' => 'Correction',
+        'new_bom' => 'New BOM',
+        'replacement' => 'Replacement',
     ],
     'unit_numbers' => [
         '00' => 'Common Parts',

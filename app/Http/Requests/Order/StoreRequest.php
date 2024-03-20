@@ -15,8 +15,8 @@ class StoreRequest extends FormRequest
     {
         return [
             'po_number' => 'required|string|unique:orders,po_number|exists:parts,po_number',
-            'notes'     => 'string',
-            'status'    => 'required|in_array:' . implode(',', config('models.orders.status')),
+            'notes' => 'string',
+            'status' => 'required|in_array:'.implode(',', config('models.orders.status')),
         ];
     }
 }

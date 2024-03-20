@@ -24,11 +24,11 @@ class IndexRequest extends FormRequest
     {
         return [
             'page' => 'nullable|integer|min:1',
-            'status' => 'nullable|string|in:' . implode(',', array_merge(
+            'status' => 'nullable|string|in:'.implode(',', array_merge(
                 array_keys(config('models.orders.status')),
                 ['0']
             )),
-            'supplier' => 'nullable|string|in:' . implode(',', array_merge(
+            'supplier' => 'nullable|string|in:'.implode(',', array_merge(
                 Supplier::all()->pluck('id')->toArray(),
                 ['0']
             )),
