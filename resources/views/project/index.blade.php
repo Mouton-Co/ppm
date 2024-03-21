@@ -12,6 +12,7 @@
         </form>
     </div>
 
+    {{-- add button --}}
     <div class="flex justify-end items-center mt-4">
         <th class="flex justify-end w-48">
             <a href="{{ route('projects.create') }}" class="btn btn-sky max-w-fit">
@@ -20,9 +21,11 @@
         </th>
     </div>
 
+    {{-- table --}}
     <div class="field-card mt-4 overflow-auto">
         <table class="table-dark">
             <caption class="hidden">{{ __('Projects index table') }}</caption>
+            {{-- headings --}}
             <thead>
                 <tr>
                     <th class="text-nowrap">{{ __('Machine Nr') }}</th>
@@ -41,6 +44,7 @@
                     <th class="text-nowrap">{{ __('Submission ID') }}</th>
                 </tr>
             </thead>
+            {{-- rows --}}
             <tbody>
                 @if (!$projects->isEmpty())
                     @foreach ($projects as $project)
@@ -64,13 +68,19 @@
                                 {{ $project->submission->submission_code }}
                             @else
                                 <div class="w-full flex justify-start">
-                                    <a href="{{ route('new.submission') }}" class="btn btn-sky max-w-fit !text-xs
-                                    !py-1 !max-h-fit !rounded">
+                                    <a class="btn btn-sky max-w-fit !text-xs !py-1 !max-h-fit !rounded"
+                                    target="_blank" href="{{ route('new.submission', [
+                                        'machine_number' => $project->machine_nr,
+                                        'submission_type' => 'additional_project',
+                                        'project_id' => $project->id,
+                                        'notes' => $project->notes,
+                                    ]) }}">
                                         {{ __('Link submission') }}
                                     </a>
                                 </div>
                             @endif
                         </td>
+                        {{-- edit and delete --}}
                         <td class="w-[150px]">
                             <div class="flex justify-end items-center gap-2">
                                 <a href="{{ route('projects.edit', $project) }}"

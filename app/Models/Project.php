@@ -34,4 +34,15 @@ class Project extends Model
     {
         return $this->belongsTo(Submission::class);
     }
+
+    /**
+     * Get the notes attribute.
+     *
+     * @return string
+     */
+    public function getNotesAttribute(): string
+    {
+        return 'Noticed issue&#10;' . $this->noticed_issue .
+            '&#10;&#10;Proposed solution&#10;' . $this->proposed_solution;
+    }
 }
