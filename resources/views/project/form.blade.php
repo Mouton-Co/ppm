@@ -41,6 +41,7 @@
 <label class="label-dark" for="status">{{ __('Status') }}</label>
 <select class="w-full cursor-pointer {{ !empty($errors->get('status')) ? 'field-error' : 'field-dark' }} mb-5"
 name="status" id="status" required>
+    <option value="" disabled selected>{{ __("--Please select--") }}</option>
     @foreach ($statuses as $status)
         <option {{ !empty($project) && $project->status == $status ? 'selected' : '' }}
         value="{{ $status }}">

@@ -95,6 +95,13 @@
                                 <span class="truncate">{{ __('Process Types') }}</span>
                             </a>
                         </li>
+                        <li>
+                            <a href="{{ route('project-statuses.index') }}"
+                            class="nav-item-{{ request()->segment(1) == 'project-statuses' ? 'active' : 'default' }}">
+                                <x-icon.statuses class="h-6 w-6 shrink-0" />
+                                <span class="truncate">{{ __('Project statuses') }}</span>
+                            </a>
+                        </li>
                     </ul>
                 </li>
             @endif
