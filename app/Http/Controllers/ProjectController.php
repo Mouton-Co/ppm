@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Project\StoreRequest;
 use App\Models\Project;
+use App\Models\ProjectResponsible;
+use App\Models\ProjectStatus;
 use Illuminate\Http\Request;
 
 class ProjectController extends Controller
@@ -43,14 +45,12 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        $statuses = [
-            'pending',
-            'in progress',
-            'resolved'
-        ];
+        $statuses = ProjectStatus::orderBy('name')->get();
+        $responsibles = ProjectResponsible::orderBy('name')->get();
 
         return view('project.create', [
-            'statuses' => $statuses
+            'statuses' => $statuses,
+            'responsibles' => $responsibles,
         ]);
     }
 
@@ -69,15 +69,13 @@ class ProjectController extends Controller
      */
     public function edit(Project $project)
     {
-        $statuses = [
-            'pending',
-            'in progress',
-            'resolved'
-        ];
+        $statuses = ProjectStatus::orderBy('name')->get();
+        $responsibles = ProjectResponsible::orderBy('name')->get();
 
         return view('project.edit', [
             'project' => $project,
-            'statuses' => $statuses
+            'statuses' => $statuses,
+            'responsibles' => $responsibles,
         ]);
     }
 

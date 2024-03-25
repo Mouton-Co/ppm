@@ -18,7 +18,10 @@
     @endforeach
 @endif
 
-<label class="label-dark" for="coc">{{ __('COC') }}</label>
+<div class="flex gap-3 items-center">
+    <label class="label-dark" for="coc">{{ __('COC') }}</label>
+    <span class="text-slate-500 text-sm">{{ __("*Auto generation recommended") }}</span>
+</div>
 <input type="text" id="coc" name="coc" required
     class="{{ !empty($errors->get('coc')) ? 'field-error' : 'field-dark' }} mb-5"
     value="{{ $project->coc ?? old('coc') }}">
@@ -38,20 +41,32 @@
     $project->proposed_solution ?? old('proposed_solution')
 }}</textarea>
 
+<label class="label-dark" for="currently_responsible">{{ __('Currently Responsible') }}</label>
+<select class="w-full cursor-pointer {{ !empty($errors->get('currently_responsible')) ? 'field-error' : 'field-dark' }}
+mb-5" name="currently_responsible" id="currently_responsible" required>
+    <option value="" disabled selected>{{ __("--Please select--") }}</option>
+    @foreach ($responsibles as $responsible)
+        <option {{ !empty($project) && $project->currently_responsible == $responsible->name ? 'selected' : '' }}
+        value="{{ $responsible->name }}">
+            {{ $responsible->name }}
+        </option>
+    @endforeach
+</select>
+
 <label class="label-dark" for="status">{{ __('Status') }}</label>
 <select class="w-full cursor-pointer {{ !empty($errors->get('status')) ? 'field-error' : 'field-dark' }} mb-5"
 name="status" id="status" required>
     <option value="" disabled selected>{{ __("--Please select--") }}</option>
     @foreach ($statuses as $status)
-        <option {{ !empty($project) && $project->status == $status ? 'selected' : '' }}
-        value="{{ $status }}">
-            {{ $status }}
+        <option {{ !empty($project) && $project->status == $status->name ? 'selected' : '' }}
+        value="{{ $status->name }}">
+            {{ $status->name }}
         </option>
     @endforeach
 </select>
 
 <label class="label-dark" for="related_po">{{ __('Related PO') }}</label>
-<input type="text" id="related_po" name="related_po" required
+<input type="text" id="related_po" name="related_po"
     class="{{ !empty($errors->get('related_po')) ? 'field-error' : 'field-dark' }} mb-5"
     value="{{ $project->related_po ?? old('related_po') }}">
 @if (!empty($errors->get('related_po')))

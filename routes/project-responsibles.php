@@ -1,13 +1,13 @@
 <?php
 
-use App\Http\Controllers\ProjectStatusController;
+use App\Http\Controllers\ProjectResponsibleController;
 use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| Project status routes
+| Project responsibles routes
 |--------------------------------------------------------------------------
 */
 
-Route::resource('project-statuses', ProjectStatusController::class)->except(['show']);
+Route::resource('project-responsibles', ProjectResponsibleController::class)->except(['show']);
 
