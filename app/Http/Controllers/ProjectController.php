@@ -98,4 +98,29 @@ class ProjectController extends Controller
 
         return redirect()->back()->with('success', 'Project deleted successfully');
     }
+
+    /**
+     * Generate a new coc number for a machine
+     * @param string $machineNr
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function generateCoc($machineNr): \Illuminate\Http\JsonResponse
+    {
+        $projects = Project::where('coc', 'like', '%' . $machineNr . '_%')->get();
+
+        // get the highest coc number
+        $highest = 0;
+        foreach ($projects as $project) {
+            $number = explode('_', $project->coc);
+            $number = end($number);
+            if ((int) $number > $highest) {
+                $highest = $number;
+            }
+        }
+
+        // generate new coc number in format machineNr_###
+        $coc = $machineNr . '_' . str_pad($highest + 1, 3, '0', STR_PAD_LEFT);
+        
+        return response()->json(['coc' => $coc]);
+    }
 }

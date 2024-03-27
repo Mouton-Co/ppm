@@ -10,3 +10,4 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::resource('projects', ProjectController::class)->except(['show']);
+Route::get('project/coc/{machine_nr}', [ProjectController::class, 'generateCoc'])->name('projects.coc');

@@ -79,6 +79,10 @@ return [
             'sortable' => true,
             'format' => \App\Models\Part::$statuses,
         ],
+        'coc' => [
+            'name' => 'COC',
+            'sortable' => false,
+        ],
         'part_ordered_at' => [
             'name' => 'Part Ordered At',
             'sortable' => true,

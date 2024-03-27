@@ -22,9 +22,14 @@
     <label class="label-dark" for="coc">{{ __('COC') }}</label>
     <span class="text-slate-500 text-sm">{{ __("*Auto generation recommended") }}</span>
 </div>
-<input type="text" id="coc" name="coc" required
-    class="{{ !empty($errors->get('coc')) ? 'field-error' : 'field-dark' }} mb-5"
+<div class="flex gap-3 items-center mb-5">
+    <div class="btn btn-sky max-w-fit" id="coc-generate">
+        {{ __('Generate') }}
+    </div>
+    <input type="text" id="coc" name="coc" required
+    class="{{ !empty($errors->get('coc')) ? 'field-error' : 'field-dark' }}"
     value="{{ $project->coc ?? old('coc') }}">
+</div>
 @if (!empty($errors->get('coc')))
     @foreach ($errors->get('coc') as $error)
         @include('components.error-message', ['error' => $error, 'hidden' => 'false', 'class' => 'mb-5'])
