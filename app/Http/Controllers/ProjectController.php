@@ -158,6 +158,20 @@ class ProjectController extends Controller
                 'status' => 'Shipped',
             ]);
         }
+
+        // if status is moved the closed set resolved at
+        if ($request->field === 'status' && $request->value === 'Closed') {
+            $project->update([
+                'resolved_at' => now(),
+            ]);
+        }
+
+        // if status is moved from closed set resolved at to null\
+        if ($request->field === 'status' && $project->status === 'Closed') {
+            $project->update([
+                'resolved_at' => null,
+            ]);
+        }
         
         $project->update([
             $request->field => $request->value,
@@ -168,7 +182,7 @@ class ProjectController extends Controller
             'update' => [
                 'id' => $project->id,
                 'status' => $project->status,
-                'resolved_at' => $project->resolved_at,
+                'resolved_at' => $project->resolved_at_formatted,
             ],
         ]);
     }
