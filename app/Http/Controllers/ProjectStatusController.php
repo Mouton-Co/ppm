@@ -13,7 +13,7 @@ class ProjectStatusController extends Controller
      */
     public function index()
     {
-        $projectStatuses = ProjectStatus::query();
+        $projectStatuses = ProjectStatus::orderBy('name');
 
         if (request()->has('search')) {
             $projectStatuses->where('name', 'like', '%' . request('search') . '%');

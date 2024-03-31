@@ -20,6 +20,8 @@ class ProjectStatus extends Model
         switch ($this->name) {
             case 'Prepare':
             case 'Closed':
+            case 'Work in Progress':
+            case 'Design':
                 return false;
             default:
                 return true;

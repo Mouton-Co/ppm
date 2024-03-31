@@ -1,85 +1,221 @@
 @extends('layouts.dashboard')
 
 @section('dashboard-content')
-    <div class="flex justify-between items-center">
+    {{-- title and add button --}}
+    <div class="flex justify-between items-center mb-2">
         <h2 class="text-left">{{ __('Projects') }}</h2>
-        <form action="{{ route('projects.index') }}" method="get">
-            {{-- search --}}
-            <div class="flex items-center justify-start gap-2 smaller-than-711:flex-col smaller-than-711:items-start">
-                <input type="text" name="search" placeholder="Search..." value="{{ request()->query('search') ?? '' }}"
-                    class="field-dark min-w-[500px]">
+        <a href="{{ route('projects.create') }}" class="btn btn-sky max-w-fit">
+            {{ __('Add project') }}
+        </a>
+    </div>
+
+    {{-- filters --}}
+    <hr>
+    <form action="{{ route('projects.index') }}" method="get">
+        <div class="grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-4 gap-2 my-2 items-center justify-start">
+
+            {{-- machine_nr --}}
+            <div class="flex items-center justify-start gap-2 w-full">
+                <label for="search" class="min-w-fit text-white text-nowrap">
+                    {{ __('Machine #') }}
+                </label>
+                <input
+                    type="text"
+                    name="machine_nr"
+                    placeholder="Machine #"
+                    value="{{ request()->query('machine_nr') ?? '' }}"
+                    class="field-dark w-full"
+                >
             </div>
-        </form>
-    </div>
 
-    {{-- add button --}}
-    <div class="flex justify-end items-center mt-4">
-        <th class="flex justify-end w-48">
-            <a href="{{ route('projects.create') }}" class="btn btn-sky max-w-fit">
-                {{ __('Add project') }}
+            {{-- country --}}
+            <div class="flex items-center justify-start gap-2 w-full">
+                <label for="search" class="min-w-fit text-white text-nowrap">
+                    {{ __('Country') }}
+                </label>
+                <input
+                    type="text"
+                    name="country"
+                    placeholder="Country..."
+                    value="{{ request()->query('country') ?? '' }}"
+                    class="field-dark w-full"
+                >
+            </div>
+
+            {{-- currently_responsible --}}
+            <div class="flex items-center justify-start gap-2">
+                <label for="currently_responsible" class="min-w-fit text-white text-nowrap">
+                    {{ __('Currently responsible') }}
+                </label>
+                <select name="currently_responsible" class="field bg-transparent border-none
+                !ring-0 focus:ring-0 focus:outline-none cursor-pointer">
+                    <option value="" selected>{{ __('All') }}</option>
+                    @foreach (\App\Models\ProjectResponsible::orderBy('name')->get() as $responsible)
+                        <option value="{{ $responsible->name }}"
+                        @if (
+                            !empty(request()->query('currently_responsible')) &&
+                            request()->query('currently_responsible') == $responsible->name
+                        ) selected @endif>
+                            {{ $responsible->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            {{-- status --}}
+            <div class="flex items-center justify-start gap-2">
+                <label for="status" class="min-w-fit text-white text-nowrap">
+                    {{ __('Status') }}
+                </label>
+                <select name="status" class="field bg-transparent border-none
+                !ring-0 focus:ring-0 focus:outline-none cursor-pointer">
+                    <option value="" selected>{{ __('All') }}</option>
+                    @foreach (\App\Models\ProjectStatus::orderBy('name')->get() as $status)
+                        <option value="{{ $status->name }}"
+                        @if (
+                            !empty(request()->query('status')) &&
+                            request()->query('status') == $status->name
+                        ) selected @endif>
+                            {{ $status->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+        </div>
+
+        <div class="w-full flex justify-end gap-2">
+            <input type="hidden" name="page" value="{{ request()->query('page') ?? 1 }}">
+            <button type="submit" class="btn-sky max-w-fit">
+                {{ __('Filter') }}
+            </button>
+            <a href="{{ route('projects.index') }}" class="btn-sky-light max-w-fit">
+                {{ __('Clear Filters') }}
             </a>
-        </th>
-    </div>
+        </div>
+    </form>
 
-    {{-- table --}}
-    <div class="field-card mt-4 overflow-auto">
-        <table class="table-dark">
+    {{-- index table --}}
+    <div class="field-card mt-4 overflow-auto no-scrollbar">
+        <table class="table-dark no-scrollbar">
             <caption class="hidden">{{ __('Projects index table') }}</caption>
-            {{-- headings --}}
             <thead>
                 <tr>
-                    <th class="text-nowrap">{{ __('Machine Nr') }}</th>
-                    <th class="text-nowrap">{{ __('Country') }}</th>
-                    <th class="text-nowrap">{{ __('COC') }}</th>
-                    <th class="text-nowrap">{{ __('Noticed Issue') }}</th>
-                    <th class="text-nowrap">{{ __('Proposed Solution') }}</th>
-                    <th class="text-nowrap">{{ __('Currently Responsible') }}</th>
-                    <th class="text-nowrap">{{ __('Status') }}</th>
-                    <th class="text-nowrap">{{ __('Issues At') }}</th>
-                    <th class="text-nowrap">{{ __('Resolved At') }}</th>
-                    <th class="text-nowrap">{{ __('Related PO') }}</th>
-                    <th class="text-nowrap">{{ __('Customer Comment') }}</th>
-                    <th class="text-nowrap">{{ __('Commisioner Comment') }}</th>
-                    <th class="text-nowrap">{{ __('Logistics Comment') }}</th>
-                    <th class="text-nowrap">{{ __('Submission ID') }}</th>
+                    @foreach (config('models.projects.columns') as $key => $field)
+                        <th>
+                            <span class="flex justify-between">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-nowrap">
+                                        {{ $field['name'] }}
+                                    </span>
+                                    @if ($field['sortable'])
+                                        <form action="{{ route('projects.index') }}" method="GET">
+                                            <input type="hidden" name="order_by" value="{{ $key }}">
+                                            <input type="hidden" name="page"
+                                                value="{{ request()->query('page') ?? 1 }}">
+                                            <input type="hidden" name="order"
+                                                value="{{ !empty(request()->query('order_by')) &&
+                                                request()->query('order_by') == $key &&
+                                                request()->query('order') == 'asc'
+                                                    ? 'desc'
+                                                    : 'asc' }}">
+                                            <button type="submit">
+                                                <x-icon.up-arrow
+                                                    class="cursor-pointer h-[10px]
+                                                    {{ !empty(request()->query('order_by')) &&
+                                                    request()->query('order_by') == $key &&
+                                                    request()->query('order') == 'asc'
+                                                        ? 'rotate-180'
+                                                        : '' }}" />
+                                            </button>
+                                        </form>
+                                    @endif
+                                </div>
+                            </span>
+                        </th>
+                    @endforeach
                 </tr>
             </thead>
-            {{-- rows --}}
-            <tbody>
-                @if (!$projects->isEmpty())
-                    @foreach ($projects as $project)
-                    <tr class="h-10">
-                        <td class="max-w-[280px] truncate px-3">{{ $project->machine_nr }}</td>
-                        <td class="max-w-[280px] truncate px-3">{{ $project->country }}</td>
-                        <td class="max-w-[280px] truncate px-3">{{ $project->coc }}</td>
-                        <td class="max-w-[280px] truncate px-3">{{ $project->noticed_issue }}</td>
-                        <td class="max-w-[280px] truncate px-3">{{ $project->proposed_solution }}</td>
-                        <td class="max-w-[280px] truncate px-3">{{ $project->currently_responsible }}</td>
-                        <td class="max-w-[280px] truncate px-3">{{ $project->status }}</td>
-                        <td class="max-w-[280px] truncate px-3">{{ $project->created_at }}</td>
-                        <td class="max-w-[280px] truncate px-3">{{ $project->resolved_at }}</td>
-                        <td class="max-w-[280px] truncate px-3">{{ $project->related_po }}</td>
-                        <td class="max-w-[280px] truncate px-3">{{ $project->customer_comment }}</td>
-                        <td class="max-w-[280px] truncate px-3">{{ $project->commisioner_comment }}</td>
-                        <td class="max-w-[280px] truncate px-3">{{ $project->logistics_comment }}</td>
-                        {{-- show create button if empty --}}
-                        <td class="max-w-[280px] truncate px-3">
-                            @if (! empty($project->submission->submission_code))
-                                {{ $project->submission->submission_code }}
-                            @else
-                                <div class="w-full flex justify-start">
-                                    <a class="btn btn-sky max-w-fit !text-xs !py-1 !max-h-fit !rounded"
-                                    target="_blank" href="{{ route('new.submission', [
-                                        'machine_number' => $project->machine_nr,
-                                        'submission_type' => 'additional_project',
-                                        'project_id' => $project->id,
-                                        'notes' => $project->notes,
-                                    ]) }}">
-                                        {{ __('Link submission') }}
-                                    </a>
-                                </div>
-                            @endif
-                        </td>
+            <tbody class="hover-cell">
+                @php
+                    $cell = 0;
+                @endphp
+                @foreach ($projects as $project)
+                    <tr>
+                        @foreach (config('models.projects.columns') as $key => $field)
+                            <td class="max-w-[280px] truncate">
+                                @php
+                                    $editable = !empty($field['editable']) && $field['editable'];
+                                    $type = !empty($field['type']) ? $field['type'] : 'text';
+                                @endphp
+                                <span id="{{ $project->id . '-' . $key }}" class="relative w-full h-full
+                                {{ $editable && $type == 'text' ?
+                                'cell-edit hover:bg-sky-700 cursor-text hover:shadow-inner' : '' }}">
+
+                                    @php
+                                        $value = str_contains($key, '->')
+                                            ? App\Http\Services\ModelService::nestedValue($project, $key)
+                                            : $project->$key;
+                                    @endphp
+
+                                    @if ($editable)
+                                        @switch($type)
+                                            @case('text')
+                                                <input type="{{ $key == 'date_stamp' ? 'date' : 'text' }}"
+                                                    name="{{ $key }}" value="{{ $value }}"
+                                                    class="w-auto h-full bg-transparent border-none
+                                                    focus:ring-0 focus:outline-none cell-text"
+                                                    item-id="{{ $project->id }}">
+                                                @break
+                                            @case('select')
+                                                @php
+                                                    $options = $field['options']['model']::orderBy('name')->get();
+                                                @endphp
+                                                <select name="{{ $key }}" class="field bg-transparent border-none
+                                                !ring-0 !w-[195px] focus:ring-0 focus:outline-none cursor-pointer
+                                                cell-dropdown" item-id="{{ $project->id }}">
+                                                    <option value="" disabled selected>
+                                                        {{ $value ?? '' }}
+                                                    </option>
+                                                    @foreach ($options as $option)
+                                                        <option
+                                                            value="{{ $option->name }}"
+                                                            @if ($option->name === $project->$value) selected @endif
+                                                        >
+                                                            {{ $option->name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                                @break
+                                        @endswitch
+                                    @else
+                                        @if ($key == 'submission_id')
+                                                @if (! empty($project->submission->submission_code))
+                                                    {{ $project->submission->submission_code }}
+                                                @else
+                                                <div class="w-full flex justify-start">
+                                                    <a class="btn btn-sky max-w-fit !text-xs !py-1 !max-h-fit !rounded"
+                                                    target="_blank" href="{{ route('new.submission', [
+                                                        'machine_number' => $project->machine_nr,
+                                                        'submission_type' => 'additional_project',
+                                                        'project_id' => $project->id,
+                                                        'notes' => $project->notes,
+                                                    ]) }}">
+                                                        {{ __('Link submission') }}
+                                                    </a>
+                                                </div>
+                                                @endif
+                                        @else
+                                            {{ $value ?? '-' }}
+                                        @endif
+                                    @endif
+
+                                </span>
+                            </td>
+                            @php
+                                $cell++;
+                            @endphp
+                        @endforeach
                         {{-- edit and delete --}}
                         <td class="w-[150px]">
                             <div class="flex justify-end items-center gap-2">
@@ -99,18 +235,14 @@
                             </div>
                         </td>
                     </tr>
-                    @endforeach
-                @else
-                    <tr>
-                        <td colspan="13">{{ __('No projects found') }}</td>
-                    </tr>
-                @endif
+                @endforeach
             </tbody>
         </table>
     </div>
 
     {{-- pagination --}}
     {{ $projects->appends([
-        'search' => request()->query('search') ?? '',
+        'order_by' => request()->query('order_by'),
+        'order' => request()->query('order'),
     ])->links() }}
 @endsection

@@ -18,7 +18,8 @@ class Project extends Model
         'currently_responsible',
         'status',
         'resolved_at',
-        'related_po',
+        'related_pos',
+        'waybill_nr',
         'customer_comment',
         'commisioner_comment',
         'logistics_comment',
@@ -44,5 +45,15 @@ class Project extends Model
     {
         return 'Noticed issue&#10;' . $this->noticed_issue .
             '&#10;&#10;Proposed solution&#10;' . $this->proposed_solution;
+    }
+
+    /**
+     * Get the issued at attribute.
+     *
+     * @return string
+     */
+    public function getIssuedAtAttribute(): string
+    {
+        return $this->created_at;
     }
 }

@@ -82,6 +82,7 @@ class SubmissionController extends Controller
         // link the project to the submission
         if (! empty($request->get('project_id'))) {
             $project = Project::find($request->get('project_id'));
+            $project->status = "Work in Progress";
             $project->submission_id = $submission->id;
             $project->save();
         }

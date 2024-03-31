@@ -70,14 +70,16 @@ name="status" id="status" required>
     @endforeach
 </select>
 
-<label class="label-dark" for="related_po">{{ __('Related PO') }}</label>
-<input type="text" id="related_po" name="related_po"
-    class="{{ !empty($errors->get('related_po')) ? 'field-error' : 'field-dark' }} mb-5"
-    value="{{ $project->related_po ?? old('related_po') }}">
-@if (!empty($errors->get('related_po')))
-    @foreach ($errors->get('related_po') as $error)
-        @include('components.error-message', ['error' => $error, 'hidden' => 'false', 'class' => 'mb-5'])
-    @endforeach
+@if (! empty($project))
+    <label class="label-dark" for="related_po">{{ __('Related PO') }}</label>
+    <input type="text" id="related_po" name="related_po"
+        class="{{ !empty($errors->get('related_po')) ? 'field-error' : 'field-dark' }} mb-5"
+        value="{{ $project->related_po ?? old('related_po') }}">
+    @if (!empty($errors->get('related_po')))
+        @foreach ($errors->get('related_po') as $error)
+            @include('components.error-message', ['error' => $error, 'hidden' => 'false', 'class' => 'mb-5'])
+        @endforeach
+    @endif
 @endif
 
 <label class="label-dark" for="customer_comment">{{ __('Customer Comment') }}</label>

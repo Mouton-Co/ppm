@@ -19,6 +19,7 @@ class ProjectStatusSeeder extends Seeder
             'Shipped',
             'Waiting for customer',
             'Closed',
+            'Design',
         ];
 
         \App\Models\ProjectStatus::truncate();

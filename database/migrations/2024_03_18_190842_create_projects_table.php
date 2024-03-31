@@ -21,7 +21,8 @@ return new class extends Migration
             $table->string('currently_responsible')->nullable();
             $table->string('status')->nullable();
             $table->string('resolved_at')->nullable();
-            $table->string('related_po')->nullable();
+            $table->string('related_pos')->nullable();
+            $table->string('waybill_nr')->nullable();
             $table->text('customer_comment')->nullable();
             $table->text('commisioner_comment')->nullable();
             $table->text('logistics_comment')->nullable();
