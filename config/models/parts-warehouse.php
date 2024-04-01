@@ -24,6 +24,7 @@ $treatments = [
     'Skim',
     'Edge Radius',
     'Strip',
+    'Matte black powder coated',
     'Other',
 ];
 
