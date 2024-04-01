@@ -6,17 +6,20 @@
     <label class="label-dark" for="assembly_name">{{ __('Assemly name') }}</label>
     <input type="text" id="assembly_name" name="assembly_name" class="field-dark mb-5" required>
 
-    <div class="flex mb-5 flex-col sm:flex-row sm:gap-5">
-        <div class="w-full mb-5 md:mb-0">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5 mb-5">
+        <div class="w-full">
             <label class="label-dark" for="machine_number">{{ __('Machine number') }}</label>
-            <input type="text" name="machine_number" id="machine_number" required class="field-dark">
+            <input type="text" name="machine_number" id="machine_number" required class="field-dark"
+            value="{{ request()->get('machine_number') ?? '' }}">
         </div>
-        <div class="w-full mb-5 md:mb-0">
+        <div class="w-full">
             <label class="label-dark" for="submission_type">{{ __('Submission type') }}</label>
             <select class="w-full field-dark" id="submission_type" name="submission_type" required>
                 <option value="">{{ __('--Please select--') }}</option>
                 @foreach ($submission_types as $key => $submission_type)
-                    <option value="{{ $key }}">{{ $submission_type }}</option>
+                    <option value="{{ $key }}" @if (request()->get('submission_type') == $key) selected @endif>
+                        {{ $submission_type }}
+                    </option>
                 @endforeach
             </select>
         </div>
@@ -29,8 +32,22 @@
                 @endforeach
             </select>
         </div>
+        <div class="w-full">
+            <label class="label-dark" for="project_id">{{ __('Project') }}</label>
+            <select class="w-full field-dark" name="project_id" id="project_id">
+                <option value="">{{ __('--Please select--') }}</option>
+                @foreach ($projects as $project)
+                    <option value="{{ $project->id }}"
+                    @if (request()->get('project_id') == $project->id) selected @endif>
+                        {{ $project->coc }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
     </div>
 
     <label class="label-dark" for="notes">{{ __('Notes') }}</label>
-    <textarea name="notes" cols="30" rows="6" class="field-dark mb-5" placeholder="Additional notes..."></textarea>
+    <textarea name="notes" cols="30" rows="6" class="field-dark mb-5" placeholder="Additional notes...">{!!
+        request()->get('notes') ?? ''
+    !!}</textarea>
 </form>

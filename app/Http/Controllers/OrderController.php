@@ -140,6 +140,15 @@ class OrderController extends Controller
             ]);
         }
 
+        // if project is attached to submission update related POs
+        if (! empty($order?->submission?->project)) {
+            $order->submission->project->update([
+                'related_pos' => ! empty($order->submission->project->related_pos)
+                    ? $order->submission->project->related_pos . ', ' . $order->po_number
+                    : $order->po_number,
+            ]);
+        }
+
         return redirect()->route('orders.index')->withSuccess(
             'Parts marked as ordered.'
         );

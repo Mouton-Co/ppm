@@ -26,6 +26,7 @@ class Submission extends Model
         'notes',
         'submitted',
         'user_id',
+        'project_id',
     ];
 
     /*
@@ -48,6 +49,14 @@ class Submission extends Model
     public function parts(): HasMany
     {
         return $this->hasMany(Part::class);
+    }
+
+    /**
+     * Get the project for this submission
+     */
+    public function project(): BelongsTo
+    {
+        return $this->belongsTo(Project::class);
     }
 
     /*

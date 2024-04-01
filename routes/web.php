@@ -27,6 +27,9 @@ Route::middleware('auth')->group(function () {
     include 'representatives.php';
     include 'autofill-supplier.php';
     include 'process-types.php';
+    include 'projects.php';
+    include 'project-statuses.php';
+    include 'project-responsibles.php';
 });
 
 include __DIR__.'/auth.php';

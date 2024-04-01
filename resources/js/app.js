@@ -21,3 +21,7 @@ import { modals } from "./general/modals.js";
 modals();
 import { processTypes } from "./general/process-types.js";
 processTypes();
+import { cocGenerate } from "./projects/coc-generation.js";
+cocGenerate();
+import { cellEditProject } from "./projects/cell-edit.js";
+cellEditProject();

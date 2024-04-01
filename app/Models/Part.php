@@ -102,9 +102,22 @@ class Part extends Model
         return $this->belongsTo(Supplier::class);
     }
 
+    /**
+     * Get the first pdf for the part
+     */
     public function pdf()
     {
         return $this->files()->where('file_type', 'pdf')->first();
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Attributes
+    |--------------------------------------------------------------------------
+    */
+    public function getCocAttribute()
+    {
+        return $this->submission->project->coc ?? 'N/A';
     }
 
     /*

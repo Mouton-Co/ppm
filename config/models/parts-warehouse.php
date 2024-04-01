@@ -24,6 +24,7 @@ $treatments = [
     'Skim',
     'Edge Radius',
     'Strip',
+    'Matte black powder coated',
     'Other',
 ];
 
@@ -100,6 +101,10 @@ return [
             'name' => 'Status',
             'sortable' => true,
             'format' => \App\Models\Part::$statuses,
+        ],
+        'coc' => [
+            'name' => 'COC',
+            'sortable' => false,
         ],
         'part_lifecycle_stamps' => [
             'name' => 'Part Lifecycle Stamps',
