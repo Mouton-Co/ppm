@@ -7,7 +7,7 @@ return [
             'sortable' => true,
         ],
         'country' => [
-            'name' => 'Country',
+            'name' => 'Country/Company',
             'sortable' => true,
         ],
         'coc' => [

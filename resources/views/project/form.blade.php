@@ -8,7 +8,7 @@
     @endforeach
 @endif
 
-<label class="label-dark" for="country">{{ __('Country') }}</label>
+<label class="label-dark" for="country">{{ __('Country/Company') }}</label>
 <input type="text" id="country" name="country" required
     class="{{ !empty($errors->get('country')) ? 'field-error' : 'field-dark' }} mb-5"
     value="{{ $project->country ?? old('country') }}">
