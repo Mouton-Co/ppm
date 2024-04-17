@@ -85,6 +85,22 @@ export function cellEdit() {
                     id: id,
                     field: field,
                     value: value
+                },
+                success: function (data) {
+                    if (
+                        field == 'treatment_1' &&
+                        value != '-' &&
+                        $('#' + id + '-status').text().includes('Treatment')
+                    ) {
+                        $($('input[name="treatment_1_part_received"][part-id="' + id + '"]')).removeAttr('disabled');
+                    }
+                    if (
+                        field == 'treatment_2' &&
+                        value != '-' &&
+                        $('#' + id + '-status').text() == 'Treatment'
+                    ) {
+                        $($('input[name="treatment_2_part_received"][part-id="' + id + '"]')).removeAttr('disabled');
+                    }
                 }
             });
         }, 200);
