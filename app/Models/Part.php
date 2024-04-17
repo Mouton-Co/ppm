@@ -154,11 +154,12 @@ class Part extends Model
                 ) && ! $this->qc_passed;
                 break;
             case 'qc_passed':
-                $enabled = $this->completed_part_received;
+                $enabled = $this->completed_part_received
+                    && ! $this->qc_issue;
                 break;
             case 'part_ordered':
             case 'qc_issue':
-                $enabled = true;
+                $enabled = ! $this->qc_passed;
                 break;
             default:
                 $enabled = false;
