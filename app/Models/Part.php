@@ -134,10 +134,16 @@ class Part extends Model
                 $enabled = $this->part_ordered && ! $this->treatment_1_part_received;
                 break;
             case 'treatment_1_part_received':
-                $enabled = $this->raw_part_received && ! $this->treatment_2_part_received;
+                $enabled = $this->raw_part_received &&
+                    ! $this->treatment_2_part_received &&
+                    ! empty($this->treatment_1) &&
+                    $this->treatment_1 != '-';
                 break;
             case 'treatment_2_part_received':
-                $enabled = $this->treatment_1_part_received && ! $this->completed_part_received;
+                $enabled = $this->treatment_1_part_received &&
+                    ! $this->completed_part_received &&
+                    ! empty($this->treatment_2) &&
+                    $this->treatment_2 != '-';
                 break;
             case 'completed_part_received':
                 $enabled = (
