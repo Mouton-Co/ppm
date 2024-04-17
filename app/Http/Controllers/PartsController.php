@@ -457,7 +457,21 @@ class PartsController extends Controller
         }
 
         foreach ($parts as $part) {
-            if ($request->get('mark_as') == 'raw_part_received') {
+            if ($request->get('mark_as') == 'untick_all') {
+                $part->raw_part_received = false;
+                $part->treatment_1_part_received = false;
+                $part->treatment_2_part_received = false;
+                $part->completed_part_received = false;
+                $part->qc_passed = false;
+
+                $part->raw_part_received_at = null;
+                $part->treatment_1_part_received_at = null;
+                $part->treatment_2_part_received_at = null;
+                $part->completed_part_received_at = null;
+                $part->qc_passed_at = null;
+
+                $part->status = 'supplier';
+            } elseif ($request->get('mark_as') == 'raw_part_received') {
                 $part->raw_part_received = true;
                 $part->raw_part_received_at = now();
                 $part->status = 'treatment';

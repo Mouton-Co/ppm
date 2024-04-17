@@ -65,6 +65,7 @@ class Part extends Model
     ];
 
     public static $markedAs = [
+        'untick_all' => 'Untick All',
         'raw_part_received' => 'Raw Part Received',
         'treatment_1_part_received' => 'Treatment 1 Part Received',
         'treatment_2_part_received' => 'Treatment 2 Part Received',
