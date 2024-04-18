@@ -54,12 +54,26 @@ return [
             'sortable' => true,
             'options' => $treatments,
         ],
+        'treatment_1_supplier' => [
+            'name' => 'Treatment 1 Supplier',
+            'editable' => true,
+            'type' => 'select',
+            'sortable' => true,
+            'options' => '\App\Models\Supplier',
+        ],
         'treatment_2' => [
             'name' => 'Treatment 2',
             'editable' => true,
             'type' => 'select',
             'sortable' => true,
             'options' => $treatments,
+        ],
+        'treatment_2_supplier' => [
+            'name' => 'Treatment 2 Supplier',
+            'editable' => true,
+            'type' => 'select',
+            'sortable' => true,
+            'options' => '\App\Models\Supplier',
         ],
         'po_number' => [
             'name' => 'PO Number',

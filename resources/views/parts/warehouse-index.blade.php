@@ -223,8 +223,17 @@
                                                 @php
                                                     $options = [];
                                                     $options['-'] = '--Please select--';
-                                                    foreach ($field['options'] as $option) {
-                                                        $options[$option] = $option;
+                                                    if ($field['options'] == '\App\Models\Supplier') {
+                                                        $models = $field['options']::all()->pluck(
+                                                            'name',
+                                                        )->toArray();
+                                                        foreach ($models as $model) {
+                                                            $options[$model] = $model;
+                                                        }
+                                                    } else {
+                                                        foreach ($field['options'] as $option) {
+                                                            $options[$option] = $option;
+                                                        }
                                                     }
                                                     ksort($options);
                                                 @endphp
