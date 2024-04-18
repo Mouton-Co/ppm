@@ -63,8 +63,10 @@ mb-5" name="currently_responsible" id="currently_responsible" required>
 name="status" id="status" required>
     <option value="" disabled selected>{{ __("--Please select--") }}</option>
     @foreach ($statuses as $status)
-        <option {{ !empty($project) && $project->status == $status->name ? 'selected' : '' }}
-        value="{{ $status->name }}">
+        <option {{
+            (!empty($project) && $project->status == $status->name) ||
+            $status->name == 'Prepare' ? 'selected' : ''
+        }} value="{{ $status->name }}">
             {{ $status->name }}
         </option>
     @endforeach
