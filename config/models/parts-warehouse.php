@@ -91,6 +91,13 @@ return [
             'name' => 'Qty Ordered',
             'sortable' => true,
         ],
+        'qty_received' => [
+            'name' => 'Qty Received',
+            'editable' => true,
+            'sortable' => true,
+            'type' => 'integer',
+            'min' => 0,
+        ],
         'material' => [
             'name' => 'Material',
             'sortable' => true,

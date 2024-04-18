@@ -52,6 +52,7 @@ class PartsController extends Controller
                 }
                 $part->quantity_in_stock = 0;
                 $part->quantity_ordered = $part->quantity;
+                $part->qty_received = $part->quantity;
 
                 $part->save();
 

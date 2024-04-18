@@ -54,6 +54,7 @@ class Part extends Model
         'quantity_ordered',
         'treatment_1_supplier',
         'treatment_2_supplier',
+        'qty_received',
     ];
 
     public static $statuses = [
