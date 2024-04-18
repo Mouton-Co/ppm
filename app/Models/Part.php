@@ -52,6 +52,8 @@ class Part extends Model
         'comment_logistics',
         'quantity_in_stock',
         'quantity_ordered',
+        'treatment_1_supplier',
+        'treatment_2_supplier',
     ];
 
     public static $statuses = [
