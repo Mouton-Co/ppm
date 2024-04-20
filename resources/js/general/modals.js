@@ -10,4 +10,13 @@ export function modals() {
         $('.purchase-order-modal').removeClass('flex').addClass('hidden');
         $('#modal-curtain').removeClass('flex').addClass('hidden');
     });
+
+    // tooltip trigger
+    $('.tooltip-trigger').hover(function () {
+        let id = $(this).attr('tooltip-id');
+        $('#' + id).removeClass('hidden').addClass('fixed');
+    }, function () {
+        let id = $(this).attr('tooltip-id');
+        $('#' + id).addClass('hidden').removeClass('fixed');
+    });
 }
