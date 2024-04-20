@@ -164,8 +164,17 @@
                                                 <input type="{{ $key == 'date_stamp' ? 'date' : 'text' }}"
                                                     name="{{ $key }}" value="{{ $value }}"
                                                     class="w-auto h-full bg-transparent border-none
-                                                    focus:ring-0 focus:outline-none cell-text"
-                                                    item-id="{{ $project->id }}">
+                                                    focus:ring-0 focus:outline-none cell-text tooltip-trigger"
+                                                    item-id="{{ $project->id }}"
+                                                    @if ($key == 'noticed_issue' || $key == 'proposed_solution')
+                                                        tooltip-id="{{ $project->id . '-' . $key . '-tooltip' }}"
+                                                    @endif>
+
+                                                @if ($key == 'noticed_issue' || $key == 'proposed_solution')
+                                                    <x-tooltip id="{{ $project->id . '-' . $key . '-tooltip' }}">
+                                                        {!! $value !!}
+                                                    </x-tooltip>
+                                                @endif
                                                 @break
                                             @case('select')
                                                 @php
