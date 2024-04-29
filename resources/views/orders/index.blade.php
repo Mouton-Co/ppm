@@ -96,7 +96,7 @@
                     </div>
                     <div class="order-card-body-item">
                         <x-icon.submission class="w-5" />
-                        <span>{{ $order->submission->submission_code }}</span>
+                        <span>{{ $order->submission->submission_code ?? '## submission deleted' }}</span>
                     </div>
                     <div class="order-card-body-item">
                         <x-icon.spanner class="w-5" />
