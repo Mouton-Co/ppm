@@ -101,6 +101,7 @@
             <caption class="hidden">{{ __('Projects index table') }}</caption>
             <thead>
                 <tr>
+                    <th></th>
                     @foreach (config('models.projects.columns') as $key => $field)
                         <th>
                             <span class="flex justify-between">
@@ -134,6 +135,7 @@
                             </span>
                         </th>
                     @endforeach
+                    <th></th>
                 </tr>
             </thead>
             <tbody class="hover-cell">
@@ -142,6 +144,15 @@
                 @endphp
                 @foreach ($projects as $project)
                     <tr>
+                        {{-- edit --}}
+                        <td class="w-[150px]">
+                            <div class="flex justify-end items-center gap-2">
+                                <a href="{{ route('projects.edit', $project) }}"
+                                class="text-gray-300 hover:text-sky-700 max-w-fit">
+                                    {{ __('Edit') }}
+                                </a>
+                            </div>
+                        </td>
                         @foreach (config('models.projects.columns') as $key => $field)
                             <td class="max-w-[280px] truncate">
                                 @php
@@ -228,10 +239,6 @@
                         {{-- edit and delete --}}
                         <td class="w-[150px]">
                             <div class="flex justify-end items-center gap-2">
-                                <a href="{{ route('projects.edit', $project) }}"
-                                class="text-gray-300 hover:text-sky-700 max-w-fit">
-                                    {{ __('Edit') }}
-                                </a>
                                 <div class="text-gray-300 hover:text-red-600 cursor-pointer max-w-fit"
                                 id="delete-button-{{ $project->id }}">
                                     {{ __('Delete') }}

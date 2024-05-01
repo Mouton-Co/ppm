@@ -138,7 +138,7 @@ class PartsController extends Controller
         }
 
         return view('parts.procurement-index')->with([
-            'parts' => $parts->paginate(10),
+            'parts' => $parts->paginate(15),
         ]);
     }
 
@@ -218,7 +218,7 @@ class PartsController extends Controller
         }
 
         return view('parts.warehouse-index')->with([
-            'parts' => $parts->paginate(10),
+            'parts' => $parts->paginate(15),
         ]);
     }
 

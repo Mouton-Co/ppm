@@ -2,6 +2,10 @@
 
 return [
     'columns' => [
+        'submission_id' => [
+            'name' => 'Submission',
+            'sortable' => true,
+        ],
         'machine_nr' => [
             'name' => 'Machine Nr',
             'sortable' => true,
@@ -78,10 +82,6 @@ return [
             'name' => 'Logistics Comment',
             'sortable' => true,
             'editable' => true,
-        ],
-        'submission_id' => [
-            'name' => 'Submission',
-            'sortable' => true,
         ],
     ],
 ];

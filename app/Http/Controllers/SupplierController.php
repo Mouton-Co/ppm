@@ -24,7 +24,7 @@ class SupplierController extends Controller
         }
 
         return view('supplier.index')->with([
-            'suppliers' => $suppliers->orderBy('name')->paginate(10),
+            'suppliers' => $suppliers->orderBy('name')->paginate(15),
         ]);
     }
 

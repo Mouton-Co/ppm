@@ -142,7 +142,7 @@ class SubmissionController extends Controller
 
         return view('submissions.index')->with([
             'current' => 'view-submissions',
-            'submissions' => $submissions->paginate(10),
+            'submissions' => $submissions->paginate(15),
             'fields' => config('models.submissions.columns'),
         ]);
     }

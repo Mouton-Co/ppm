@@ -28,7 +28,7 @@ class RepresentativeController extends Controller
         }
 
         return view('representative.index')->with([
-            'representatives' => $representatives->orderBy('name')->paginate(10),
+            'representatives' => $representatives->orderBy('name')->paginate(15),
         ]);
     }
 
