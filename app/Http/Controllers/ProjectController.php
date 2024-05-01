@@ -34,7 +34,7 @@ class ProjectController extends Controller
         }
 
         return view('project.index', [
-            'projects' => $projects->paginate(10)
+            'projects' => $projects->paginate(15)
         ]);
     }
 

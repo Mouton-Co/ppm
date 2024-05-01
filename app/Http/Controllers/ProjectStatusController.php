@@ -20,7 +20,7 @@ class ProjectStatusController extends Controller
         }
 
         return view('project-status.index', [
-            'projectStatuses' => $projectStatuses->paginate(10)
+            'projectStatuses' => $projectStatuses->paginate(15)
         ]);
     }
 

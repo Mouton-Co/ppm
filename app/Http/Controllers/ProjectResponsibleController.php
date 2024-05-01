@@ -20,7 +20,7 @@ class ProjectResponsibleController extends Controller
         }
 
         return view('project-responsible.index', [
-            'projectResponsibles' => $projectResponsibles->paginate(10)
+            'projectResponsibles' => $projectResponsibles->paginate(15)
         ]);
     }
 
