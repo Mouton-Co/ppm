@@ -30,6 +30,7 @@ Route::middleware('auth')->group(function () {
     include 'projects.php';
     include 'project-statuses.php';
     include 'project-responsibles.php';
+    include 'recipient-groups.php';
 });
 
 include __DIR__.'/auth.php';

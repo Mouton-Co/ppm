@@ -31,13 +31,8 @@ return [
         'currently_responsible' => [
             'name' => 'Currently Responsible',
             'sortable' => true,
-            'type' => 'select',
+            'type' => 'responsibles',
             'editable' => true,
-            'options' => [
-                'model' => 'App\Models\ProjectResponsible',
-                'value' => 'name',
-                'label' => 'name',
-            ],
         ],
         'status' => [
             'name' => 'Status',

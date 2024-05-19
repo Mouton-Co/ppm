@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\PartsController;
 use App\Http\Helpers\FileManagementHelper;
 use App\Models\Project;
+use App\Models\RecipientGroup;
 use App\Models\Submission;
 use App\Models\User;
 use Carbon\Carbon;
@@ -92,6 +93,15 @@ class SubmissionController extends Controller
 
         $partsController = new PartsController();
         $partsController->storeParts($submission);
+
+        // send out email to recipients
+        $group = RecipientGroup::where('field', "Item created")
+            ->where('value', 'Submission')
+            ->first();
+
+        if (! empty($group)) {
+            $group->mail('New Submission Available', 'emails.submission.created', $submission);
+        }
 
         return redirect()->route('submissions.index')->with([
             'success' => 'Submission created - '.$submission->assembly_name,

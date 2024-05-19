@@ -12,9 +12,9 @@
                 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z"></path>
             </g>
         </svg>
-        {{ __('All responsibles') }}
+        {{ __('All departments') }}
     </a>
-    <h2 class="mb-5 text-left">{{ __('Edit responsible') }}</h2>
+    <h2 class="mb-5 text-left">{{ __('Edit department') }}</h2>
 
     @include('components.error-message')
 

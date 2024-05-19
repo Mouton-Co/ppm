@@ -22,6 +22,7 @@ class ProjectStatus extends Model
             case 'Closed':
             case 'Work in Progress':
             case 'Design':
+            case 'Waiting for customer':
                 return false;
             default:
                 return true;
