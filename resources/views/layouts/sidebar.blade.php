@@ -116,7 +116,16 @@
                                     0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25
                                     2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
                                 </svg>
-                                <span class="truncate">{{ __('Project responsibles') }}</span>
+                                <span class="truncate">{{ __('Departments') }}</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('recipient-groups.index') }}"
+                            class="nav-item-{{
+                                request()->segment(1) == 'recipient-groups' ? 'active' : 'default'
+                            }}">
+                                <x-icon.email class="h-6 w-6 shrink-0" />
+                                <span class="truncate">{{ __('Email triggers') }}</span>
                             </a>
                         </li>
                     </ul>

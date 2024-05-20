@@ -2,8 +2,8 @@
 
 @section('dashboard-content')
     <div class="flex justify-between items-center">
-        <h2 class="text-left">{{ __('Departments') }}</h2>
-        <form action="{{ route('project-responsibles.index') }}" method="get">
+        <h2 class="text-left">{{ __('Email triggers') }}</h2>
+        <form action="{{ route('recipient-groups.index') }}" method="get">
             {{-- search --}}
             <div class="flex items-center justify-start gap-2 smaller-than-711:flex-col smaller-than-711:items-start">
                 <input type="text" name="search" placeholder="Search..." value="{{ request()->query('search') ?? '' }}"
@@ -15,42 +15,49 @@
     {{-- add button --}}
     <div class="flex justify-end items-center mt-4">
         <th class="flex justify-end w-48">
-            <a href="{{ route('project-responsibles.create') }}" class="btn btn-sky max-w-fit">
-                {{ __('Add department') }}
-            </a>
+            <a href="{{ route('recipient-groups.create') }}" class="btn btn-sky max-w-fit">
+                {{ __('Add trigger') }}
+        </a>
         </th>
     </div>
 
     {{-- table --}}
     <div class="field-card mt-4 overflow-auto">
         <table class="table-dark">
-            <caption class="hidden">{{ __('Project responsibles index table') }}</caption>
+            <caption class="hidden">{{ __('Group recipients index table') }}</caption>
             {{-- headings --}}
             <thead>
                 <tr>
-                    <th class="text-nowrap">{{ __('Name') }}</th>
+                    <th class="text-nowrap">{{ __('Triggers when...') }}</th>
+                    <th class="text-nowrap">{{ __('Changed to... / Item...') }}</th>
+                    <th class="text-nowrap">{{ __('Recipients') }}</th>
                 </tr>
             </thead>
             {{-- rows --}}
             <tbody>
-                @if (!$projectResponsibles->isEmpty())
-                    @foreach ($projectResponsibles as $projectResponsible)
+                @if (!$recipientGroups->isEmpty())
+                    @foreach ($recipientGroups as $recipientGroup)
                     <tr class="h-10">
-                        <td class="max-w-[280px] truncate px-3">{{ $projectResponsible->name }}</td>
+                        <td class="max-w-[280px] truncate px-3">{{ $recipientGroup->field }}</td>
+                        <td class="max-w-[280px] truncate px-3">{{ $recipientGroup->value }}</td>
+                        <td class="max-w-[280px] truncate px-3 py-1">
+                            {!! nl2br($recipientGroup->recipients) !!}
+                        </td>
                         {{-- edit and delete --}}
                         <td class="w-[150px]">
                             <div class="flex justify-end items-center gap-2">
-                                <a href="{{ route('project-responsibles.edit', $projectResponsible) }}"
+                                <a href="{{ route('recipient-groups.edit', $recipientGroup) }}"
                                 class="text-gray-300 hover:text-sky-700 max-w-fit">
                                     {{ __('Edit') }}
                                 </a>
+
                                 <div class="text-gray-300 hover:text-red-600 cursor-pointer max-w-fit"
-                                id="delete-button-{{ $projectResponsible->id }}">
+                                id="delete-button-{{ $recipientGroup->id }}">
                                     {{ __('Delete') }}
                                 </div>
                                 @include('components.delete-modal', [
-                                    'model' => $projectResponsible,
-                                    'route' => 'project-responsibles',
+                                    'model' => $recipientGroup,
+                                    'route' => 'recipient-groups',
                                     'method' => 'DELETE',
                                 ])
                             </div>
@@ -59,7 +66,7 @@
                     @endforeach
                 @else
                     <tr>
-                        <td colspan="13">{{ __('No responsibles found') }}</td>
+                        <td colspan="13">{{ __('No recipient groups found') }}</td>
                     </tr>
                 @endif
             </tbody>
@@ -67,7 +74,7 @@
     </div>
 
     {{-- pagination --}}
-    {{ $projectResponsibles->appends([
+    {{ $recipientGroups->appends([
         'search' => request()->query('search') ?? '',
     ])->links() }}
 @endsection

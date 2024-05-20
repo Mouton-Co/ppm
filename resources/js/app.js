@@ -25,3 +25,5 @@ import { cocGenerate } from "./projects/coc-generation.js";
 cocGenerate();
 import { cellEditProject } from "./projects/cell-edit.js";
 cellEditProject();
+import { emailTriggerForm } from "./email-triggers/form.js";
+emailTriggerForm();

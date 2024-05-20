@@ -207,6 +207,23 @@
                                                     @endforeach
                                                 </select>
                                                 @break
+                                            @case('responsibles')
+                                                <select name="{{ $key }}" class="field bg-transparent border-none
+                                                !ring-0 !w-[195px] focus:ring-0 focus:outline-none cursor-pointer
+                                                cell-dropdown" item-id="{{ $project->id }}">
+                                                    <option value="" disabled selected>
+                                                        {{ $value ?? '' }}
+                                                    </option>
+                                                    @foreach ($responsibles as $responsible)
+                                                        <option
+                                                            value="{{ $responsible }}"
+                                                            @if ($responsible === $project->$value) selected @endif
+                                                        >
+                                                            {{ $responsible }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            @break
                                         @endswitch
                                     @else
                                         @if ($key == 'submission_id')

@@ -94,7 +94,11 @@
                     @include('components.success-message', ['success' => session('success')])
                 @endif
                 @if (session('error'))
-                    @include('components.error-message', ['error' => session('error')])
+                    @include('components.error-message', [
+                        'error' => session('error'),
+                        'hidden' => 'false',
+                        'class' => 'mb-5',
+                    ])
                 @endif
                 @yield('dashboard-content')
             </main>

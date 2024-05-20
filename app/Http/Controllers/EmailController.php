@@ -9,7 +9,14 @@ use Illuminate\Support\Facades\Mail;
 
 class EmailController extends Controller
 {
-    public function sendOrder(Request $request, $id)
+    /**
+     * Send the purchase order email.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function sendOrder(Request $request, $id): \Illuminate\Http\RedirectResponse
     {
         $order = Order::find($id);
 

@@ -6,6 +6,7 @@ use App\Http\Requests\Project\StoreRequest;
 use App\Models\Project;
 use App\Models\ProjectResponsible;
 use App\Models\ProjectStatus;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class ProjectController extends Controller
@@ -16,6 +17,12 @@ class ProjectController extends Controller
     public function index(Request $request)
     {
         $projects = Project::with(['submission']);
+
+        $responsibles = array_merge(
+            ProjectResponsible::pluck('name')->toArray(),
+            User::pluck('name')->toArray()
+        );
+        sort($responsibles);
 
         if (request()->has('machine_nr')) {
             $projects->where('machine_nr', 'like', '%' . request('machine_nr') . '%');
@@ -34,7 +41,8 @@ class ProjectController extends Controller
         }
 
         return view('project.index', [
-            'projects' => $projects->paginate(15)
+            'projects' => $projects->paginate(15),
+            'responsibles' => $responsibles,
         ]);
     }
 
@@ -44,7 +52,12 @@ class ProjectController extends Controller
     public function create()
     {
         $statuses = ProjectStatus::orderBy('name')->get();
-        $responsibles = ProjectResponsible::orderBy('name')->get();
+
+        $responsibles = array_merge(
+            ProjectResponsible::pluck('name')->toArray(),
+            User::pluck('name')->toArray()
+        );
+        sort($responsibles);
 
         return view('project.create', [
             'statuses' => $statuses,
