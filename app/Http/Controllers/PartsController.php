@@ -137,8 +137,22 @@ class PartsController extends Controller
             });
         }
 
+        $parts = $parts->paginate(15);
+
+        if ($parts->currentPage() > 1 && $parts->lastPage() < $parts->currentPage()) {
+            return redirect()->route('parts.procurement.index', [
+                'page' => $parts->lastPage(),
+                'order_by' => $request->get('order_by'),
+                'order' => $request->get('order'),
+                'status' => $request->get('status'),
+                'supplier_id' => $request->get('supplier_id'),
+                'submission' => $request->get('submission'),
+                'search' => $request->get('search'),
+            ]);
+        }
+
         return view('parts.procurement-index')->with([
-            'parts' => $parts->paginate(15),
+            'parts' => $parts,
         ]);
     }
 
@@ -217,8 +231,22 @@ class PartsController extends Controller
             });
         }
 
+        $parts = $parts->paginate(15);
+
+        if ($parts->currentPage() > 1 && $parts->lastPage() < $parts->currentPage()) {
+            return redirect()->route('parts.warehouse.index', [
+                'page' => $parts->lastPage(),
+                'order_by' => $request->get('order_by'),
+                'order' => $request->get('order'),
+                'status' => $request->get('status'),
+                'supplier_id' => $request->get('supplier_id'),
+                'submission' => $request->get('submission'),
+                'search' => $request->get('search'),
+            ]);
+        }
+
         return view('parts.warehouse-index')->with([
-            'parts' => $parts->paginate(15),
+            'parts' => $parts,
         ]);
     }
 
