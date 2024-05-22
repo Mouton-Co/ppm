@@ -150,9 +150,22 @@ class SubmissionController extends Controller
                 });
         }
 
+        $submissions = $submissions->paginate(15);
+
+        if ($submissions->currentPage() > 1 && $submissions->lastPage() < $submissions->currentPage()) {
+            return redirect()->route('submissions.index', [
+                'order_by' => $request->get('order_by'),
+                'order' => $request->get('order'),
+                'current_unit_number' => $request->get('current_unit_number'),
+                'submission_type' => $request->get('submission_type'),
+                'search' => $request->get('search'),
+                'page' => $submissions->lastPage(),
+            ]);
+        }
+
         return view('submissions.index')->with([
             'current' => 'view-submissions',
-            'submissions' => $submissions->paginate(15),
+            'submissions' => $submissions,
             'fields' => config('models.submissions.columns'),
         ]);
     }

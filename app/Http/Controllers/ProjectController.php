@@ -40,8 +40,20 @@ class ProjectController extends Controller
             $projects->where('status', 'like', '%' . request('status') . '%');
         }
 
+        $projects = $projects->paginate(15);
+
+        if ($projects->currentPage() > 1 && $projects->lastPage() < $projects->currentPage()) {
+            return redirect()->route('projects.index', [
+                'machine_nr' => request('machine_nr'),
+                'country' => request('country'),
+                'currently_responsible' => request('currently_responsible'),
+                'status' => request('status'),
+                'page' => $projects->lastPage(),
+            ]);
+        }
+
         return view('project.index', [
-            'projects' => $projects->paginate(15),
+            'projects' => $projects,
             'responsibles' => $responsibles,
         ]);
     }
