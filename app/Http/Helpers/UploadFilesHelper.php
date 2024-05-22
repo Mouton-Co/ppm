@@ -289,9 +289,12 @@ class UploadFilesHelper
     {
         $files = [];
 
-        for ($i = 0; $i < count($matrix['Item Number']) - 1; $i++) {
-            $processType = ProcessType::where('process_type', $matrix['Process Type'][$i])->first();
-            if (! empty($processType)) {
+        for ($i = 0; $i < count($matrix['Item Number']); $i++) {
+            if (
+                ! empty($matrix['File Name'][$i]) &&
+                ! empty($matrix['Process Type'][$i]) &&
+                ! empty($processType = ProcessType::where('process_type', $matrix['Process Type'][$i])->first())
+            ) {
                 foreach (explode(',', $processType->required_files) as $file) {
                     $files[] = $matrix['File Name'][$i].' - '.strtoupper($file);
                 }
