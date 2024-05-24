@@ -50,13 +50,13 @@
                 <select name="currently_responsible" class="field bg-transparent border-none
                 !ring-0 focus:ring-0 focus:outline-none cursor-pointer">
                     <option value="" selected>{{ __('All') }}</option>
-                    @foreach (\App\Models\ProjectResponsible::orderBy('name')->get() as $responsible)
-                        <option value="{{ $responsible->name }}"
+                    @foreach ($responsibles as $responsible)
+                        <option value="{{ $responsible }}"
                         @if (
                             !empty(request()->query('currently_responsible')) &&
-                            request()->query('currently_responsible') == $responsible->name
+                            request()->query('currently_responsible') == $responsible
                         ) selected @endif>
-                            {{ $responsible->name }}
+                            {{ $responsible }}
                         </option>
                     @endforeach
                 </select>
