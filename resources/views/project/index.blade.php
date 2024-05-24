@@ -190,10 +190,24 @@
                                             @case('select')
                                                 @php
                                                     $options = $field['options']['model']::orderBy('name')->get();
+                                                    $bg = "!bg-transparent";
+                                                    if ($key == 'status') {
+                                                        // color code the statuses
+                                                        if (strtolower($value) == 'closed') {
+                                                            $bg = "!bg-green-300 !text-green-800";
+                                                        } elseif (strtolower($value) == 'waiting for customer') {
+                                                            $bg = "!bg-cyan-300 !text-cyan-800";
+                                                        } elseif (strtolower($value) == 'prepare') {
+                                                            $bg = "!bg-zinc-300 !text-zinc-800";
+                                                        } elseif (strtolower($value) == 'work in progress') {
+                                                            $bg = "!bg-orange-300 !text-orange-800";
+                                                        }
+                                                    }
                                                 @endphp
-                                                <select name="{{ $key }}" class="field bg-transparent border-none
+                                                <select name="{{ $key }}" class="field {{ $bg }} border-none
                                                 !ring-0 !w-[195px] focus:ring-0 focus:outline-none cursor-pointer
-                                                cell-dropdown" item-id="{{ $project->id }}">
+                                                cell-dropdown {{ $key == 'status' ? 'project-status-dropdown' : '' }}"
+                                                item-id="{{ $project->id }}">
                                                     <option value="" disabled selected>
                                                         {{ $value ?? '' }}
                                                     </option>
