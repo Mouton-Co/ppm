@@ -34,5 +34,12 @@ module.exports = {
         },
     },
 
+    safelist: [
+        'bg-green-300', 'text-green-800',
+        'bg-cyan-300', 'text-cyan-800',
+        'bg-zinc-300', 'text-zinc-800',
+        'bg-orange-300', 'text-orange-800',
+    ],
+
     plugins: [require('@tailwindcss/forms')],
 };

@@ -33,4 +33,27 @@ export function cellEditProject() {
             });
         }, 200);
     }
+
+    // change status dropdown colour
+    $('.project-status-dropdown').on("change", function () {
+        let status = $(this).val();
+
+        // remove all classes
+        $(this).removeClass('!bg-green-300 !text-green-800')
+            .removeClass('!bg-cyan-300 !text-cyan-800')
+            .removeClass('!bg-zinc-300 !text-zinc-800')
+            .removeClass('!bg-orange-300 !text-orange-800');
+
+        // add class based on status
+        if (status.toLowerCase() == 'closed') {
+            $(this).addClass('!bg-green-300 !text-green-800');
+        } else if (status.toLowerCase() == 'waiting for customer') {
+            $(this).addClass('!bg-cyan-300 !text-cyan-800');
+        } else if (status.toLowerCase() == 'prepare') {
+            $(this).addClass('!bg-zinc-300 !text-zinc-800');
+        } else if (status.toLowerCase() == 'work in progress') {
+            $(this).addClass('!bg-orange-300 !text-orange-800');
+        }
+
+    });
 }
