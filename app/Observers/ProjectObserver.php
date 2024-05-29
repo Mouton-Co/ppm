@@ -37,6 +37,14 @@ class ProjectObserver
             if (! empty($group)) {
                 $group->mail('Status Change on CoC Ticket', 'emails.project.status', $project);
             }
+
+            $group = RecipientGroup::where('field', "Status updated for")
+                ->where('value', 'LIKE', "%{$project->machine_nr}%")
+                ->first();
+
+            if (! empty($group)) {
+                $group->mail("Status Change for Machine # {$project->machine_nr}", 'emails.project.status', $project);
+            }
         }
 
         if ($project->isDirty('currently_responsible')) {
