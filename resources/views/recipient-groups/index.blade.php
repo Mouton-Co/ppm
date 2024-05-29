@@ -29,7 +29,7 @@
             <thead>
                 <tr>
                     <th class="text-nowrap">{{ __('Triggers when...') }}</th>
-                    <th class="text-nowrap">{{ __('Changed to... / Item...') }}</th>
+                    <th class="text-nowrap">{{ __('Changed to... / Item... / Machine #...') }}</th>
                     <th class="text-nowrap">{{ __('Recipients') }}</th>
                 </tr>
             </thead>

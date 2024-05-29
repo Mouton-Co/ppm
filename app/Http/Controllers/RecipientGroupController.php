@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\RecipientGroup\StoreRequest;
 use App\Http\Requests\RecipientGroup\UpdateRequest;
+use App\Models\Project;
 use App\Models\ProjectResponsible;
 use App\Models\ProjectStatus;
 use App\Models\RecipientGroup;
@@ -16,7 +17,7 @@ class RecipientGroupController extends Controller
     public function index()
     {
         $recipientGroups = RecipientGroup::query();
-
+    
         if (request()->has('search')) {
             $recipientGroups->where('field', 'like', '%' . request('search') . '%')
                 ->orWhere('value', 'like', '%' . request('search') . '%')
@@ -35,10 +36,12 @@ class RecipientGroupController extends Controller
     {
         $departments = ProjectResponsible::orderBy('name')->get();
         $statuses = ProjectStatus::orderBy('name')->get();
+        $machineNumbers = array_unique(Project::select('machine_nr')->orderBy('machine_nr')->pluck('machine_nr')->toArray());
 
         return view('recipient-groups.create', [
             'departments' => $departments,
             'statuses' => $statuses,
+            'machineNumbers' => $machineNumbers,
         ]);
     }
 
@@ -68,11 +71,13 @@ class RecipientGroupController extends Controller
     {
         $departments = ProjectResponsible::orderBy('name')->get();
         $statuses = ProjectStatus::orderBy('name')->get();
+        $machineNumbers = array_unique(Project::select('machine_nr')->orderBy('machine_nr')->pluck('machine_nr')->toArray());
 
         return view('recipient-groups.edit', [
             'recipientGroup' => $recipientGroup,
             'departments' => $departments,
             'statuses' => $statuses,
+            'machineNumbers' => $machineNumbers,
         ]);
     }
 

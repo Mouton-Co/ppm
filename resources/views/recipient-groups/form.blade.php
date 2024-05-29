@@ -23,6 +23,11 @@
         }}>
             {{ __('Item created') }}
         </option>
+        <option value="Status updated for" {{
+            ! empty($recipientGroup) && $recipientGroup->field == 'Status updated for' ? 'selected' : old('field')
+        }}>
+            {{ __('Status updated for') }}
+        </option>
     </select>
     @if (!empty($errors->get('field')))
         @foreach ($errors->get('field') as $error)
@@ -31,7 +36,9 @@
     @endif
 
     {{-- Changed to... / Item... --}}
-    <label class="label-dark text-nowrap" for="value">{{ __('Changed to... / Item...') }}</label>
+    <label class="label-dark text-nowrap" for="value" id="select-changed-to-label">
+        {{ __('Changed to...') }}
+    </label>
     <select class="w-full cursor-pointer {{ !empty($errors->get('value')) ? 'field-error' : 'field-dark' }}"
         name="value" required id="select-changed-to" {{ empty($recipientGroup) ? 'disabled' : '' }}>
         <option value="" disabled selected>{{ __("--Please select--") }}</option>
@@ -66,11 +73,24 @@
         >
             {{ __("CoC") }}
         </option>
-        <option value="Submission" class="created-item" {{
-            ! empty($recipientGroup?->value) && $recipientGroup?->value == 'Submission' ? 'selected' : ''
-        }}>
+        <option
+            value="Submission"
+            class="created-item {{ ! empty($recipientGroup) && $recipientGroup->field != 'Item created' ? 'hidden' : '' }}"
+            {{ ! empty($recipientGroup?->value) && $recipientGroup?->value == 'Submission' ? 'selected' : '' }}
+        >
             {{ __("Submission") }}
         </option>
+
+        {{-- list of machine numbers --}}
+        @foreach ($machineNumbers as $machineNumber)
+            <option
+                value="{{ $machineNumber }}"
+                class="machine-item {{ ! empty($recipientGroup) && $recipientGroup->field != 'Status updated for' ? 'hidden' : '' }}"
+                {{ ! empty($recipientGroup?->value) && $recipientGroup?->value == $machineNumber ? 'selected' : '' }}
+            >
+                {{ $machineNumber }}
+            </option>
+        @endforeach
 
     </select>
     @if (!empty($errors->get('value')))
