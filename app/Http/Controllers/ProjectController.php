@@ -211,4 +211,24 @@ class ProjectController extends Controller
             ],
         ]);
     }
+
+    /**
+     * Unlink a submission from a project
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function unlink($id): \Illuminate\Http\RedirectResponse
+    {
+        $project = Project::findOrFail($id);
+
+        if (empty($project)) {
+            return redirect()->back()->with('error', 'Project not found');
+        }
+
+        $project->update([
+            'submission_id' => null,
+        ]);
+
+        return redirect()->back()->with('success', 'Project deleted successfully');
+    }
 }

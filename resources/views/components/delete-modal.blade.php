@@ -1,4 +1,4 @@
-<div id="delete-modal-{{ $model->id }}" class="hidden relative z-30" aria-labelledby="modal-title" role="dialog"
+<div id="delete-modal-{{ $model->id }}" class="hidden relative z-30" aria-labelledby="modal-title"
     aria-modal="true">
 
     <div id="delete-modal-curtain-{{ $model->id }}" class="opacity-0 inset-0 bg-gray-900/80 z-40 curtain-closed">

@@ -242,7 +242,16 @@
                                     @else
                                         @if ($key == 'submission_id')
                                                 @if (! empty($project->submission->submission_code))
+                                                <div class="w-full flex justify-center items-center gap-3">
                                                     {{ $project->submission->submission_code }}
+                                                    <x-icon.unlink
+                                                        id="unlink-button-{{ $project->id }}"
+                                                        class="cursor-pointer h-[20px] text-red-500 hover:text-red-700"
+                                                    />
+                                                    @include('components.unlink-modal', [
+                                                        'model' => $project,
+                                                    ])
+                                                </div>
                                                 @else
                                                 <div class="w-full flex justify-start">
                                                     <a class="btn btn-sky max-w-fit !text-xs !py-1 !max-h-fit !rounded"
