@@ -140,14 +140,22 @@
                             @elseif ($key == 'submission_type')
                                 <td>
                                     <a href="{{ route('submissions.view', $submission->id) }}">
-                                        {{ config('dropdowns.submission_types')[$submission->$key] }}
+                                        @if (! empty($submission->$key))
+                                            {{ config('dropdowns.submission_types')[$submission->$key] }}
+                                        @else
+                                            {{ __('N/A') }}
+                                        @endif
                                     </a>
                                 </td>
                             @elseif ($key == 'current_unit_number')
                                 <td>
                                     <a href="{{ route('submissions.view', $submission->id) }}">
-                                        {{ $submission->$key . ' - ' .
-                                        config('dropdowns.unit_numbers')[$submission->$key] }}
+                                        @if (! empty($submission->$key))
+                                            {{ $submission->$key . ' - ' .
+                                            config('dropdowns.unit_numbers')[$submission->$key] }}
+                                        @else
+                                            {{ __('N/A') }}
+                                        @endif
                                     </a>
                                 </td>
                             @else
