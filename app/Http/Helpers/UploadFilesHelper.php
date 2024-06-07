@@ -230,14 +230,25 @@ class UploadFilesHelper
                     if (
                         ! empty($headingData['required']) && $headingData['required'] // if required
                         && ! empty($headingData['allowed']) // and has allowed value
-                        && ! in_array(strtolower($matrix[$heading][$i]), $headingData['allowed'])
                     ) {
-                        return [
-                            false,
-                            'Data integrity violation - Row '.($i + 3)." , heading '$heading' must contain
-                            one of the following:",
-                            $headingData['allowed'],
-                        ];
+                        if ($headingData['allowed'] == '/App/Models/ProcessType::class') {
+                            $processTypes = array_map('strtolower', ProcessType::all()->pluck('process_type')->toArray());
+                            if (! in_array(strtolower($matrix[$heading][$i]), $processTypes)) {
+                                return [
+                                    false,
+                                    'Data integrity violation - Row '.($i + 3)." , heading '$heading' must contain
+                                    one of the following:",
+                                    $processTypes,
+                                ];
+                            }
+                        } elseif (! in_array(strtolower($matrix[$heading][$i]), $headingData['allowed'])) {
+                            return [
+                                false,
+                                'Data integrity violation - Row '.($i + 3)." , heading '$heading' must contain
+                                one of the following:",
+                                $headingData['allowed'],
+                            ];
+                        }
                     }
 
                     // convert values to correct state
