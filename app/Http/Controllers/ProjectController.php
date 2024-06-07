@@ -93,7 +93,11 @@ class ProjectController extends Controller
     public function edit(Project $project)
     {
         $statuses = ProjectStatus::orderBy('name')->get();
-        $responsibles = ProjectResponsible::orderBy('name')->get();
+        $responsibles = array_merge(
+            ProjectResponsible::pluck('name')->toArray(),
+            User::pluck('name')->toArray()
+        );
+        sort($responsibles);
 
         return view('project.edit', [
             'project' => $project,
