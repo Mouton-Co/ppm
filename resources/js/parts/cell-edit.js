@@ -101,6 +101,13 @@ export function cellEdit() {
                     ) {
                         $($('input[name="treatment_2_part_received"][part-id="' + id + '"]')).removeAttr('disabled');
                     }
+                    if (field == 'supplier->name') {
+                        if (value == 0) {
+                            $('#' + id + '-po_number input').addClass('cursor-not-allowed').attr('disabled', true);
+                        } else {
+                            $('#' + id + '-po_number input').removeClass('cursor-not-allowed').removeAttr('disabled');
+                        }
+                    }
                 }
             });
         }, 200);
