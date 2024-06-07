@@ -43,19 +43,7 @@ return [
     ],
     'Process Type' => [
         'required' => true,
-        'allowed' => [
-            'lc',
-            'lcm',
-            'mch',
-            'lcb',
-            'lcbm',
-            'lcbw',
-            'lbwm',
-            'tlcm',
-            'tlc',
-            'pm',
-            'p',
-        ],
+        'allowed' => '/App/Models/ProcessType::class',
     ],
     'Notes' => '',
     'Manufactured or Purchased' => [
