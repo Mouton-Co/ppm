@@ -88,11 +88,11 @@
                 <div class="order-card-body">
                     <div class="order-card-body-item">
                         <x-icon.company class="w-5" />
-                        <span>{{ $order->supplier->name  ?? 'N/A'}}</span>
+                        <span>{{ $order->supplier?->name  ?? 'N/A'}}</span>
                     </div>
                     <div class="order-card-body-item">
                         <x-icon.email class="w-5" />
-                        <span>{{ $order->supplier->representatives()->first()->email ?? 'N/A' }}</span>
+                        <span>{{ $order->supplier?->representatives()->first()->email ?? 'N/A' }}</span>
                     </div>
                     <div class="order-card-body-item">
                         <x-icon.submission class="w-5" />
