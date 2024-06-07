@@ -34,7 +34,7 @@ class PartsController extends Controller
         $matrix = $uploadFilesHelper->cleanMatrix($matrix);
 
         if (! empty($matrix) && ! empty($matrix['Item Number'])) {
-            for ($i = 0; $i < count($matrix['Item Number']) - 1; $i++) {
+            for ($i = 0; $i < count($matrix['Item Number']); $i++) {
                 $part = new Part();
                 $part->name = $matrix['File Name'][$i];
                 $part->quantity = $matrix['Quantity'][$i];
@@ -559,12 +559,10 @@ class PartsController extends Controller
 
                 if (! $part->treatment_1_part_received) {
                     $part->treatment_1_part_received = true;
-                    $part->treatment_1_part_received_at = now();
                 }
 
                 if (! $part->treatment_2_part_received) {
                     $part->treatment_2_part_received = true;
-                    $part->treatment_2_part_received_at = now();
                 }
 
                 $part->completed_part_received = true;
@@ -581,12 +579,10 @@ class PartsController extends Controller
 
                 if (! $part->treatment_1_part_received) {
                     $part->treatment_1_part_received = true;
-                    $part->treatment_1_part_received_at = now();
                 }
 
                 if (! $part->treatment_2_part_received) {
                     $part->treatment_2_part_received = true;
-                    $part->treatment_2_part_received_at = now();
                 }
 
                 if (! $part->completed_part_received) {
