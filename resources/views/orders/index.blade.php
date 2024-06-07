@@ -82,17 +82,17 @@
             {{-- order card --}}
             <div id="order-card-{{ $order->id }}" class="order-card-{{$order->status}} order-card-hover">
                 <div class="order-card-header">
-                    <span>PO {{ $order->po_number }}</span>
-                    <x-order.status :status="$order->status" />
+                    <span>PO {{ $order->po_number ?? 'N/A' }}</span>
+                    <x-order.status :status="$order->status ?? 'N/A'" />
                 </div>
                 <div class="order-card-body">
                     <div class="order-card-body-item">
                         <x-icon.company class="w-5" />
-                        <span>{{ $order->supplier->name }}</span>
+                        <span>{{ $order->supplier->name  ?? 'N/A'}}</span>
                     </div>
                     <div class="order-card-body-item">
                         <x-icon.email class="w-5" />
-                        <span>{{ $order->supplier->representatives()->first()->email }}</span>
+                        <span>{{ $order->supplier->representatives()->first()->email ?? 'N/A' }}</span>
                     </div>
                     <div class="order-card-body-item">
                         <x-icon.submission class="w-5" />
@@ -100,11 +100,11 @@
                     </div>
                     <div class="order-card-body-item">
                         <x-icon.spanner class="w-5" />
-                        <span>Total parts: {{ $order->total_parts }}</span>
+                        <span>Total parts: {{ $order->total_parts ?? 'N/A' }}</span>
                     </div>
                     <div class="order-card-body-item">
                         <x-icon.datetime class="w-5" />
-                        <span>{{ $order->created_at }}</span>
+                        <span>{{ $order->created_at ?? 'N/A' }}</span>
                     </div>
                 </div>
                 <div class="order-card-footer">
@@ -122,14 +122,14 @@
                 <div class="order-card-{{$order->status}} min-w-[34rem] smaller-than-572:min-w-full
                 max-h-[700px] overflow-y-scroll">
                     <div class="order-card-header">
-                        <span>PO {{ $order->po_number }}</span>
-                        <x-order.status :status="$order->status" />
+                        <span>PO {{ $order->po_number ?? 'N/A' }}</span>
+                        <x-order.status :status="$order->status ?? 'N/A'" />
                     </div>
                     <div class="order-card-body">
                         @foreach ($order->parts()->get() as $part)
                             <div class="order-card-body-item w-full justify-between">
-                                <span>{{ $part->name }}</span>
-                                <span>{{ $part->quantity }}</span>
+                                <span>{{ $part->name ?? 'N/A' }}</span>
+                                <span>{{ $part->quantity ?? 'N/A' }}</span>
                             </div>
                         @endforeach
                     </div>
