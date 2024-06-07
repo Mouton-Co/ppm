@@ -212,11 +212,22 @@
                                     @if ($editable)
                                         @switch($type)
                                             @case('text')
+                                                @php
+                                                    $disabled = false;
+
+                                                    // if there's no supplier, disable po_number input
+                                                    if (
+                                                        $key == 'po_number'
+                                                        && empty($part->supplier_id)
+                                                    ) {
+                                                        $disabled = true;
+                                                    }
+                                                @endphp
                                                 <input type="{{ $key == 'date_stamp' ? 'date' : 'text' }}"
                                                     name="{{ $key }}" value="{{ $value }}"
                                                     class="w-auto h-full bg-transparent border-none
-                                                    focus:ring-0 focus:outline-none editable-cell-text"
-                                                    part-id="{{ $part->id }}">
+                                                    focus:ring-0 focus:outline-none editable-cell-text {{ $disabled ? 'cursor-not-allowed' : '' }}"
+                                                    part-id="{{ $part->id }}" @if ($disabled) disabled @endif>
                                                 @break
                                             @case('select')
                                                 @php
