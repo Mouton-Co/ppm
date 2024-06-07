@@ -40,6 +40,10 @@ class ProjectController extends Controller
             $projects->where('status', 'like', '%' . request('status') . '%');
         }
 
+        if (! empty($request->order_by)) {
+            $projects->orderBy($request->get('order_by'), $request->get('order') ?? 'asc');
+        }
+
         $projects = $projects->paginate(15);
 
         if ($projects->currentPage() > 1 && $projects->lastPage() < $projects->currentPage()) {
