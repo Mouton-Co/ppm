@@ -214,6 +214,13 @@ class SubmissionController extends Controller
             $part->delete();
         }
 
+        // remove links from any projects
+        $projects = Project::where('submission_id', $submission->id)->get();
+        foreach ($projects as $project) {
+            $project->submission_id = null;
+            $project->save();
+        }
+
         $code = $submission->submission_code;
         $submission->delete();
 
