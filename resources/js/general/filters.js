@@ -63,27 +63,4 @@ export function filters() {
         $('#form').trigger('submit');
     });
 
-    const data = [
-        {
-            id: 1,
-            level: 1,
-            parent_id: 0,
-            title: 'Branch 1'
-        },
-        {
-            id: 2,
-            level: 2,
-            parent_id: 1,
-            title: 'Branch 2'
-        }
-    ];
-
-    const sortable = new TreeSortable({
-        treeSelector: '#tree'
-    });
-
-    const $content = data.map(sortable.createBranch);
-    $('#tree').html($content);
-    sortable.run();
-
 }

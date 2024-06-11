@@ -1,10 +1,5 @@
 @extends('layouts.dashboard')
 
-@section('custom-scripts')
-    <link href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css" rel="stylesheet" type="text/css" />
-    <link href="{{ asset('css/treeSortable.css') }}" rel="stylesheet" />
-@endsection
-
 @section('dashboard-content')
     {{-- heading --}}
     <div class="mb-2 flex items-center justify-between">
@@ -180,13 +175,4 @@
     {{-- pagination --}}
     {{ $suppliers->appends(request()->query())->links() }}
 
-
-
-    <ul id="tree"></ul>
-
-@endsection
-
-@section('end-body-scripts')
-    {{-- <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script> --}}
-    <script src="{{ asset('js/treeSortable.js') }}"></script>
 @endsection
