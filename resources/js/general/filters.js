@@ -32,6 +32,23 @@ export function filters() {
         }
     });
 
+    // toggle column configurations
+    $('#column-config-toggle').on('click', function () {
+        if ($('#column-config').attr('aria-hidden') == 'true') {
+            $('#column-config').removeClass('hidden').attr('aria-hidden', false);
+        } else {
+            $('#column-config').addClass('hidden').attr('aria-hidden', true);
+        }
+    });
+    $(document).on('click', function (e) {
+        if (
+            ! $(e.target).closest('#column-config').length &&
+            ! $(e.target).closest('#column-config-toggle').length
+        ) {
+            $('#column-config').addClass('hidden').attr('aria-hidden', true);
+        }
+    });
+
     // add filter pill
     $('.add-filter-pill').on('click', function () {
         $.ajax({ // route('pill-html')
@@ -60,5 +77,33 @@ export function filters() {
     $('#filter').on('click', function () {
         $('#form').trigger('submit');
     });
+
+    // sortable list of items
+    jQuery('.sortable-list').sortable({
+        group: 'list',
+        animation: 200,
+        ghostClass: 'ghost',
+        onSort: itemSorted,
+    });
+
+    function itemSorted()
+    {
+        let table = $('#column-config').attr('table');
+
+        let columns = [];
+        $('.sortable-list div').each(function () {
+            columns.push($(this).attr('key'));
+        });
+
+        $.ajax({ // route('update-configs')
+            type: 'POST',
+            url: '/update-configs',
+            data: {
+                _token: $('meta[name="csrf-token"]').attr('content'),
+                table: table,
+                columns: columns,
+            }
+        });
+    }
 
 }

@@ -22,6 +22,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role_id',
+        'configurations',
     ];
 
     /**
@@ -55,5 +56,24 @@ class User extends Authenticatable
     public function role(): BelongsTo
     {
         return $this->belongsTo(Role::class);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | ACCESSORS
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Get user's table configurations
+     * @return array|null
+     */
+    public function getTableConfigsAttribute(): ?array
+    {
+        try {
+            return (array)json_decode($this->configurations, true);
+        } catch (\Exception $e) {
+            return null;
+        }
     }
 }

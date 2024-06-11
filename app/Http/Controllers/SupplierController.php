@@ -12,26 +12,23 @@ use Illuminate\Http\Request;
 class SupplierController extends Controller
 {
     /**
-     * @var Request
-     */
-    public $request;
-
-    /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
+        $this->checkTableConfigurations('suppliers', Supplier::class);
         $suppliers = $this->filter(Supplier::class, Supplier::query(), $request)->paginate(15);
-        
+
         if ($suppliers->currentPage() > 1 && $suppliers->lastPage() < $suppliers->currentPage()) {
-            return redirect()->route(
-                'suppliers.index',
-                array_merge(['page' => $suppliers->lastPage()], $request->except(['page']))
-            );
+            return redirect()->route('suppliers.index', array_merge(['page' => $suppliers->lastPage()], $request->except(['page'])));
         }
 
-        return view('supplier.index')->with([
-            'suppliers' => $suppliers,
+        return view('generic.index')->with([
+            'heading' => 'Suppliers',
+            'table' => 'suppliers',
+            'route' => 'suppliers',
+            'indexRoute' => 'suppliers.index',
+            'data' => $suppliers,
             'model' => Supplier::class,
         ]);
     }
@@ -51,9 +48,11 @@ class SupplierController extends Controller
     {
         $supplier = Supplier::create($request->all());
 
-        return redirect()->route('suppliers.index')->with([
-            'success' => "$supplier->name created successfully",
-        ]);
+        return redirect()
+            ->route('suppliers.index')
+            ->with([
+                'success' => "$supplier->name created successfully",
+            ]);
     }
 
     /**
@@ -64,9 +63,11 @@ class SupplierController extends Controller
         $supplier = Supplier::find($id);
 
         if (empty($supplier)) {
-            return redirect()->route('suppliers.index')->with([
-                'error' => 'Supplier not found',
-            ]);
+            return redirect()
+                ->route('suppliers.index')
+                ->with([
+                    'error' => 'Supplier not found',
+                ]);
         }
 
         return view('supplier.edit')->with([
@@ -82,16 +83,20 @@ class SupplierController extends Controller
         $supplier = Supplier::find($id);
 
         if (empty($supplier)) {
-            return redirect()->route('suppliers.index')->with([
-                'error' => 'Supplier not found',
-            ]);
+            return redirect()
+                ->route('suppliers.index')
+                ->with([
+                    'error' => 'Supplier not found',
+                ]);
         }
 
         $supplier->update($request->all());
 
-        return redirect()->route('suppliers.index')->with([
-            'success' => "$supplier->name updated successfully",
-        ]);
+        return redirect()
+            ->route('suppliers.index')
+            ->with([
+                'success' => "$supplier->name updated successfully",
+            ]);
     }
 
     /**
@@ -103,9 +108,11 @@ class SupplierController extends Controller
         $name = $supplier->name;
 
         if (empty($supplier)) {
-            return redirect()->route('suppliers.index')->with([
-                'error' => 'Supplier not found',
-            ]);
+            return redirect()
+                ->route('suppliers.index')
+                ->with([
+                    'error' => 'Supplier not found',
+                ]);
         }
 
         $supplier->representatives()->delete();
@@ -114,8 +121,10 @@ class SupplierController extends Controller
 
         $supplier->delete();
 
-        return redirect()->route('suppliers.index')->with([
-            'success' => "$name deleted successfully",
-        ]);
+        return redirect()
+            ->route('suppliers.index')
+            ->with([
+                'success' => "$name deleted successfully",
+            ]);
     }
 }

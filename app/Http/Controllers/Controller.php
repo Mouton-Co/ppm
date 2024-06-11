@@ -100,4 +100,45 @@ class Controller extends BaseController
 
         return $query;
     }
+
+    /**
+     * Creates table configurations if they don't exist
+     * @param string $table
+     * @param mixed $model
+     * @return void
+     */
+    public function checkTableConfigurations(string $table, mixed $model): void
+    {
+        $configs = auth()->user()->table_configs;
+
+        if (! array_key_exists('tables', $configs)) {
+            $configs['tables'] = [];
+        }
+
+        if (! array_key_exists($table, $configs['tables'])) {
+            $configs['tables'][$table] = [];
+            foreach ($model::$structure as $key => $value) {
+                $configs['tables'][$table]['show'][] = $key;
+            }
+            $configs['tables'][$table]['hide'] = [];
+            auth()->user()->configurations = json_encode($configs);
+            auth()->user()->save();
+        }
+    }
+
+    /**
+     * Update the table configurations
+     * @param Request $request
+     * @return void
+     */
+    public function updateConfigs(Request $request): void
+    {
+        if ($request->has('table') && $request->has('columns')) {
+            $configs = auth()->user()->table_configs;
+            $configs['tables'][$request->table]['show'] = array_slice($request->columns, 0, array_search('hidden-columns', $request->columns));
+            $configs['tables'][$request->table]['hide'] = array_slice($request->columns, array_search('hidden-columns', $request->columns) + 1);
+            auth()->user()->configurations = json_encode($configs);
+            auth()->user()->save();
+        }
+    }
 }
