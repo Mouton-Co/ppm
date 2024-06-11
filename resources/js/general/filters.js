@@ -43,11 +43,9 @@ export function filters() {
                 field: $(this).attr('field'),
             },
             success: function (data) {
-                console.log(data);
                 if (data != 'error') {
                     $('#filter-options-toggle').before(data['html']);
                     $('#filter-options').addClass('hidden').attr('aria-hidden', true);
-                    console.log(data['field']);
                     $('.filter-option').each(function () {
                         if ($(this).attr('field') == data['field']) {
                             $(this).addClass('hidden');
