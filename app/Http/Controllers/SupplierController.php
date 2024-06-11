@@ -12,19 +12,27 @@ use Illuminate\Http\Request;
 class SupplierController extends Controller
 {
     /**
+     * @var Request
+     */
+    public $request;
+
+    /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-        $suppliers = Supplier::query();
-
-        if ($request->has('search')) {
-            $suppliers->where('name', 'like', "%$request->search%")
-                ->orWhere('average_lead_time', 'like', "%$request->search%");
+        $suppliers = $this->filter(Supplier::class, Supplier::query(), $request)->paginate(15);
+        
+        if ($suppliers->currentPage() > 1 && $suppliers->lastPage() < $suppliers->currentPage()) {
+            return redirect()->route(
+                'suppliers.index',
+                array_merge(['page' => $suppliers->lastPage()], $request->except(['page']))
+            );
         }
 
         return view('supplier.index')->with([
-            'suppliers' => $suppliers->orderBy('name')->paginate(15),
+            'suppliers' => $suppliers,
+            'model' => Supplier::class,
         ]);
     }
 

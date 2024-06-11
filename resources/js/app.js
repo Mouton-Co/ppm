@@ -27,3 +27,5 @@ import { cellEditProject } from "./projects/cell-edit.js";
 cellEditProject();
 import { emailTriggerForm } from "./email-triggers/form.js";
 emailTriggerForm();
+import { filters } from "./general/filters.js";
+filters();
