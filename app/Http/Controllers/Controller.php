@@ -132,7 +132,6 @@ class Controller extends BaseController
         foreach ($this->model::$structure as $key => $value) {
             if ($this->request->has($key)) {
                 if ($this->model::$structure[$key]['type'] == 'relationship') {
-                    ds('hits');
                     $query->where($key . '_id', $this->request->get($key));
                 } else {
                     $query->where($key, 'like', "%{$this->request->get($key)}%");

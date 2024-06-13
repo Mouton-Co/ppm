@@ -5,16 +5,29 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProcessTypes\StoreRequest;
 use App\Http\Requests\ProcessTypes\UpdateRequest;
 use App\Models\ProcessType;
+use Illuminate\Http\Request;
 
 class ProcessTypeController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('process-types.index')->with([
-            'processTypes' => ProcessType::orderBy('process_type')->get(),
+        $this->checkTableConfigurations('process_types', ProcessType::class);
+        $processTypes = $this->filter(ProcessType::class, ProcessType::query(), $request)->paginate(15);
+
+        if ($processTypes->currentPage() > 1 && $processTypes->lastPage() < $processTypes->currentPage()) {
+            return redirect()->route('process-types.index', array_merge(['page' => $processTypes->lastPage()], $request->except(['page'])));
+        }
+
+        return view('generic.index')->with([
+            'heading' => 'Process Types',
+            'table' => 'process_types',
+            'route' => 'process-types',
+            'indexRoute' => 'process-types.index',
+            'data' => $processTypes,
+            'model' => ProcessType::class,
         ]);
     }
 
