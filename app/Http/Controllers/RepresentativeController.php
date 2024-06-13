@@ -15,20 +15,20 @@ class RepresentativeController extends Controller
      */
     public function index(Request $request)
     {
-        $representatives = Representative::with('supplier');
+        $this->checkTableConfigurations('representatives', Representative::class);
+        $representatives = $this->filter(Representative::class, Representative::query(), $request)->paginate(15);
 
-        if ($request->has('search')) {
-            $representatives->where('name', 'like', "%$request->search%")
-                ->orWhere('email', 'like', "%$request->search%")
-                ->orWhere('phone_1', 'like', "%$request->search%")
-                ->orWhere('phone_2', 'like', "%$request->search%")
-                ->orWhereHas('supplier', function ($query) use ($request) {
-                    $query->where('name', 'like', "%$request->search%");
-                });
+        if ($representatives->currentPage() > 1 && $representatives->lastPage() < $representatives->currentPage()) {
+            return redirect()->route('representatives.index', array_merge(['page' => $representatives->lastPage()], $request->except(['page'])));
         }
 
-        return view('representative.index')->with([
-            'representatives' => $representatives->orderBy('name')->paginate(15),
+        return view('generic.index')->with([
+            'heading' => 'Representatives',
+            'table' => 'representatives',
+            'route' => 'representatives',
+            'indexRoute' => 'representatives.index',
+            'data' => $representatives,
+            'model' => Representative::class,
         ]);
     }
 
