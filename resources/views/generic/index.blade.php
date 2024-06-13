@@ -74,6 +74,20 @@
                             </option>
                         @endforeach
                     </x-filters.dropdown-pill>
+                @elseif ($model::$structure[$key]['type'] == 'relationship')
+                    <x-filters.dropdown-pill
+                        label="{{ $model::$structure[$key]['label'] }}"
+                        key="{{ $key }}"
+                    >
+                        @foreach ($model::$structure[$key]['relationship_model']::all() as $option)
+                            <option
+                                value="{{ $option->id }}"
+                                @if ($option->id == $value) selected @endif
+                            >
+                                {{ $option->{$model::$structure[$key]['relationship_field']} }}
+                            </option>
+                        @endforeach
+                    </x-filters.dropdown-pill>
                 @endif
             @endif
         @endforeach
@@ -167,7 +181,6 @@
                                         </button>
                                     </form>
                                 @endif
-
                             </div>
                         </th>
                     @endforeach
@@ -229,7 +242,11 @@
                     <tr class="border-b border-gray-700 bg-gray-800">
                         @foreach (auth()->user()->table_configs['tables'][$table]['show'] as $key)
                             <td class="text-nowrap px-6 py-2">
-                                {{ $datum->{$key} ?? 'N/A' }}
+                                @if ($model::$structure[$key]['type'] == 'relationship')
+                                    {{ $datum?->{$key}?->{$model::$structure[$key]['relationship_field']} ?? 'N/A' }}
+                                @else
+                                    {{ $datum?->{$key} ?? 'N/A' }}
+                                @endif
                             </td>
                         @endforeach
                         <td class="flex items-center justify-end gap-3 px-6 py-2">

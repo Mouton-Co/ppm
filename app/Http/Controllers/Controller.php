@@ -34,32 +34,87 @@ class Controller extends BaseController
             ! empty($field = $request->model::$structure[$request->field])
         ) {
             if ($field['type'] == 'text') {
-                return response()->json([
-                    'field' => $request->field,
-                    'html' => view('components.filters.text-pill', [
-                        'label' => $field['label'],
-                        'key' => $request->field,
-                    ])->render(),
-                ]);
+                $component = $this->renderTextPill($request, $field);
             } elseif ($field['type'] == 'dropdown') {
-                $slot = "";
-                $selected = 'selected';
-                foreach ($field['filterable_options'] as $key => $value) {
-                    $slot .= "<option value='$key' $selected>$value</option>";
-                    $selected = '';
-                }
-                return response()->json([
-                    'field' => $request->field,
-                    'html' => view('components.filters.dropdown-pill', [
-                        'label' => $field['label'],
-                        'key' => $request->field,
-                        'slot' => $slot,
-                    ])->render(),
-                ]);
+                $component = $this->renderDropdownPill($request, $field);
+            } elseif ($field['type'] == 'relationship') {
+                $component = $this->renderRelationshipPill($request, $field);
             }
+
+            return response()->json($component);
         }
 
         return response()->json('error');
+    }
+
+    /**
+     * Get the pill html for the filter
+     * @param Request $request
+     * @param array $field
+     * @return array
+     */
+    protected function renderRelationshipPill($request, $field): array
+    {
+        $slot = "";
+        $selected = 'selected';
+        $options = $field['relationship_model']::all();
+        if (! empty($options)) {
+            foreach ($options as $option) {
+                $slot .= "<option value='" . $option->id . "' $selected>" . $option->{$field['relationship_field']} . "</option>";
+                $selected = '';
+            }
+        }
+
+        return [
+            'field' => $request->field,
+            'html' => view('components.filters.dropdown-pill', [
+                'label' => $field['label'],
+                'key' => $request->field,
+                'slot' => $slot,
+            ])->render(),
+        ];
+    }
+
+    /**
+     * Get the pill html for the filter
+     * @param Request $request
+     * @param array $field
+     * @return array
+     */
+    protected function renderDropdownPill($request, $field): array
+    {
+        $slot = "";
+        $selected = 'selected';
+        foreach ($field['filterable_options'] as $key => $value) {
+            $slot .= "<option value='$key' $selected>$value</option>";
+            $selected = '';
+        }
+
+        return [
+            'field' => $request->field,
+            'html' => view('components.filters.dropdown-pill', [
+                'label' => $field['label'],
+                'key' => $request->field,
+                'slot' => $slot,
+            ])->render(),
+        ];
+    }
+
+    /**
+     * Get the pill html for the filter
+     * @param Request $request
+     * @param array $field
+     * @return array
+     */
+    protected function renderTextPill($request, $field): array
+    {
+        return [
+            'field' => $request->field,
+            'html' => view('components.filters.text-pill', [
+                'label' => $field['label'],
+                'key' => $request->field,
+            ])->render(),
+        ];
     }
 
     /**
@@ -76,7 +131,12 @@ class Controller extends BaseController
 
         foreach ($this->model::$structure as $key => $value) {
             if ($this->request->has($key)) {
-                $query->where($key, 'like', "%{$this->request->get($key)}%");
+                if ($this->model::$structure[$key]['type'] == 'relationship') {
+                    ds('hits');
+                    $query->where($key . '_id', $this->request->get($key));
+                } else {
+                    $query->where($key, 'like', "%{$this->request->get($key)}%");
+                }
             }
         }
 
@@ -85,10 +145,22 @@ class Controller extends BaseController
                 $first = true;
                 foreach ($this->model::$structure as $key => $value) {
                     if ($first) {
-                        $subquery->where($key, 'like', "%{$this->request->get('query')}%");
+                        if ($value['type'] == 'relationship') {
+                            $subquery->whereHas($key, function ($subsubquery) use ($key) {
+                                $subsubquery->where($this->model::$structure[$key]['relationship_field'], 'like', "%{$this->request->get('query')}%");
+                            });
+                        } else {
+                            $subquery->where($key, 'like', "%{$this->request->get('query')}%");
+                        }
                         $first = false;
                     } else {
-                        $subquery->orWhere($key, 'like', "%{$this->request->get('query')}%");
+                        if ($value['type'] == 'relationship') {
+                            $subquery->orWhereHas($key, function ($subsubquery) use ($key) {
+                                $subsubquery->where($this->model::$structure[$key]['relationship_field'], 'like', "%{$this->request->get('query')}%");
+                            });
+                        } else {
+                            $subquery->orWhere($key, 'like', "%{$this->request->get('query')}%");
+                        }
                     }
                 }
             });
