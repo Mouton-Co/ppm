@@ -4,19 +4,20 @@
     {{-- heading --}}
     <div class="mb-2 flex items-center justify-between">
         <h2 class="text-lg text-white">{{ $heading ?? 'Items' }}</h2>
-        <div class="cursor-pointer">
+        <div class="flex cursor-pointer gap-2">
             <button
-                class="rounded border border-gray-300 px-2 py-1 text-sm text-gray-300 shadow hover:border-sky-700 hover:text-sky-700"
+                class="h-7 rounded border border-gray-300 px-2 py-1 text-sm text-gray-300 shadow hover:border-sky-700 hover:text-sky-700"
                 id="filter"
             >
                 {{ __('Filter') }}
             </button>
-            @if (! empty($model::$actions['create']))
-                <button
-                    class="rounded border border-sky-700 bg-sky-700 px-2 py-1 text-sm text-white shadow hover:border-sky-600 hover:bg-sky-600"
+            @if (!empty($model::$actions['create']))
+                <a
+                    class="block h-7 rounded border border-sky-700 bg-sky-700 px-2 py-1 text-sm text-white shadow hover:border-sky-600 hover:bg-sky-600"
+                    href="{{ route("$route.create") }}"
                 >
                     {{ $model::$actions['create'] }}
-                </button>
+                </a>
             @endif
         </div>
     </div>
@@ -142,7 +143,7 @@
                                         <input
                                             name="order"
                                             type="hidden"
-                                            value="{{ ! empty(request()->query('order_by')) &&
+                                            value="{{ !empty(request()->query('order_by')) &&
                                             request()->query('order_by') == $key &&
                                             request()->query('order') == 'asc'
                                                 ? 'desc'
@@ -158,7 +159,7 @@
                                         <button type="submit">
                                             <x-icon.order-by
                                                 class="ms-1.5 h-3 w-3 text-gray-300"
-                                                :order="! empty(request()->query('order_by')) &&
+                                                :order="!empty(request()->query('order_by')) &&
                                                 request()->query('order_by') == $key
                                                     ? request()->query('order')
                                                     : null"
@@ -232,7 +233,7 @@
                             </td>
                         @endforeach
                         <td class="flex items-center justify-end gap-3 px-6 py-2">
-                            @if (! empty($model::$actions['edit']))
+                            @if (!empty($model::$actions['edit']))
                                 <a
                                     class="cursor-pointer text-sky-600 hover:text-sky-700"
                                     href="{{ route("$route.edit", $datum->id) }}"
@@ -240,7 +241,7 @@
                                     {{ __('Edit') }}
                                 </a>
                             @endif
-                            @if (! empty($model::$actions['delete']))
+                            @if (!empty($model::$actions['delete']))
                                 <span
                                     class="cursor-pointer text-red-500 hover:text-red-700"
                                     id="delete-button-{{ $datum->id }}"
