@@ -254,29 +254,31 @@
                                 @endif
                             </td>
                         @endforeach
-                        <td class="flex items-center justify-end gap-3 px-6 py-2">
-                            @if (!empty($model::$actions['edit']))
-                                <a
-                                    class="cursor-pointer text-sky-600 hover:text-sky-700"
-                                    href="{{ route("$route.edit", $datum->id) }}"
-                                >
-                                    {{ __('Edit') }}
-                                </a>
-                            @endif
-                            @if (!empty($model::$actions['delete']))
-                                <span
-                                    class="cursor-pointer text-red-500 hover:text-red-700"
-                                    id="delete-button-{{ $datum->id }}"
-                                >
-                                    {{ __('Delete') }}
-                                </span>
-                                @include('components.delete-modal', [
-                                    'model' => $datum,
-                                    'route' => $route,
-                                    'method' => 'DELETE',
-                                    'message' => 'Are you sure you want to delete this item?',
-                                ])
-                            @endif
+                        <td class="text-nowrap px-6 py-2">
+                            <div class="flex items-center justify-end gap-3">
+                                @if (!empty($model::$actions['edit']))
+                                    <a
+                                        class="cursor-pointer text-sky-600 hover:text-sky-700"
+                                        href="{{ route("$route.edit", $datum->id) }}"
+                                    >
+                                        {{ __('Edit') }}
+                                    </a>
+                                @endif
+                                @if (!empty($model::$actions['delete']))
+                                    <span
+                                        class="cursor-pointer text-red-500 hover:text-red-700"
+                                        id="delete-button-{{ $datum->id }}"
+                                    >
+                                        {{ __('Delete') }}
+                                    </span>
+                                    @include('components.delete-modal', [
+                                        'model' => $datum,
+                                        'route' => $route,
+                                        'method' => 'DELETE',
+                                        'message' => 'Are you sure you want to delete this item?',
+                                    ])
+                                @endif
+                            </div>
                         </td>
                     </tr>
                 @endforeach
