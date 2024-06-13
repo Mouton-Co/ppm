@@ -105,7 +105,7 @@
             id="filter-options"
             aria-hidden="true"
         >
-            <div class="border-dark-field-border max-h-48 w-full overflow-hidden overflow-y-scroll rounded-md border">
+            <div class="border-dark-field-border w-full overflow-hidden overflow-y-scroll rounded-md border">
                 <div
                     class="border-dark-field-border flex h-8 w-full items-center border-b bg-gray-700 px-6 py-2 text-xs uppercase text-gray-400">
                     <span class="w-1/2">{{ __('Field') }}</span>
