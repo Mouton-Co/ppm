@@ -46,6 +46,56 @@ class User extends Authenticatable
 
     /*
     |--------------------------------------------------------------------------
+    | Index table properties
+    |--------------------------------------------------------------------------
+    */
+    public static $structure = [
+        'id' => [
+            'label' => 'ID',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
+        'name' => [
+            'label' => 'Name',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
+        'email' => [
+            'label' => 'Email',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
+        'role_id' => [
+            'label' => 'Role',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
+        'created_at' => [
+            'label' => 'Created at',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
+        'updated_at' => [
+            'label' => 'Updated at',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
+    ];
+
+    public static $actions = [
+        'create' => 'Create new',
+        'edit' => 'Edit',
+        'delete' => 'Delete',
+    ];
+
+    /*
+    |--------------------------------------------------------------------------
     | RELATIONSHIPS
     |--------------------------------------------------------------------------
     */
