@@ -242,7 +242,12 @@
                     <tr class="border-b border-gray-700 bg-gray-800">
                         @foreach (auth()->user()->table_configs['tables'][$table]['show'] as $key)
                             <td class="text-nowrap px-6 py-2">
-                                @if ($model::$structure[$key]['type'] == 'relationship')
+                                @if (! empty($model::$structure[$key]['component']))
+                                    @include('components.table.'.$model::$structure[$key]['component'], [
+                                        'datum' => $datum,
+                                        'key' => $key,
+                                    ])
+                                @elseif ($model::$structure[$key]['type'] == 'relationship')
                                     {{ $datum?->{$key}?->{$model::$structure[$key]['relationship_field']} ?? 'N/A' }}
                                 @else
                                     {{ $datum?->{$key} ?? 'N/A' }}
