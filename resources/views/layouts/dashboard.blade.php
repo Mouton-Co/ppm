@@ -33,7 +33,7 @@
             @include('layouts.sidebar')
         </div>
 
-        <div class="lg:pl-">
+        <div>
             <div
                 class="sticky top-0 z-30 flex justify-between lg:justify-end h-16 shrink-0 items-center gap-x-4
             border-b border-gray-900 shadow-md bg-gray-800 px-4 sm:gap-x-6 sm:px-6 lg:px-8">

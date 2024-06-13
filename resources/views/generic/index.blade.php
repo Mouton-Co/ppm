@@ -131,7 +131,7 @@
     </form>
 
     {{-- table --}}
-    <div class="relative overflow-x-auto rounded">
+    <div class="relative overflow-x-auto min-h-[550px] rounded">
         <table class="border-dark-field-border w-full border text-left text-sm text-gray-400 rtl:text-right">
             {{-- headings --}}
             <thead class="bg-gray-700 text-xs uppercase text-gray-400">
