@@ -5,22 +5,29 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProjectStatus\StoreRequest;
 use App\Http\Requests\ProjectStatus\UpdateRequest;
 use App\Models\ProjectStatus;
+use Illuminate\Http\Request;
 
 class ProjectStatusController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $projectStatuses = ProjectStatus::orderBy('name');
+        $this->checkTableConfigurations('project-statuses', ProjectStatus::class);
+        $projectStatuses = $this->filter(ProjectStatus::class, ProjectStatus::query(), $request)->paginate(15);
 
-        if (request()->has('search')) {
-            $projectStatuses->where('name', 'like', '%' . request('search') . '%');
+        if ($projectStatuses->currentPage() > 1 && $projectStatuses->lastPage() < $projectStatuses->currentPage()) {
+            return redirect()->route('project-statuses.index', array_merge(['page' => $projectStatuses->lastPage()], $request->except(['page'])));
         }
 
-        return view('project-status.index', [
-            'projectStatuses' => $projectStatuses->paginate(15)
+        return view('generic.index')->with([
+            'heading' => 'Project Statuses',
+            'table' => 'project-statuses',
+            'route' => 'project-statuses',
+            'indexRoute' => 'project-statuses.index',
+            'data' => $projectStatuses,
+            'model' => ProjectStatus::class,
         ]);
     }
 
