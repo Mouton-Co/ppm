@@ -31,6 +31,107 @@ class Submission extends Model
 
     /*
     |--------------------------------------------------------------------------
+    | Index table properties
+    |--------------------------------------------------------------------------
+    */
+    public static $structure = [
+        'id' => [
+            'label' => 'ID',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
+        'submission_code' => [
+            'label' => 'Submission Code',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
+        'assembly_name' => [
+            'label' => 'Assembly Name',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
+        'machine_number' => [
+            'label' => 'Machine Number',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
+        'submission_type' => [
+            'label' => 'Submission Type',
+            'type' => 'dropdown',
+            'sortable' => true,
+            'filterable' => true,
+            'filterable_options' => [
+                'Additional Project',
+                'Correction',
+                'New BOM',
+                'Replacement',
+            ],
+        ],
+        'current_unit_number' => [
+            'label' => 'Unit Number',
+            'type' => 'dropdown',
+            'sortable' => true,
+            'filterable' => true,
+            'filterable_options' => [
+                '00 - Common Parts',
+                '01 - Main Frame',
+                '02 - Unwind',
+                '03 - Tapping Unit',
+                '04 - Gland Unit',
+                '05 - Side Seal Unit',
+                '06 - Punch Unit',
+                '07 - Cross Seal 1',
+                '08 - Cross Seal 2',
+                '09 - Cross Cool',
+                '10 - Delta Seal',
+                '11 - Deliver Table',
+                '12 - Gland Unit Hopper/Bowl',
+                '13 - Tapping Unit Hopper/Bowl',
+                '14 - Ancillary Units',
+                '15 - Perforator',
+                '16 - Gusset Seal',
+                '17 - Custom Unit 2',
+                '18 - Gusset Unwind',
+                '19 - 3 Point Seal',
+                '20 - Handle Punch',
+            ],
+        ],
+        'notes' => [
+            'label' => 'Notes',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
+        'user' => [
+            'label' => 'Submitted by',
+            'type' => 'relationship',
+            'sortable' => true,
+            'filterable' => true,
+            'relationship_field' => 'name',
+            'relationship_model' => User::class,
+        ],
+        'project' => [
+            'label' => 'Project COC',
+            'type' => 'relationship',
+            'sortable' => true,
+            'filterable' => true,
+            'relationship_field' => 'coc',
+            'relationship_model' => Project::class,
+        ],
+    ];
+
+    public static $actions = [
+        'create' => 'Create new',
+        'show' => 'View',
+        'delete' => 'Delete',
+    ];
+
+    /*
+    |--------------------------------------------------------------------------
     | Relationships
     |--------------------------------------------------------------------------
     */

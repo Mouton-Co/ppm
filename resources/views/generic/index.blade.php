@@ -256,12 +256,20 @@
                         @endforeach
                         <td class="text-nowrap px-6 py-2">
                             <div class="flex items-center justify-end gap-3">
+                                @if (!empty($model::$actions['show']))
+                                    <a
+                                        class="cursor-pointer text-sky-600 hover:text-sky-700"
+                                        href="{{ route("$route.show", $datum->id) }}"
+                                    >
+                                        {{ $model::$actions['show'] }}
+                                    </a>
+                                @endif
                                 @if (!empty($model::$actions['edit']))
                                     <a
                                         class="cursor-pointer text-sky-600 hover:text-sky-700"
                                         href="{{ route("$route.edit", $datum->id) }}"
                                     >
-                                        {{ __('Edit') }}
+                                        {{ $model::$actions['edit'] }}
                                     </a>
                                 @endif
                                 @if (!empty($model::$actions['delete']))
@@ -269,7 +277,7 @@
                                         class="cursor-pointer text-red-500 hover:text-red-700"
                                         id="delete-button-{{ $datum->id }}"
                                     >
-                                        {{ __('Delete') }}
+                                        {{ $model::$actions['delete'] }}
                                     </span>
                                     @include('components.delete-modal', [
                                         'model' => $datum,

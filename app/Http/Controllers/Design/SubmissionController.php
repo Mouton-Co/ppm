@@ -48,8 +48,8 @@ class SubmissionController extends Controller
 
         return view('designer.new-submission')->with([
             'submission' => $submission,
-            'submission_types' => config('dropdowns.submission_types'),
-            'unit_numbers' => config('dropdowns.unit_numbers'),
+            'submission_types' => Submission::$structure['submission_type']['filterable_options'],
+            'unit_numbers' => Submission::$structure['current_unit_number']['filterable_options'],
             'projects' => $projects,
         ]);
     }
@@ -115,58 +115,20 @@ class SubmissionController extends Controller
      */
     public function index(Request $request)
     {
-        // get all submissions
-        $this->request = $request;
-        $submissions = Submission::select(['submissions.*', 'users.name as user_name'])
-            ->join('users', 'users.id', '=', 'submissions.user_id')
-            ->where('submitted', 1);
-
-        // order by
-        if (! empty($request->get('order_by'))) {
-            if ($request->get('order_by') == 'user->name') {
-                $submissions = $submissions->orderBy('users.name', $request->get('order') ?? 'asc');
-            } else {
-                $submissions = $submissions->orderBy($request->get('order_by'), $request->get('order') ?? 'asc');
-            }
-        }
-
-        // unit number
-        if (! empty($request->get('current_unit_number')) && $request->get('current_unit_number') != '-') {
-            $submissions = $submissions->where('current_unit_number', $request->get('current_unit_number'));
-        }
-
-        // submission type
-        if (! empty($request->get('submission_type')) && $request->get('submission_type') != '-') {
-            $submissions = $submissions->where('submission_type', $request->get('submission_type'));
-        }
-
-        // search
-        if (! empty($request->get('search'))) {
-            $submissions = $submissions
-                ->where(function ($query) {
-                    $query->where('assembly_name', 'like', '%'.$this->request->get('search').'%')
-                        ->orWhere('submission_code', 'like', '%'.$this->request->get('search').'%')
-                        ->orWhere('users.name', 'like', '%'.$this->request->get('search').'%');
-                });
-        }
-
-        $submissions = $submissions->paginate(15);
+        $this->checkTableConfigurations('submissions', Submission::class);
+        $submissions = $this->filter(Submission::class, Submission::query(), $request)->paginate(15);
 
         if ($submissions->currentPage() > 1 && $submissions->lastPage() < $submissions->currentPage()) {
-            return redirect()->route('submissions.index', [
-                'order_by' => $request->get('order_by'),
-                'order' => $request->get('order'),
-                'current_unit_number' => $request->get('current_unit_number'),
-                'submission_type' => $request->get('submission_type'),
-                'search' => $request->get('search'),
-                'page' => $submissions->lastPage(),
-            ]);
+            return redirect()->route('user.index', array_merge(['page' => $submissions->lastPage()], $request->except(['page'])));
         }
 
-        return view('submissions.index')->with([
-            'current' => 'view-submissions',
-            'submissions' => $submissions,
-            'fields' => config('models.submissions.columns'),
+        return view('generic.index')->with([
+            'heading' => 'Submission',
+            'table' => 'submissions',
+            'route' => 'submissions',
+            'indexRoute' => 'submissions.index',
+            'data' => $submissions,
+            'model' => Submission::class,
         ]);
     }
 
