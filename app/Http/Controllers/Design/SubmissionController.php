@@ -119,7 +119,7 @@ class SubmissionController extends Controller
         $submissions = $this->filter(Submission::class, Submission::query(), $request)->paginate(15);
 
         if ($submissions->currentPage() > 1 && $submissions->lastPage() < $submissions->currentPage()) {
-            return redirect()->route('user.index', array_merge(['page' => $submissions->lastPage()], $request->except(['page'])));
+            return redirect()->route('submissions.index', array_merge(['page' => $submissions->lastPage()], $request->except(['page'])));
         }
 
         return view('generic.index')->with([

@@ -10,6 +10,11 @@ class Project extends Model
 {
     use HasFactory;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'machine_nr',
         'country',
@@ -27,8 +32,141 @@ class Project extends Model
         'submission_id'
     ];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
     protected $casts = [
         'resolved_at' => 'datetime:Y-m-d H:i:s',
+    ];
+
+    /**
+     * Table structure.
+     *
+     * @var array
+     */
+    public static $structure = [
+        'id' => [
+            'label' => 'ID',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
+        'machine_nr' => [
+            'label' => 'Machine Nr',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
+        'country' => [
+            'label' => 'Country/Company',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
+        'coc' => [
+            'label' => 'COC',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
+        'noticed_issue' => [
+            'label' => 'Noticed Issue',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+            'component' => 'editable-text',
+            'tooltip' => true,
+        ],
+        'proposed_solution' => [
+            'label' => 'Proposed Solution',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+            'component' => 'editable-text',
+            'tooltip' => true,
+        ],
+        'currently_responsible' => [
+            'label' => 'Currently Responsible',
+            'type' => 'dropdown',
+            'sortable' => true,
+            'filterable' => true,
+            'filterable_options' => 'custom',
+            'component' => 'editable-select',
+        ],
+        'status' => [
+            'label' => 'Status',
+            'type' => 'dropdown',
+            'sortable' => true,
+            'filterable' => true,
+            'filterable_options' => 'custom',
+            'component' => 'editable-select',
+        ],
+        'resolved_at' => [
+            'label' => 'Resolved At',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
+        'related_pos' => [
+            'label' => 'Related POs',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+            'component' => 'editable-text',
+        ],
+        'waybill_nr' => [
+            'label' => 'Waybill Nr',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+            'component' => 'editable-text',
+        ],
+        'customer_comment' => [
+            'label' => 'Customer Comment',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+            'component' => 'editable-text',
+            'tooltip' => true,
+        ],
+        'commisioner_comment' => [
+            'label' => 'Commisioner Comment',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+            'component' => 'editable-text',
+            'tooltip' => true,
+        ],
+        'logistics_comment' => [
+            'label' => 'Logistics Comment',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+            'component' => 'editable-text',
+            'tooltip' => true,
+        ],
+        'submission' => [
+            'label' => 'Submission',
+            'type' => 'relationship',
+            'sortable' => true,
+            'filterable' => true,
+            'relationship_field' => 'submission_code',
+            'relationship_model' => Submission::class,
+            'component' => 'project-submission',
+        ],
+    ];
+
+    /**
+     * Actions.
+     *
+     * @var array<string, string>
+     */
+    public static $actions = [
+        'create' => 'Create new',
+        'edit' => 'Edit',
+        'delete' => 'Delete',
     ];
 
     /**
@@ -70,5 +208,30 @@ class Project extends Model
     public function getResolvedAtFormattedAttribute(): ?string
     {
         return $this->resolved_at ? Carbon::parse($this->resolved_at)->format('Y-m-d H:i:s') : null;
+    }
+
+    /**
+     * Get the currently responsible attribute.
+     *
+     * @return array
+     */
+    public static function getCustomCurrentlyResponsibleAttribute(): array
+    {
+        $responsibles = array_merge(
+            ProjectResponsible::pluck('name')->toArray(),
+            User::pluck('name')->toArray()
+        );
+        sort($responsibles);
+        return $responsibles;
+    }
+
+    /**
+     * Get the status attribute.
+     *
+     * @return array
+     */
+    public static function getCustomStatusAttribute(): array
+    {
+        return ProjectStatus::orderBy('name')->pluck('name')->toArray();
     }
 }

@@ -39,6 +39,7 @@ module.exports = {
         'bg-cyan-300', 'text-cyan-800',
         'bg-zinc-300', 'text-zinc-800',
         'bg-orange-300', 'text-orange-800',
+        'bg-transparent' , 'text-gray-400',
     ],
 
     plugins: [require('@tailwindcss/forms')],

@@ -43,4 +43,19 @@ export function modals() {
                 .removeClass('hidden');
         }, 200);
     });
+
+    // unlink modal
+    $('*[id^="unlink-button-"]').on("click", function () {
+        let id = this.getAttribute('id').split('-')[2];
+        $("#unlink-modal-"+id).removeClass('hidden');
+        $("#curtain").addClass('curtain-expanded').removeClass('curtain-closed');
+        $("#unlink-modal-popup-"+id).removeClass('modal-close').addClass('modal-popup');
+    });
+    $('#curtain, button[id^="unlink-modal-cancel-"]').on("click", function () {
+        let id = this.getAttribute('id').split('-')[3];
+        $("#curtain").addClass('curtain-closed').removeClass('curtain-expanded');
+        $("#unlink-modal-popup-"+id).removeClass('modal-popup').addClass('modal-close');
+        $("*[id^='unlink-modal-']").removeClass('hidden').addClass('hidden');
+        $("*[id^='unlink-modal-popup-']").removeClass('hidden');
+    });
 }

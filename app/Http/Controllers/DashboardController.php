@@ -6,6 +6,6 @@ class DashboardController extends Controller
 {
     public function dashboard()
     {
-        return redirect()->route('submissions.index');
+        return redirect()->route('projects.index');
     }
 }

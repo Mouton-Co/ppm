@@ -85,7 +85,15 @@ class Controller extends BaseController
     {
         $slot = "";
         $selected = 'selected';
-        foreach ($field['filterable_options'] as $key => $value) {
+
+        if ($field['filterable_options'] == 'custom') {
+            $customKey = \Str::camel("get_custom_{$request->field}_attribute");
+            $options =  $request->model::$customKey();
+        } else {
+            $options = $field['filterable_options'];
+        }
+
+        foreach ($options as $key => $value) {
             $slot .= "<option value='$key' $selected>$value</option>";
             $selected = '';
         }

@@ -65,7 +65,17 @@
                         label="{{ $model::$structure[$key]['label'] }}"
                         key="{{ $key }}"
                     >
-                        @foreach ($model::$structure[$key]['filterable_options'] as $optionKey => $optionValue)
+                        @if ($model::$structure[$key]['filterable_options'] == "custom")
+                            @php
+                                $customKey = \Str::camel("get_custom_{$key}_attribute");
+                                $options =  $model::$customKey();
+                            @endphp
+                        @else
+                            @php
+                                $options = $model::$structure[$key]['filterable_options'];
+                            @endphp
+                        @endif
+                        @foreach ($options as $optionKey => $optionValue)
                             <option
                                 value="{{ $optionKey }}"
                                 @if ($optionKey == $value) selected @endif
@@ -101,7 +111,7 @@
             <span>{{ __('Filter') }}</span>
         </div>
         <div
-            class="absolute bottom-0 right-0 z-10 hidden w-full max-w-xs translate-y-full text-xs shadow-lg"
+            class="absolute bottom-0 right-0 z-10 hidden w-full max-w-sm translate-y-full text-xs shadow-lg"
             id="filter-options"
             aria-hidden="true"
         >
@@ -253,6 +263,7 @@
                                     @include('components.table.'.$model::$structure[$key]['component'], [
                                         'datum' => $datum,
                                         'key' => $key,
+                                        'model' => $model,
                                     ])
                                 @elseif ($model::$structure[$key]['type'] == 'relationship')
                                     {{ $datum?->{$key}?->{$model::$structure[$key]['relationship_field']} ?? 'N/A' }}

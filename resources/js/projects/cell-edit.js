@@ -42,7 +42,8 @@ export function cellEditProject() {
         $(this).removeClass('!bg-green-300 !text-green-800')
             .removeClass('!bg-cyan-300 !text-cyan-800')
             .removeClass('!bg-zinc-300 !text-zinc-800')
-            .removeClass('!bg-orange-300 !text-orange-800');
+            .removeClass('!bg-orange-300 !text-orange-800')
+            .removeClass('!bg-transparent !text-gray-400');
 
         // add class based on status
         if (status.toLowerCase() == 'closed') {
@@ -53,6 +54,8 @@ export function cellEditProject() {
             $(this).addClass('!bg-zinc-300 !text-zinc-800');
         } else if (status.toLowerCase() == 'work in progress') {
             $(this).addClass('!bg-orange-300 !text-orange-800');
+        } else {
+            $(this).addClass('!bg-transparent !text-gray-400');
         }
 
     });
