@@ -47,7 +47,7 @@ class ProcessType extends Model
                 'dwg' => 'DWG',
                 'step' => 'STEP',
             ],
-            'component' => 'required-files',
+            'component' => 'process-type.required-files',
         ],
         'created_at' => [
             'label' => 'Created at',

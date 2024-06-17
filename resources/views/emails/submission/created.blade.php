@@ -15,8 +15,8 @@
     <p>
         Submission Name: {{ $datum->assembly_name ?? 'N/A' }}<br>
         Submission Code: {{ $datum->submission_code ?? 'N/A' }}<br>
-        Link to Submission: <a href="{{ route('submissions.view', $datum->id) }}">
-            {{ route('submissions.view', $datum->id) }}
+        Link to Submission: <a href="{{ route('submissions.show', $datum->id) }}">
+            {{ route('submissions.show', $datum->id) }}
         </a><br>
     </p>
 </body>

@@ -48,7 +48,7 @@ class RecipientGroup extends Model
             'type' => 'text',
             'sortable' => true,
             'filterable' => true,
-            'component' => 'recipient-list',
+            'component' => 'email-trigger.recipients',
         ],
         'created_at' => [
             'label' => 'Created at',

@@ -76,7 +76,7 @@ class Project extends Model
             'type' => 'text',
             'sortable' => true,
             'filterable' => true,
-            'component' => 'editable-text',
+            'component' => 'editable.text',
             'tooltip' => true,
         ],
         'proposed_solution' => [
@@ -84,7 +84,7 @@ class Project extends Model
             'type' => 'text',
             'sortable' => true,
             'filterable' => true,
-            'component' => 'editable-text',
+            'component' => 'editable.text',
             'tooltip' => true,
         ],
         'currently_responsible' => [
@@ -93,7 +93,7 @@ class Project extends Model
             'sortable' => true,
             'filterable' => true,
             'filterable_options' => 'custom',
-            'component' => 'editable-select',
+            'component' => 'editable.select',
         ],
         'status' => [
             'label' => 'Status',
@@ -101,7 +101,7 @@ class Project extends Model
             'sortable' => true,
             'filterable' => true,
             'filterable_options' => 'custom',
-            'component' => 'editable-select',
+            'component' => 'editable.select',
         ],
         'resolved_at' => [
             'label' => 'Resolved At',
@@ -114,21 +114,21 @@ class Project extends Model
             'type' => 'text',
             'sortable' => true,
             'filterable' => true,
-            'component' => 'editable-text',
+            'component' => 'editable.text',
         ],
         'waybill_nr' => [
             'label' => 'Waybill Nr',
             'type' => 'text',
             'sortable' => true,
             'filterable' => true,
-            'component' => 'editable-text',
+            'component' => 'editable.text',
         ],
         'customer_comment' => [
             'label' => 'Customer Comment',
             'type' => 'text',
             'sortable' => true,
             'filterable' => true,
-            'component' => 'editable-text',
+            'component' => 'editable.text',
             'tooltip' => true,
         ],
         'commisioner_comment' => [
@@ -136,7 +136,7 @@ class Project extends Model
             'type' => 'text',
             'sortable' => true,
             'filterable' => true,
-            'component' => 'editable-text',
+            'component' => 'editable.text',
             'tooltip' => true,
         ],
         'logistics_comment' => [
@@ -144,7 +144,7 @@ class Project extends Model
             'type' => 'text',
             'sortable' => true,
             'filterable' => true,
-            'component' => 'editable-text',
+            'component' => 'editable.text',
             'tooltip' => true,
         ],
         'submission' => [
@@ -154,7 +154,7 @@ class Project extends Model
             'filterable' => true,
             'relationship_field' => 'submission_code',
             'relationship_model' => Submission::class,
-            'component' => 'project-submission',
+            'component' => 'project.submission',
         ],
     ];
 

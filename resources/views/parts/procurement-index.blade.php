@@ -288,7 +288,7 @@
                                                     ) }}" class="max-w-fit !p-0" download>
                                                         <x-icon.zip class="h-6 text-gray-300 hover:text-sky-700" />
                                                     </a>
-                                                    <a href="{{ route('submissions.view', [
+                                                    <a href="{{ route('submissions.show', [
                                                         'id' => $part->submission->id,
                                                         'part' => $part->id
                                                     ]) }}" class="max-w-fit !p-0" target="_blank">
