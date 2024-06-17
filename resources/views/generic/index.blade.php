@@ -6,7 +6,7 @@
         <h2 class="text-lg text-white">{{ $heading ?? 'Items' }}</h2>
         <div class="flex cursor-pointer gap-2">
             <button
-                class="h-7 rounded border border-gray-300 px-2 py-1 text-sm text-gray-300 shadow hover:border-sky-700 hover:text-sky-700"
+                class="h-7 rounded border border-sky-700 px-2 py-1 text-sm text-sky-700 shadow hover:border-sky-700 hover:text-white hover:bg-sky-700"
                 id="filter"
             >
                 {{ __('Filter') }}
