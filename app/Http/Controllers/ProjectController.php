@@ -16,49 +16,20 @@ class ProjectController extends Controller
      */
     public function index(Request $request)
     {
-        $projects = Project::with(['submission']);
-
-        $responsibles = array_merge(
-            ProjectResponsible::pluck('name')->toArray(),
-            User::pluck('name')->toArray()
-        );
-        sort($responsibles);
-
-        if (request()->has('machine_nr')) {
-            $projects->where('machine_nr', 'like', '%' . request('machine_nr') . '%');
-        }
-
-        if ($request->has('country')) {
-            $projects->where('country', 'like', '%' . request('country') . '%');
-        }
-
-        if ($request->has('currently_responsible')) {
-            $projects->where('currently_responsible', 'like', '%' . request('currently_responsible') . '%');
-        }
-
-        if ($request->has('status')) {
-            $projects->where('status', 'like', '%' . request('status') . '%');
-        }
-
-        if (! empty($request->order_by)) {
-            $projects->orderBy($request->get('order_by'), $request->get('order') ?? 'asc');
-        }
-
-        $projects = $projects->paginate(15);
+        $this->checkTableConfigurations('projects', Project::class);
+        $projects = $this->filter(Project::class, Project::query(), $request)->paginate(15);
 
         if ($projects->currentPage() > 1 && $projects->lastPage() < $projects->currentPage()) {
-            return redirect()->route('projects.index', [
-                'machine_nr' => request('machine_nr'),
-                'country' => request('country'),
-                'currently_responsible' => request('currently_responsible'),
-                'status' => request('status'),
-                'page' => $projects->lastPage(),
-            ]);
+            return redirect()->route('projects.index', array_merge(['page' => $projects->lastPage()], $request->except(['page'])));
         }
 
-        return view('project.index', [
-            'projects' => $projects,
-            'responsibles' => $responsibles,
+        return view('generic.index')->with([
+            'heading' => 'Projects',
+            'table' => 'projects',
+            'route' => 'projects',
+            'indexRoute' => 'projects.index',
+            'data' => $projects,
+            'model' => Project::class,
         ]);
     }
 
@@ -237,6 +208,6 @@ class ProjectController extends Controller
             'submission_id' => null,
         ]);
 
-        return redirect()->back()->with('success', 'Project deleted successfully');
+        return redirect()->back()->with('success', 'Submission unlinked');
     }
 }

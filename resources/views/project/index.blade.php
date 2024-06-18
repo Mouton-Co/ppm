@@ -255,7 +255,7 @@
                                                 @else
                                                 <div class="w-full flex justify-start">
                                                     <a class="btn btn-sky max-w-fit !text-xs !py-1 !max-h-fit !rounded"
-                                                    target="_blank" href="{{ route('new.submission', [
+                                                    target="_blank" href="{{ route('submissions.create', [
                                                         'machine_number' => $project->machine_nr,
                                                         'submission_type' => 'additional_project',
                                                         'project_id' => $project->id,

@@ -6,16 +6,29 @@ use App\Http\Requests\AutofillSuppliers\StoreRequest;
 use App\Http\Requests\AutofillSuppliers\UpdateRequest;
 use App\Models\AutofillSupplier;
 use App\Models\Supplier;
+use Illuminate\Http\Request;
 
 class AutofillSupplierController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('autofill-suppliers.index')->with([
-            'autofillSuppliers' => AutofillSupplier::orderBy('text')->get(),
+        $this->checkTableConfigurations('autofill-suppliers', AutofillSupplier::class);
+        $autofillSuppliers = $this->filter(AutofillSupplier::class, AutofillSupplier::query(), $request)->paginate(15);
+
+        if ($autofillSuppliers->currentPage() > 1 && $autofillSuppliers->lastPage() < $autofillSuppliers->currentPage()) {
+            return redirect()->route('autofill-suppliers.index', array_merge(['page' => $autofillSuppliers->lastPage()], $request->except(['page'])));
+        }
+
+        return view('generic.index')->with([
+            'heading' => 'Autofill Suppliers',
+            'table' => 'autofill-suppliers',
+            'route' => 'autofill-suppliers',
+            'indexRoute' => 'autofill-suppliers.index',
+            'data' => $autofillSuppliers,
+            'model' => AutofillSupplier::class,
         ]);
     }
 

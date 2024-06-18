@@ -26,7 +26,7 @@
             @if (!empty($processType) && $processType->isDisabled('pdf'))
                 disabled class="bg-gray-300"
             @endif>
-            <img src="{{ asset('images/pdf.png') }}" alt="No image" class="w-5 h-5">
+            <img src="{{ asset('images/pdf.png') }}" alt="None" class="w-5 h-5">
             <div class="h-full text-gray-300 text-sm">PDF</div>
             <div class="strikethrough {{ !empty($processType) && $processType->isDisabled('pdf') ? '' : 'hidden' }}"
             id="pdf-strikethrough"></div>
@@ -44,7 +44,7 @@
             @if (!empty($processType) && $processType->isDisabled('dwg'))
                 disabled class="bg-gray-300"
             @endif>
-            <img src="{{ asset('images/dwg.png') }}" alt="No image" class="w-5 h-5">
+            <img src="{{ asset('images/dwg.png') }}" alt="None" class="w-5 h-5">
             <div class="h-full text-gray-300 text-sm">DWG</div>
             <div class="strikethrough {{ !empty($processType) && $processType->isDisabled('dwg') ? '' : 'hidden' }}"
             id="dwg-strikethrough"></div>
@@ -62,7 +62,7 @@
             @if (!empty($processType) && $processType->isDisabled('step'))
                 disabled class="bg-gray-300"
             @endif>
-            <img src="{{ asset('images/step.png') }}" alt="No image" class="w-5 h-5">
+            <img src="{{ asset('images/step.png') }}" alt="None" class="w-5 h-5">
             <div class="h-full text-gray-300 text-sm">STEP</div>
             <div class="strikethrough {{ !empty($processType) && $processType->isDisabled('step') ? '' : 'hidden' }}"
             id="step-strikethrough"></div>
@@ -83,10 +83,10 @@
             @if (!empty($processType) && $processType->isDisabled('pdfOrDwg'))
                 disabled class="bg-gray-300"
             @endif>
-            <img src="{{ asset('images/pdf.png') }}" alt="No image" class="w-5 h-5">
+            <img src="{{ asset('images/pdf.png') }}" alt="None" class="w-5 h-5">
             <div class="h-full text-gray-300 text-sm">PDF</div>
             <div class="h-full text-gray-300 text-sm px-1">OR</div>
-            <img src="{{ asset('images/dwg.png') }}" alt="No image" class="w-5 h-5">
+            <img src="{{ asset('images/dwg.png') }}" alt="None" class="w-5 h-5">
             <div class="h-full text-gray-300 text-sm">DWG</div>
             <div class="strikethrough {{
                 !empty($processType) && $processType->isDisabled('pdfOrDwg') ? '' : 'hidden'
@@ -108,10 +108,10 @@
             @if (!empty($processType) && $processType->isDisabled('pdfOrStep'))
                 disabled class="bg-gray-300"
             @endif>
-            <img src="{{ asset('images/pdf.png') }}" alt="No image" class="w-5 h-5">
+            <img src="{{ asset('images/pdf.png') }}" alt="None" class="w-5 h-5">
             <div class="h-full text-gray-300 text-sm">PDF</div>
             <div class="h-full text-gray-300 text-sm px-1">OR</div>
-            <img src="{{ asset('images/step.png') }}" alt="No image" class="w-5 h-5">
+            <img src="{{ asset('images/step.png') }}" alt="None" class="w-5 h-5">
             <div class="h-full text-gray-300 text-sm">STEP</div>
             <div class="strikethrough {{
                 !empty($processType) && $processType->isDisabled('pdfOrStep') ? '' : 'hidden'
@@ -133,10 +133,10 @@
             @if (!empty($processType) && $processType->isDisabled('dwgOrStep'))
                 disabled class="bg-gray-300"
             @endif>
-            <img src="{{ asset('images/dwg.png') }}" alt="No image" class="w-5 h-5">
+            <img src="{{ asset('images/dwg.png') }}" alt="None" class="w-5 h-5">
             <div class="h-full text-gray-300 text-sm">DWG</div>
             <div class="h-full text-gray-300 text-sm px-1">OR</div>
-            <img src="{{ asset('images/step.png') }}" alt="No image" class="w-5 h-5">
+            <img src="{{ asset('images/step.png') }}" alt="None" class="w-5 h-5">
             <div class="h-full text-gray-300 text-sm">STEP</div>
             <div class="strikethrough {{
                 !empty($processType) && $processType->isDisabled('dwgOrStep') ? '' : 'hidden'

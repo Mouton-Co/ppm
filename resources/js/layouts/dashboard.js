@@ -55,42 +55,4 @@ export function dashboard() {
         }
     });
 
-    $('svg[id^="delete-button-"], div[id^="delete-button-"]').on("click", function () {
-        let id = this.getAttribute('id').split('-')[2];
-        $("#delete-modal-"+id).removeClass('hidden');
-        setTimeout(function () {
-            $("#delete-modal-curtain-"+id).addClass('curtain-expanded').removeClass('curtain-closed');
-            $("#delete-modal-popup-"+id).removeClass('modal-close');
-            $("#delete-modal-popup-"+id).addClass('modal-popup');
-        }, 300);
-    });
-    $('div[id^="delete-modal-curtain-"], button[id^="delete-modal-cancel-"]').on("click", function () {
-        let id = this.getAttribute('id').split('-')[3];
-        $("#delete-modal-curtain-"+id).addClass('curtain-closed').removeClass('curtain-expanded');
-        $("#delete-modal-popup-"+id).removeClass('modal-popup');
-        $("#delete-modal-popup-"+id).addClass('modal-close');
-        setTimeout(function () {
-            $("#delete-modal-"+id).addClass('hidden');
-        }, 200);
-    });
-
-    $('svg[id^="unlink-button-"], div[id^="unlink-button-"]').on("click", function () {
-        let id = this.getAttribute('id').split('-')[2];
-        $("#unlink-modal-"+id).removeClass('hidden');
-        setTimeout(function () {
-            $("#unlink-modal-curtain-"+id).addClass('curtain-expanded').removeClass('curtain-closed');
-            $("#unlink-modal-popup-"+id).removeClass('modal-close');
-            $("#unlink-modal-popup-"+id).addClass('modal-popup');
-        }, 300);
-    });
-    $('div[id^="unlink-modal-curtain-"], button[id^="unlink-modal-cancel-"]').on("click", function () {
-        let id = this.getAttribute('id').split('-')[3];
-        $("#unlink-modal-curtain-"+id).addClass('curtain-closed').removeClass('curtain-expanded');
-        $("#unlink-modal-popup-"+id).removeClass('modal-popup');
-        $("#unlink-modal-popup-"+id).addClass('modal-close');
-        setTimeout(function () {
-            $("#unlink-modal-"+id).addClass('hidden');
-        }, 200);
-    });
-
 };

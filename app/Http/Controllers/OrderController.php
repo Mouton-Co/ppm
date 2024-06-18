@@ -2,42 +2,33 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Order\IndexRequest;
 use App\Http\Requests\Order\StoreRequest;
 use App\Http\Requests\Order\UpdateRequest;
 use App\Models\Order;
 use App\Models\Part;
 use App\Models\Submission;
+use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(IndexRequest $request)
+    public function index(Request $request)
     {
-        $orders = Order::with('submission')
-            ->when($request->status, function ($query) use ($request) {
-                return $query->where('status', $request->status);
-            })
-            ->when($request->supplier, function ($query) use ($request) {
-                return $query->where('supplier_id', $request->supplier);
-            })
-            ->when($request->search, function ($query) use ($request) {
-                return $query->where('po_number', 'like', '%'.$request->search.'%')
-                    ->orWhere(
-                        Submission::select('submission_code')
-                            ->whereColumn('submission_id', 'submissions.id')
-                            ->where('submission_code', 'like', '%'.$request->search.'%')
-                            ->limit(1),
-                        'like',
-                        '%'.$request->search.'%'
-                    );
-            })
-            ->orderBy('created_at', 'desc')
-            ->paginate(8);
+        $orders = $this->filter(Order::class, Order::query(), $request)->paginate(15);
 
-        return view('orders.index', compact('orders'));
+        if ($orders->currentPage() > 1 && $orders->lastPage() < $orders->currentPage()) {
+            return redirect()->route('orders.index', array_merge(['page' => $orders->lastPage()], $request->except(['page'])));
+        }
+
+        return view('generic.index-custom')->with([
+            'heading' => 'Orders',
+            'indexRoute' => 'orders.index',
+            'data' => $orders,
+            'model' => Order::class,
+            'slot' => 'components.table.orders.list',
+        ]);
     }
 
     /**

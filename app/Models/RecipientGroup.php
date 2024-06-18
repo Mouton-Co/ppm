@@ -12,7 +12,63 @@ class RecipientGroup extends Model
 {
     use HasFactory;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = ['field', 'value', 'recipients'];
+
+    /*
+    |--------------------------------------------------------------------------
+    | Index table properties
+    |--------------------------------------------------------------------------
+    */
+    public static $structure = [
+        'id' => [
+            'label' => 'ID',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
+        'field' => [
+            'label' => 'Triggers when',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
+        'value' => [
+            'label' => 'Condition',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
+        'recipients' => [
+            'label' => 'Recipients',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+            'component' => 'email-trigger.recipients',
+        ],
+        'created_at' => [
+            'label' => 'Created at',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
+        'updated_at' => [
+            'label' => 'Updated at',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
+    ];
+
+    public static $actions = [
+        'create' => 'Create new',
+        'edit' => 'Edit',
+        'delete' => 'Delete',
+    ];
 
     /**
      * Get the recipient emails for the recipient group.

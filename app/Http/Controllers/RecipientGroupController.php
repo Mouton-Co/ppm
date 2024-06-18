@@ -8,24 +8,29 @@ use App\Models\Project;
 use App\Models\ProjectResponsible;
 use App\Models\ProjectStatus;
 use App\Models\RecipientGroup;
+use Illuminate\Http\Request;
 
 class RecipientGroupController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $recipientGroups = RecipientGroup::query();
-    
-        if (request()->has('search')) {
-            $recipientGroups->where('field', 'like', '%' . request('search') . '%')
-                ->orWhere('value', 'like', '%' . request('search') . '%')
-                ->orWhere('recipients', 'like', '%' . request('search') . '%');
+        $this->checkTableConfigurations('recipient-groups', RecipientGroup::class);
+        $recipientGroups = $this->filter(RecipientGroup::class, RecipientGroup::query(), $request)->paginate(15);
+
+        if ($recipientGroups->currentPage() > 1 && $recipientGroups->lastPage() < $recipientGroups->currentPage()) {
+            return redirect()->route('recipient-groups.index', array_merge(['page' => $recipientGroups->lastPage()], $request->except(['page'])));
         }
 
-        return view('recipient-groups.index', [
-            'recipientGroups' => $recipientGroups->orderBy('field')->paginate(15)
+        return view('generic.index')->with([
+            'heading' => 'Email Triggers',
+            'table' => 'recipient-groups',
+            'route' => 'recipient-groups',
+            'indexRoute' => 'recipient-groups.index',
+            'data' => $recipientGroups,
+            'model' => RecipientGroup::class,
         ]);
     }
 

@@ -5,22 +5,29 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProjectResponsible\StoreRequest;
 use App\Http\Requests\ProjectResponsible\UpdateRequest;
 use App\Models\ProjectResponsible;
+use Illuminate\Http\Request;
 
 class ProjectResponsibleController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $projectResponsibles = ProjectResponsible::orderBy('name');
+        $this->checkTableConfigurations('project-responsibles', ProjectResponsible::class);
+        $projectResponsibles = $this->filter(ProjectResponsible::class, ProjectResponsible::query(), $request)->paginate(15);
 
-        if (request()->has('search')) {
-            $projectResponsibles->where('name', 'like', '%' . request('search') . '%');
+        if ($projectResponsibles->currentPage() > 1 && $projectResponsibles->lastPage() < $projectResponsibles->currentPage()) {
+            return redirect()->route('project-responsibles.index', array_merge(['page' => $projectResponsibles->lastPage()], $request->except(['page'])));
         }
 
-        return view('project-responsible.index', [
-            'projectResponsibles' => $projectResponsibles->paginate(15)
+        return view('generic.index')->with([
+            'heading' => 'Project Responsibles',
+            'table' => 'project-responsibles',
+            'route' => 'project-responsibles',
+            'indexRoute' => 'project-responsibles.index',
+            'data' => $projectResponsibles,
+            'model' => ProjectResponsible::class,
         ]);
     }
 

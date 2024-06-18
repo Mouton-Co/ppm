@@ -4,9 +4,251 @@ namespace App\Http\Controllers;
 
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 
 class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
+
+    /**
+     * @var Request
+     */
+    public $request;
+
+    /**
+     * @var mixed
+     */
+    public $model;
+
+    /**
+     * @var array
+     */
+    public $structure;
+
+    /**
+     * Get the pill html for the filter
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getPillHtml(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $structure = json_decode($request->structure, true);
+
+        if (
+            $request->has('model') &&
+            $request->has('field') &&
+            ! empty($field = $structure[$request->field])
+        ) {
+            if ($field['type'] == 'text') {
+                $component = $this->renderTextPill($request, $field);
+            } elseif ($field['type'] == 'dropdown') {
+                $component = $this->renderDropdownPill($request, $field);
+            } elseif ($field['type'] == 'relationship') {
+                $component = $this->renderRelationshipPill($request, $field);
+            } elseif ($field['type'] == 'boolean') {
+                $component = $this->renderBooleanPill($request, $field);
+            }
+
+            return response()->json($component);
+        }
+
+        return response()->json('error');
+    }
+
+    /**
+     * Get the pill html for the filter
+     * @param Request $request
+     * @param array $field
+     * @return array
+     */
+    protected function renderRelationshipPill($request, $field): array
+    {
+        $slot = "";
+        $selected = 'selected';
+        $options = $field['relationship_model']::all();
+        if (! empty($options)) {
+            foreach ($options as $option) {
+                $slot .= "<option value='" . $option->id . "' $selected>" . $option->{$field['relationship_field']} . "</option>";
+                $selected = '';
+            }
+        }
+
+        return [
+            'field' => $request->field,
+            'html' => view('components.filters.dropdown-pill', [
+                'label' => $field['label'],
+                'key' => $request->field,
+                'slot' => $slot,
+            ])->render(),
+        ];
+    }
+
+    /**
+     * Get the pill html for the filter
+     * @param Request $request
+     * @param array $field
+     * @return array
+     */
+    protected function renderDropdownPill($request, $field): array
+    {
+        $slot = "";
+        $selected = 'selected';
+
+        if ($field['filterable_options'] == 'custom') {
+            $customKey = \Str::camel("get_custom_{$request->field}_attribute");
+            $options =  $request->model::$customKey();
+        } else {
+            $options = $field['filterable_options'];
+        }
+
+        foreach ($options as $key => $value) {
+            $slot .= "<option value='$key' $selected>$value</option>";
+            $selected = '';
+        }
+
+        return [
+            'field' => $request->field,
+            'html' => view('components.filters.dropdown-pill', [
+                'label' => $field['label'],
+                'key' => $request->field,
+                'slot' => $slot,
+            ])->render(),
+        ];
+    }
+
+    /**
+     * Get the pill html for the filter
+     * @param Request $request
+     * @param array $field
+     * @return array
+     */
+    protected function renderBooleanPill($request, $field): array
+    {
+        return [
+            'field' => $request->field,
+            'html' => view('components.filters.dropdown-pill', [
+                'label' => $field['label'],
+                'key' => $request->field,
+                'slot' => "<option value='0'>No</option><option value='1'>Yes</option>",
+            ])->render(),
+        ];
+    }
+
+    /**
+     * Get the pill html for the filter
+     * @param Request $request
+     * @param array $field
+     * @return array
+     */
+    protected function renderTextPill($request, $field): array
+    {
+        return [
+            'field' => $request->field,
+            'html' => view('components.filters.text-pill', [
+                'label' => $field['label'],
+                'key' => $request->field,
+            ])->render(),
+        ];
+    }
+
+    /**
+     * Filter the query
+     * @param $model
+     * @param $query
+     * @param $request
+     * @return mixed
+     */
+    public function filter($model, $query, $request, $structure = null): mixed
+    {
+        $this->request = $request;
+        $this->model = $model;
+        $this->structure = $structure ?? $model::$structure;
+
+        foreach ($this->structure as $key => $value) {
+            if ($this->request->has($key)) {
+                if ($this->structure[$key]['type'] == 'relationship') {
+                    $query->where(str_replace('_id', '', $key) . '_id', $this->request->get($key));
+                } else {
+                    $query->where($key, 'like', "%{$this->request->get($key)}%");
+                }
+            }
+        }
+
+        if ($this->request->has('query')) {
+            $query = $query->where(function ($subquery) {
+                $first = true;
+                foreach ($this->structure as $key => $value) {
+                    if (!empty($value['filterable']) && $value['filterable']) {
+                        if ($first) {
+                            if ($value['type'] == 'relationship') {
+                                $subquery->whereHas(str_replace('_id', '', $key), function ($subsubquery) use ($key) {
+                                    $subsubquery->where($this->structure[$key]['relationship_field'], 'like', "%{$this->request->get('query')}%");
+                                });
+                            } else {
+                                $subquery->where($key, 'like', "%{$this->request->get('query')}%");
+                            }
+                            $first = false;
+                        } else {
+                            if ($value['type'] == 'relationship') {
+                                $subquery->orWhereHas(str_replace('_id', '', $key), function ($subsubquery) use ($key) {
+                                    $subsubquery->where($this->structure[$key]['relationship_field'], 'like', "%{$this->request->get('query')}%");
+                                });
+                            } else {
+                                $subquery->orWhere($key, 'like', "%{$this->request->get('query')}%");
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        if ($this->request->has('order') && $this->request->has('order_by')) {
+            $query->orderBy($this->request->get('order_by'), $this->request->get('order'));
+        }
+
+        return $query;
+    }
+
+    /**
+     * Creates table configurations if they don't exist
+     * @param string $table
+     * @param mixed $model
+     * @return void
+     */
+    public function checkTableConfigurations(string $table, mixed $model, $structure = null): void
+    {
+        $structure = $structure ?? $model::$structure;
+        $configs = auth()->user()->table_configs;
+
+        if (! array_key_exists('tables', $configs)) {
+            $configs['tables'] = [];
+        }
+
+        if (! array_key_exists($table, $configs['tables'])) {
+            $configs['tables'][$table] = [];
+            foreach ($structure as $key => $value) {
+                $configs['tables'][$table]['show'][] = $key;
+            }
+            $configs['tables'][$table]['hide'] = [];
+            auth()->user()->configurations = json_encode($configs);
+            auth()->user()->save();
+        }
+    }
+
+    /**
+     * Update the table configurations
+     * @param Request $request
+     * @return void
+     */
+    public function updateConfigs(Request $request): void
+    {
+        if ($request->has('table') && $request->has('columns')) {
+            $configs = auth()->user()->table_configs;
+            $configs['tables'][$request->table]['show'] = array_slice($request->columns, 0, array_search('hidden-columns', $request->columns));
+            $configs['tables'][$request->table]['hide'] = array_slice($request->columns, array_search('hidden-columns', $request->columns) + 1);
+            auth()->user()->configurations = json_encode($configs);
+            auth()->user()->save();
+        }
+    }
 }

@@ -6,6 +6,7 @@ use App\Http\Requests\User\UserStoreRequest;
 use App\Http\Requests\User\UserUpdateRequest;
 use App\Models\Role;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -13,12 +14,22 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::all();
+        $this->checkTableConfigurations('users', User::class);
+        $users = $this->filter(User::class, User::query(), $request)->paginate(15);
 
-        return view('user.index')->with([
-            'users' => $users,
+        if ($users->currentPage() > 1 && $users->lastPage() < $users->currentPage()) {
+            return redirect()->route('user.index', array_merge(['page' => $users->lastPage()], $request->except(['page'])));
+        }
+
+        return view('generic.index')->with([
+            'heading' => 'Users',
+            'table' => 'users',
+            'route' => 'user',
+            'indexRoute' => 'user.index',
+            'data' => $users,
+            'model' => User::class,
         ]);
     }
 

@@ -22,6 +22,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role_id',
+        'configurations',
     ];
 
     /**
@@ -45,6 +46,58 @@ class User extends Authenticatable
 
     /*
     |--------------------------------------------------------------------------
+    | Index table properties
+    |--------------------------------------------------------------------------
+    */
+    public static $structure = [
+        'id' => [
+            'label' => 'ID',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
+        'name' => [
+            'label' => 'Name',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
+        'email' => [
+            'label' => 'Email',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
+        'role' => [
+            'label' => 'Role',
+            'type' => 'relationship',
+            'sortable' => true,
+            'filterable' => true,
+            'relationship_field' => 'role',
+            'relationship_model' => Role::class,
+        ],
+        'created_at' => [
+            'label' => 'Created at',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
+        'updated_at' => [
+            'label' => 'Updated at',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
+    ];
+
+    public static $actions = [
+        'create' => 'Create new',
+        'edit' => 'Edit',
+        'delete' => 'Delete',
+    ];
+
+    /*
+    |--------------------------------------------------------------------------
     | RELATIONSHIPS
     |--------------------------------------------------------------------------
     */
@@ -55,5 +108,24 @@ class User extends Authenticatable
     public function role(): BelongsTo
     {
         return $this->belongsTo(Role::class);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | ACCESSORS
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Get user's table configurations
+     * @return array|null
+     */
+    public function getTableConfigsAttribute(): ?array
+    {
+        try {
+            return (array)json_decode($this->configurations, true);
+        } catch (\Exception $e) {
+            return null;
+        }
     }
 }
