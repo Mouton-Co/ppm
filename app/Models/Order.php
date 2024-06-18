@@ -9,6 +9,11 @@ class Order extends Model
 {
     use HasFactory;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'po_number',
         'notes',
@@ -18,11 +23,58 @@ class Order extends Model
         'submission_id',
     ];
 
-    /*
-    |--------------------------------------------------------------------------
-    | Relationships
-    |--------------------------------------------------------------------------
-    */
+    /**
+     * The possible statuses for an order
+     *
+     * @var array<string, string>
+     */
+    public const STATUSES = [
+        'processing' => 'Processing',
+        'emailed' => 'Email Sent',
+        'ordered' => 'Ordered',
+    ];
+
+    /**
+     * The structure of the order
+     *
+     * @var array<string, string>
+     */
+    public static $structure = [
+        'po_number' => [
+            'label' => 'PO Number',
+            'type' => 'text',
+            'filterable' => true,
+        ],
+        'notes' => [
+            'label' => 'Notes',
+            'type' => 'text',
+            'filterable' => true,
+        ],
+        'status' => [
+            'label' => 'Status',
+            'type' => 'dropdown',
+            'filterable' => true,
+            'filterable_options' => [
+                'processing' => 'Processing',
+                'emailed' => 'Email Sent',
+                'ordered' => 'Ordered',
+            ],
+        ],
+        'supplier_id' => [
+            'label' => 'Supplier',
+            'type' => 'relationship',
+            'filterable' => true,
+            'relationship_field' => 'name',
+            'relationship_model' => Supplier::class,
+        ],
+        'submission_id' => [
+            'label' => 'Submission',
+            'type' => 'relationship',
+            'filterable' => true,
+            'relationship_field' => 'submission_code',
+            'relationship_model' => Submission::class,
+        ],
+    ];
 
     /**
      * Get the supplier that the order belongs to

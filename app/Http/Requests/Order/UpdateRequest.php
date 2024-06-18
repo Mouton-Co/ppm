@@ -27,7 +27,7 @@ class UpdateRequest extends FormRequest
             'id' => 'required|exists:orders,id',
             'po_number' => 'string|unique:orders,po_number|exists:parts,po_number',
             'notes' => 'string',
-            'status' => 'in_array:'.implode(',', config('models.orders.status')),
+            'status' => 'in_array:'.implode(',', \App\Models\Order::STATUSES),
         ];
     }
 }
