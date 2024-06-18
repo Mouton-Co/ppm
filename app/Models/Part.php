@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 class Part extends Model
 {
@@ -74,6 +75,167 @@ class Part extends Model
         'treatment_2_part_received' => 'Treatment 2 Part Received',
         'completed_part_received' => 'Completed Part Received',
         'qc_passed' => 'QC Passed',
+    ];
+
+    /**
+     * Procurment table structure.
+     *
+     * @var array
+     */
+    public static $procurementStructure = [
+        'id' => [
+            'label' => 'ID',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
+        'po_number' => [
+            'label' => 'PO #',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+            'component' => 'editable.text',
+        ],
+        'part_ordered' => [
+            'label' => 'Part Ordered',
+            'type' => 'boolean',
+            'sortable' => true,
+            'filterable' => true,
+            'component' => 'editable.checkbox',
+        ],
+        'supplier_id' => [
+            'label' => 'Supplier',
+            'type' => 'relationship',
+            'sortable' => true,
+            'filterable' => true,
+            'component' => 'editable.select',
+            'relationship_field' => 'name',
+            'relationship_model' => Supplier::class,
+        ],
+        'name' => [
+            'label' => 'Name',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
+        'process_type' => [
+            'label' => 'Process Type',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
+        'quantity' => [
+            'label' => 'Qty needed',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+            'component' => 'editable.number',
+            'min' => 0,
+        ],
+        'quantity_in_stock' => [
+            'label' => 'Qty in stock',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+            'component' => 'editable.number',
+            'min' => 0,
+        ],
+        'quantity_ordered' => [
+            'label' => 'Qty ordered',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+            'component' => 'editable.number',
+            'min' => 0,
+        ],
+        'material' => [
+            'label' => 'Material',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
+        'material_thickness' => [
+            'label' => 'Material Thickness',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
+        'finish' => [
+            'label' => 'Finish',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
+        'used_in_weldment' => [
+            'label' => 'Used in Weldment',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
+        'submission' => [
+            'label' => 'Submission',
+            'type' => 'relationship',
+            'sortable' => true,
+            'filterable' => true,
+            'relationship_field' => 'submission_code',
+            'relationship_model' => Submission::class,
+            'component' => 'procurement.submission',
+        ],
+        'status' => [
+            'label' => 'Status',
+            'type' => 'dropdown',
+            'sortable' => true,
+            'filterable' => true,
+            'filterable_options' => [
+                'design' => 'Design',
+                'processing' => 'Processing',
+                'email_sent' => 'Email Sent',
+                'supplier' => 'Supplier',
+                'treatment' => 'Treatment',
+                'qc' => 'QC',
+                'assembly' => 'Assembly',
+            ],
+            'casts' => [
+                'design' => 'Design',
+                'processing' => 'Processing',
+                'email_sent' => 'Email Sent',
+                'supplier' => 'Supplier',
+                'treatment' => 'Treatment',
+                'qc' => 'QC',
+                'assembly' => 'Assembly',
+            ],
+        ],
+        'coc' => [
+            'label' => 'COC',
+            'type' => 'text',
+        ],
+        'part_ordered_at' => [
+            'label' => 'Part Ordered At',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
+        'comment_procurement' => [
+            'label' => 'Comment Procurement',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+            'component' => 'editable.text',
+        ],
+        'comment_warehouse' => [
+            'label' => 'Comment Warehouse',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+            'component' => 'editable.text',
+        ],
+        'comment_logistics' => [
+            'label' => 'Comment Logistics',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+            'component' => 'editable.text',
+        ],
     ];
 
     /*

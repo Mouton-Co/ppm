@@ -58,6 +58,7 @@ export function filters() {
                 _token: $('meta[name="csrf-token"]').attr('content'),
                 model: $(this).attr('model'),
                 field: $(this).attr('field'),
+                structure: $(this).attr('structure'),
             },
             success: function (data) {
                 if (data != 'error') {

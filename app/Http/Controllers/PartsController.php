@@ -65,94 +65,23 @@ class PartsController extends Controller
     /**
      * View an index of all parts
      */
-    public function index(IndexRequest $request)
+    public function index(Request $request)
     {
-        // all parts
-        $this->request = $request;
-        $parts = Part::with(['submission', 'supplier']);
-
-        // order by
-        if (! empty($request->get('order_by'))) {
-            if ($request->get('order_by') == 'submission->submission_code') {
-                $parts = $parts->orderBy(
-                    Submission::select('submission_code')
-                        ->whereColumn('submission_id', 'submissions.id')
-                        ->orderBy('submission_code', $request->get('order') ?? 'asc')
-                        ->limit(1),
-                    $request->get('order') ?? 'asc'
-                );
-            } elseif ($request->get('order_by') == 'supplier->name') {
-                $parts = $parts->orderBy(
-                    Supplier::select('name')
-                        ->whereColumn('supplier_id', 'suppliers.id')
-                        ->orderBy('name', $request->get('order') ?? 'asc')
-                        ->limit(1),
-                    $request->get('order') ?? 'asc'
-                );
-            } else {
-                $parts = $parts->orderBy($request->get('order_by'), $request->get('order') ?? 'asc');
-            }
-        }
-
-        // status
-        if (! empty($request->get('status'))) {
-            if ($request->get('status') == 'qc_issue') {
-                $parts = $parts->where('qc_issue', true);
-            } elseif ($request->get('status') != '-') {
-                $parts = $parts->where('status', $request->get('status'))->where('qc_issue', false);
-            }
-        }
-
-        // supplier
-        if (! empty($request->get('supplier_id')) && $request->get('supplier_id') != '-') {
-            $parts = $parts->where('supplier_id', $request->get('supplier_id'));
-        }
-
-        // submission
-        if (
-            ! empty($request->get('submission')) &&
-            $request->get('submission') != '-'
-        ) {
-            $parts = $parts->where(
-                Submission::select('submission_code')
-                    ->whereColumn('submission_id', 'submissions.id')
-                    ->where('submission_code', 'like', '%'.$request->get('submission').'%')
-                    ->limit(1),
-                'like',
-                '%'.$request->get('submission').'%'
-            );
-        }
-
-        // search
-        if (! empty($request->get('search'))) {
-            $parts = $parts->where(function ($query) {
-                $query->where('parts.po_number', 'like', '%'.$this->request->get('search').'%')
-                    ->orWhere('parts.name', 'like', '%'.$this->request->get('search').'%')
-                    ->orWhere('parts.process_type', 'like', '%'.$this->request->get('search').'%')
-                    ->orWhere('parts.quantity', 'like', '%'.$this->request->get('search').'%')
-                    ->orWhere('parts.material', 'like', '%'.$this->request->get('search').'%')
-                    ->orWhere('parts.material_thickness', 'like', '%'.$this->request->get('search').'%')
-                    ->orWhere('parts.finish', 'like', '%'.$this->request->get('search').'%')
-                    ->orWhere('parts.used_in_weldment', 'like', '%'.$this->request->get('search').'%');
-            });
-        }
-
-        $parts = $parts->paginate(15);
+        $this->checkTableConfigurations('procurement', Part::class, Part::$procurementStructure);
+        $parts = $this->filter(Part::class, Part::query(), $request, Part::$procurementStructure)->paginate(15);
 
         if ($parts->currentPage() > 1 && $parts->lastPage() < $parts->currentPage()) {
-            return redirect()->route('parts.procurement.index', [
-                'page' => $parts->lastPage(),
-                'order_by' => $request->get('order_by'),
-                'order' => $request->get('order'),
-                'status' => $request->get('status'),
-                'supplier_id' => $request->get('supplier_id'),
-                'submission' => $request->get('submission'),
-                'search' => $request->get('search'),
-            ]);
+            return redirect()->route('parts.procurement.index', array_merge(['page' => $parts->lastPage()], $request->except(['page'])));
         }
 
-        return view('parts.procurement-index')->with([
-            'parts' => $parts,
+        return view('generic.index')->with([
+            'heading' => 'Procurement',
+            'table' => 'procurement',
+            'indexRoute' => 'parts.procurement.index',
+            'data' => $parts,
+            'model' => Part::class,
+            'structure' => Part::$procurementStructure,
+            'slot' => 'components.table.procurement.button-row',
         ]);
     }
 

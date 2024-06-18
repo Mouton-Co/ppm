@@ -12,7 +12,7 @@ class ClearUserConfigs extends Command
      *
      * @var string
      */
-    protected $signature = 'app:clear-user-configs {user}';
+    protected $signature = 'app:clear-user-configs {user=null}';
 
     /**
      * Execute the console command.

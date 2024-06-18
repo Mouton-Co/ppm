@@ -1,18 +1,22 @@
 export function cellEditProject() {
     $(".cell-text").on("focusout", function () {
-        let value = $(this).val();
-        let field = $(this).attr('name');
-        let id    = $(this).attr('item-id');
-
-        updateField(id, field, value);
+        if ($(this).attr('model') == 'App\\Models\\Project') {
+            let value = $(this).val();
+            let field = $(this).attr('name');
+            let id    = $(this).attr('item-id');
+    
+            updateField(id, field, value);
+        }
     });
 
     $(".cell-dropdown").on("change", function () {
-        let value = $(this).val();
-        let field = $(this).attr('name');
-        let id    = $(this).attr('item-id');
-
-        updateField(id, field, value);
+        if ($(this).attr('model') == 'App\\Models\\Project') {
+            let value = $(this).val();
+            let field = $(this).attr('name');
+            let id    = $(this).attr('item-id');
+    
+            updateField(id, field, value);
+        }
     });
 
     function updateField(id, field, value) {
@@ -35,7 +39,7 @@ export function cellEditProject() {
     }
 
     // change status dropdown colour
-    $('.project-status-dropdown').on("change", function () {
+    $(".project-status-dropdown[model='\App\Models\Project']").on("change", function () {
         let status = $(this).val();
 
         // remove all classes

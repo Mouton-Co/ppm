@@ -12,37 +12,48 @@
             $bg = '!bg-orange-300 !text-orange-800';
         }
     }
-@endphp
+    
+    $structure = $structure ?? $model::structure();
 
-@if ($model::$structure[$key]['filterable_options'] == 'custom')
-    @php
+    $options = [];
+    if (! empty($structure[$key]['filterable_options']) && is_array($structure[$key]['filterable_options'])) {
+        $options = $structure[$key]['filterable_options'];
+    } elseif (! empty($structure[$key]['filterable_options']) && $structure[$key]['filterable_options'] == 'custom') {
         $customKey = \Str::camel("get_custom_{$key}_attribute");
         $options = $model::$customKey();
-    @endphp
-@else
-    @php
-        $options = $model::$structure[$key]['filterable_options'];
-    @endphp
-@endif
+    } elseif ($structure[$key]['type'] == 'relationship') {
+        $options = $structure[$key]['relationship_model']::orderBy($structure[$key]['relationship_field'])->get();
+    }
+@endphp
 
 <select
     class="field {{ $bg }} cell-dropdown {{ $key == 'status' ? 'project-status-dropdown' : '' }} !w-[195px] cursor-pointer border-none !ring-0 focus:outline-none focus:ring-0"
     name="{{ $key }}"
     item-id="{{ $datum->id }}"
+    model="{{ $model }}"
 >
     <option
         value=""
-        disabled
+        disabledw
         selected
     >
-        {{ $value ?? '' }}
+        {{ __("--Please select--") }}
     </option>
     @foreach ($options as $option)
-        <option
-            value="{{ $option }}"
-            @if ($option === $datum->$key) selected @endif
-        >
-            {{ $option }}
-        </option>
+        @if ($option instanceof \Illuminate\Database\Eloquent\Model)
+            <option
+                value="{{ $option->id }}"
+                @if ($option->id === $datum->$key) selected @endif
+            >
+                {{ $option->{$structure[$key]['relationship_field']} }}
+            </option>
+        @else
+            <option
+                value="{{ $option }}"
+                @if ($option === $datum->$key) selected @endif
+            >
+                {{ $option }}
+            </option>
+        @endif
     @endforeach
 </select>

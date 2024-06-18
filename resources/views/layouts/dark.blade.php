@@ -23,5 +23,11 @@
     @yield('content')
 
     @yield('end-body-scripts')
+
+    {{-- used for column sorting --}}
+    <script src="https://unpkg.com/sortablejs-make/Sortable.min.js"></script>
+    <script src="https://code.jquery.com/jquery-2.2.4.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-sortablejs@latest/jquery-sortable.js"></script>
+
 </body>
 </html>

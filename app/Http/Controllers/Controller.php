@@ -22,16 +22,23 @@ class Controller extends BaseController
     public $model;
 
     /**
+     * @var array
+     */
+    public $structure;
+
+    /**
      * Get the pill html for the filter
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function getPillHtml(Request $request): \Illuminate\Http\JsonResponse
     {
+        $structure = json_decode($request->structure, true);
+
         if (
             $request->has('model') &&
             $request->has('field') &&
-            ! empty($field = $request->model::$structure[$request->field])
+            ! empty($field = $structure[$request->field])
         ) {
             if ($field['type'] == 'text') {
                 $component = $this->renderTextPill($request, $field);
@@ -39,6 +46,8 @@ class Controller extends BaseController
                 $component = $this->renderDropdownPill($request, $field);
             } elseif ($field['type'] == 'relationship') {
                 $component = $this->renderRelationshipPill($request, $field);
+            } elseif ($field['type'] == 'boolean') {
+                $component = $this->renderBooleanPill($request, $field);
             }
 
             return response()->json($component);
@@ -114,6 +123,24 @@ class Controller extends BaseController
      * @param array $field
      * @return array
      */
+    protected function renderBooleanPill($request, $field): array
+    {
+        return [
+            'field' => $request->field,
+            'html' => view('components.filters.dropdown-pill', [
+                'label' => $field['label'],
+                'key' => $request->field,
+                'slot' => "<option value='0'>No</option><option value='1'>Yes</option>",
+            ])->render(),
+        ];
+    }
+
+    /**
+     * Get the pill html for the filter
+     * @param Request $request
+     * @param array $field
+     * @return array
+     */
     protected function renderTextPill($request, $field): array
     {
         return [
@@ -132,15 +159,16 @@ class Controller extends BaseController
      * @param $request
      * @return mixed
      */
-    public function filter($model, $query, $request): mixed
+    public function filter($model, $query, $request, $structure = null): mixed
     {
         $this->request = $request;
         $this->model = $model;
+        $this->structure = $structure ?? $model::$structure;
 
-        foreach ($this->model::$structure as $key => $value) {
+        foreach ($this->structure as $key => $value) {
             if ($this->request->has($key)) {
-                if ($this->model::$structure[$key]['type'] == 'relationship') {
-                    $query->where($key . '_id', $this->request->get($key));
+                if ($this->structure[$key]['type'] == 'relationship') {
+                    $query->where(str_replace('_id', '', $key) . '_id', $this->request->get($key));
                 } else {
                     $query->where($key, 'like', "%{$this->request->get($key)}%");
                 }
@@ -150,23 +178,25 @@ class Controller extends BaseController
         if ($this->request->has('query')) {
             $query = $query->where(function ($subquery) {
                 $first = true;
-                foreach ($this->model::$structure as $key => $value) {
-                    if ($first) {
-                        if ($value['type'] == 'relationship') {
-                            $subquery->whereHas($key, function ($subsubquery) use ($key) {
-                                $subsubquery->where($this->model::$structure[$key]['relationship_field'], 'like', "%{$this->request->get('query')}%");
-                            });
+                foreach ($this->structure as $key => $value) {
+                    if (!empty($value['filterable']) && $value['filterable']) {
+                        if ($first) {
+                            if ($value['type'] == 'relationship') {
+                                $subquery->whereHas(str_replace('_id', '', $key), function ($subsubquery) use ($key) {
+                                    $subsubquery->where($this->structure[$key]['relationship_field'], 'like', "%{$this->request->get('query')}%");
+                                });
+                            } else {
+                                $subquery->where($key, 'like', "%{$this->request->get('query')}%");
+                            }
+                            $first = false;
                         } else {
-                            $subquery->where($key, 'like', "%{$this->request->get('query')}%");
-                        }
-                        $first = false;
-                    } else {
-                        if ($value['type'] == 'relationship') {
-                            $subquery->orWhereHas($key, function ($subsubquery) use ($key) {
-                                $subsubquery->where($this->model::$structure[$key]['relationship_field'], 'like', "%{$this->request->get('query')}%");
-                            });
-                        } else {
-                            $subquery->orWhere($key, 'like', "%{$this->request->get('query')}%");
+                            if ($value['type'] == 'relationship') {
+                                $subquery->orWhereHas(str_replace('_id', '', $key), function ($subsubquery) use ($key) {
+                                    $subsubquery->where($this->structure[$key]['relationship_field'], 'like', "%{$this->request->get('query')}%");
+                                });
+                            } else {
+                                $subquery->orWhere($key, 'like', "%{$this->request->get('query')}%");
+                            }
                         }
                     }
                 }
@@ -186,8 +216,9 @@ class Controller extends BaseController
      * @param mixed $model
      * @return void
      */
-    public function checkTableConfigurations(string $table, mixed $model): void
+    public function checkTableConfigurations(string $table, mixed $model, $structure = null): void
     {
+        $structure = $structure ?? $model::$structure;
         $configs = auth()->user()->table_configs;
 
         if (! array_key_exists('tables', $configs)) {
@@ -196,7 +227,7 @@ class Controller extends BaseController
 
         if (! array_key_exists($table, $configs['tables'])) {
             $configs['tables'][$table] = [];
-            foreach ($model::$structure as $key => $value) {
+            foreach ($structure as $key => $value) {
                 $configs['tables'][$table]['show'][] = $key;
             }
             $configs['tables'][$table]['hide'] = [];

@@ -1,12 +1,16 @@
 @extends('layouts.dashboard')
 
 @section('dashboard-content')
+    @php
+        $structure = $structure ?? $model::$structure;
+    @endphp
+
     {{-- heading --}}
     <div class="mb-2 flex items-center justify-between">
         <h2 class="text-lg text-white">{{ $heading ?? 'Items' }}</h2>
         <div class="flex cursor-pointer gap-2">
             <button
-                class="h-7 rounded border border-sky-700 px-2 py-1 text-sm text-sky-700 shadow hover:border-sky-700 hover:text-white hover:bg-sky-700"
+                class="h-7 rounded border border-sky-600 px-2 py-1 text-sm text-sky-600 shadow hover:border-sky-700 hover:bg-sky-700 hover:text-white"
                 id="filter"
             >
                 {{ __('Filter') }}
@@ -53,26 +57,26 @@
 
         {{-- display query filters inside search bar --}}
         @foreach (request()->query() as $key => $value)
-            @if (in_array($key, array_keys($model::$structure)))
-                @if ($model::$structure[$key]['type'] == 'text')
+            @if (in_array($key, array_keys($structure)))
+                @if ($structure[$key]['type'] == 'text')
                     <x-filters.text-pill
                         value="{{ $value }}"
-                        label="{{ $model::$structure[$key]['label'] }}"
+                        label="{{ $structure[$key]['label'] }}"
                         key="{{ $key }}"
                     />
-                @elseif ($model::$structure[$key]['type'] == 'dropdown')
+                @elseif ($structure[$key]['type'] == 'dropdown')
                     <x-filters.dropdown-pill
-                        label="{{ $model::$structure[$key]['label'] }}"
+                        label="{{ $structure[$key]['label'] }}"
                         key="{{ $key }}"
                     >
-                        @if ($model::$structure[$key]['filterable_options'] == "custom")
+                        @if ($structure[$key]['filterable_options'] == 'custom')
                             @php
                                 $customKey = \Str::camel("get_custom_{$key}_attribute");
-                                $options =  $model::$customKey();
+                                $options = $model::$customKey();
                             @endphp
                         @else
                             @php
-                                $options = $model::$structure[$key]['filterable_options'];
+                                $options = $structure[$key]['filterable_options'];
                             @endphp
                         @endif
                         @foreach ($options as $optionKey => $optionValue)
@@ -84,19 +88,37 @@
                             </option>
                         @endforeach
                     </x-filters.dropdown-pill>
-                @elseif ($model::$structure[$key]['type'] == 'relationship')
+                @elseif ($structure[$key]['type'] == 'relationship')
                     <x-filters.dropdown-pill
-                        label="{{ $model::$structure[$key]['label'] }}"
+                        label="{{ $structure[$key]['label'] }}"
                         key="{{ $key }}"
                     >
-                        @foreach ($model::$structure[$key]['relationship_model']::all() as $option)
+                        @foreach ($structure[$key]['relationship_model']::all() as $option)
                             <option
                                 value="{{ $option->id }}"
                                 @if ($option->id == $value) selected @endif
                             >
-                                {{ $option->{$model::$structure[$key]['relationship_field']} }}
+                                {{ $option->{$structure[$key]['relationship_field']} }}
                             </option>
                         @endforeach
+                    </x-filters.dropdown-pill>
+                @elseif ($structure[$key]['type'] == 'boolean')
+                    <x-filters.dropdown-pill
+                        label="{{ $structure[$key]['label'] }}"
+                        key="{{ $key }}"
+                    >
+                        <option
+                            value="0"
+                            @if (0 == $value) selected @endif
+                        >
+                            {{ __('No') }}
+                        </option>
+                        <option
+                            value="1"
+                            @if (1 == $value) selected @endif
+                        >
+                            {{ __('Yes') }}
+                        </option>
                     </x-filters.dropdown-pill>
                 @endif
             @endif
@@ -121,8 +143,8 @@
                     <span class="w-1/2">{{ __('Field') }}</span>
                     <span class="w-1/2">{{ __('Type') }}</span>
                 </div>
-                @foreach ($model::$structure as $key => $field)
-                    @if ($field['filterable'])
+                @foreach ($structure as $key => $field)
+                    @if (!empty($field['filterable']) && $field['filterable'])
                         @php
                             $hidden = request()->has($key) ? 'hidden' : '';
                         @endphp
@@ -130,6 +152,7 @@
                             class="filter-option add-filter-pill border-dark-field-border {{ $hidden }} flex h-8 w-full cursor-pointer items-center border-b bg-gray-800 px-6 py-2 text-gray-300 hover:bg-gray-500"
                             model="{{ $model }}"
                             field="{{ $key }}"
+                            structure="{{ json_encode($structure) }}"
                         >
                             <span class="w-1/2">{{ $field['label'] }}</span>
                             <span class="w-1/2">{{ $field['type'] }}</span>
@@ -140,8 +163,13 @@
         </div>
     </form>
 
+    {{-- custom slot before table --}}
+    @if (!empty($slot))
+        @include($slot)
+    @endif
+
     {{-- table --}}
-    <div class="relative overflow-x-auto min-h-[550px] rounded">
+    <div class="relative min-h-[550px] overflow-x-auto rounded">
         <table class="border-dark-field-border w-full border text-left text-sm text-gray-400 rtl:text-right">
             {{-- headings --}}
             <thead class="bg-gray-700 text-xs uppercase text-gray-400">
@@ -152,8 +180,8 @@
                             scope="col"
                         >
                             <div class="text-nowrap flex items-center">
-                                {{ $model::$structure[$key]['label'] }}
-                                @if ($field['sortable'])
+                                {{ $structure[$key]['label'] }}
+                                @if (!empty($structure[$key]['sortable']) && $structure[$key]['sortable'])
                                     <form
                                         class="flex h-full w-full items-center justify-start"
                                         action="{{ route($indexRoute) }}"
@@ -226,7 +254,7 @@
                                 <div class="sortable-list flex w-full flex-col">
                                     @foreach (auth()->user()->table_configs['tables'][$table]['show'] as $key)
                                         <x-filters.column :key="$key">
-                                            {{ $model::$structure[$key]['label'] }}
+                                            {{ $structure[$key]['label'] }}
                                         </x-filters.column>
                                     @endforeach
                                     <x-filters.column-category
@@ -237,7 +265,7 @@
                                     </x-filters.column-category>
                                     @foreach (auth()->user()->table_configs['tables'][$table]['hide'] as $key)
                                         <x-filters.column :key="$key">
-                                            {{ $model::$structure[$key]['label'] }}
+                                            {{ $structure[$key]['label'] }}
                                         </x-filters.column>
                                     @endforeach
                                 </div>
@@ -250,7 +278,10 @@
             <tbody>
                 @if ($data->isEmpty())
                     <tr class="border-b border-gray-700 bg-gray-800">
-                        <td class="text-nowrap px-6 py-2" colspan="{{ count(auth()->user()->table_configs['tables'][$table]['show']) + 1 }}">
+                        <td
+                            class="text-nowrap px-6 py-2"
+                            colspan="{{ count(auth()->user()->table_configs['tables'][$table]['show']) + 1 }}"
+                        >
                             {{ __('No items found') }}
                         </td>
                     </tr>
@@ -259,14 +290,17 @@
                     <tr class="border-b border-gray-700 bg-gray-800">
                         @foreach (auth()->user()->table_configs['tables'][$table]['show'] as $key)
                             <td class="text-nowrap px-6 py-2">
-                                @if (! empty($model::$structure[$key]['component']))
-                                    @include('components.table.'.$model::$structure[$key]['component'], [
+                                @if (!empty($structure[$key]['component']))
+                                    @include('components.table.' . $structure[$key]['component'], [
                                         'datum' => $datum,
                                         'key' => $key,
                                         'model' => $model,
+                                        'structure' => $structure,
                                     ])
-                                @elseif ($model::$structure[$key]['type'] == 'relationship')
-                                    {{ $datum?->{$key}?->{$model::$structure[$key]['relationship_field']} ?? 'N/A' }}
+                                @elseif ($structure[$key]['type'] == 'relationship')
+                                    {{ $datum?->{$key}?->{$structure[$key]['relationship_field']} ?? 'N/A' }}
+                                @elseif (!empty($structure[$key]['casts']))
+                                    {{ $structure[$key]['casts'][$datum?->$key] ?? 'N/A' }}
                                 @else
                                     {{ $datum?->{$key} ?? 'N/A' }}
                                 @endif
@@ -315,11 +349,4 @@
     {{-- pagination --}}
     {{ $data->appends(request()->query())->links() }}
 
-@endsection
-
-{{-- used for column sorting --}}
-@section('end-body-scripts')
-    <script src="https://unpkg.com/sortablejs-make/Sortable.min.js"></script>
-    <script src="https://code.jquery.com/jquery-2.2.4.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jquery-sortablejs@latest/jquery-sortable.js"></script>
 @endsection

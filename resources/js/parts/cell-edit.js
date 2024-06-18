@@ -1,36 +1,38 @@
 export function cellEdit() {
     // Editable text cell
-    $(".editable-cell-text").on("focusout", function () {
-        let value = $(this).val();
-        let field = $(this).attr('name');
-        let id    = $(this).attr('part-id');
-
-        setTimeout(function () {
-            $.ajax({ // route('parts.update', $part->id)
-                type: 'POST',
-                url: '/parts/update/' + id,
-                data: {
-                    _token: $('meta[name="csrf-token"]').attr('content'),
-                    id: id,
-                    field: field,
-                    value: value
-                },
-                success: function (data) {
-                    if (data.qty_updated) {
-                        $("#" + id + "-quantity input").val(data.quantity);
-                        $("#" + id + "-quantity_in_stock input").val(data.quantity_in_stock);
-                        $("#" + id + "-quantity_ordered input").val(data.quantity_ordered);
+    $('.cell-text').on("focusout", function () {
+        if ($(this).attr('model') == 'App\\Models\\Part') {
+            let value = $(this).val();
+            let field = $(this).attr('name');
+            let id    = $(this).attr('item-id');
+    
+            setTimeout(function () {
+                $.ajax({ // route('parts.update', $part->id)
+                    type: 'POST',
+                    url: '/parts/update/' + id,
+                    data: {
+                        _token: $('meta[name="csrf-token"]').attr('content'),
+                        id: id,
+                        field: field,
+                        value: value
+                    },
+                    success: function (data) {
+                        if (data.qty_updated) {
+                            $("input[item-id='" + id + "'][name='quantity_in_stock']").val(data.quantity_in_stock);
+                            $("input[item-id='" + id + "'][name='quantity_ordered']").val(data.quantity_ordered);
+                            $("input[item-id='" + id + "'][name='quantity']").val(data.quantity);
+                        }
                     }
-                }
-            });
-        }, 200);
+                });
+            }, 200);
+        }
     });
 
     // Editable checkbox cell
     $(".editable-cell-boolean").on("click", function () {
         let value = $(this).is(':checked') ? 1 : 0;
         let field = $(this).attr('name');
-        let id    = $(this).attr('part-id');
+        let id    = $(this).attr('item-id');
 
         setTimeout(function () {
             $.ajax({ // route('parts.update-checkbox', $part->id)
@@ -71,45 +73,47 @@ export function cellEdit() {
     });
 
     // Editable dropdown cell
-    $(".editable-cell-dropdown").on("change", function () {
-        let value = $(this).val();
-        let field = $(this).attr('name');
-        let id    = $(this).attr('part-id');
-
-        setTimeout(function () {
-            $.ajax({ // route('parts.update', $part->id)
-                type: 'POST',
-                url: '/parts/update/' + id,
-                data: {
-                    _token: $('meta[name="csrf-token"]').attr('content'),
-                    id: id,
-                    field: field,
-                    value: value
-                },
-                success: function (data) {
-                    if (
-                        field == 'treatment_1' &&
-                        value != '-' &&
-                        $('#' + id + '-status').text().includes('Treatment')
-                    ) {
-                        $($('input[name="treatment_1_part_received"][part-id="' + id + '"]')).removeAttr('disabled');
-                    }
-                    if (
-                        field == 'treatment_2' &&
-                        value != '-' &&
-                        $('#' + id + '-status').text() == 'Treatment'
-                    ) {
-                        $($('input[name="treatment_2_part_received"][part-id="' + id + '"]')).removeAttr('disabled');
-                    }
-                    if (field == 'supplier->name') {
-                        if (value == 0) {
-                            $('#' + id + '-po_number input').addClass('cursor-not-allowed').attr('disabled', true);
-                        } else {
-                            $('#' + id + '-po_number input').removeClass('cursor-not-allowed').removeAttr('disabled');
+    $(".cell-dropdown").on("change", function () {
+        if ($(this).attr('model') == 'App\\Models\\Part') {
+            let value = $(this).val();
+            let field = $(this).attr('name');
+            let id    = $(this).attr('item-id');
+    
+            setTimeout(function () {
+                $.ajax({ // route('parts.update', $part->id)
+                    type: 'POST',
+                    url: '/parts/update/' + id,
+                    data: {
+                        _token: $('meta[name="csrf-token"]').attr('content'),
+                        id: id,
+                        field: field,
+                        value: value
+                    },
+                    success: function (data) {
+                        if (
+                            field == 'treatment_1' &&
+                            value != '-' &&
+                            $('#' + id + '-status').text().includes('Treatment')
+                        ) {
+                            $($('input[name="treatment_1_part_received"][part-id="' + id + '"]')).removeAttr('disabled');
+                        }
+                        if (
+                            field == 'treatment_2' &&
+                            value != '-' &&
+                            $('#' + id + '-status').text() == 'Treatment'
+                        ) {
+                            $($('input[name="treatment_2_part_received"][part-id="' + id + '"]')).removeAttr('disabled');
+                        }
+                        if (field == 'supplier->name') {
+                            if (value == 0) {
+                                $('#' + id + '-po_number input').addClass('cursor-not-allowed').attr('disabled', true);
+                            } else {
+                                $('#' + id + '-po_number input').removeClass('cursor-not-allowed').removeAttr('disabled');
+                            }
                         }
                     }
-                }
-            });
-        }, 200);
+                });
+            }, 200);
+        }
     });
 }

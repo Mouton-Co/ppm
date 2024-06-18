@@ -52,13 +52,13 @@ class RecipientGroup extends Model
         ],
         'created_at' => [
             'label' => 'Created at',
-            'type' => 'date',
+            'type' => 'text',
             'sortable' => true,
             'filterable' => true,
         ],
         'updated_at' => [
             'label' => 'Updated at',
-            'type' => 'date',
+            'type' => 'text',
             'sortable' => true,
             'filterable' => true,
         ],
