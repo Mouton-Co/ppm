@@ -216,21 +216,270 @@ class Part extends Model
             'filterable' => true,
         ],
         'comment_procurement' => [
-            'label' => 'Comment Procurement',
+            'label' => 'Procurement Comment',
             'type' => 'text',
             'sortable' => true,
             'filterable' => true,
             'component' => 'editable.text',
         ],
         'comment_warehouse' => [
-            'label' => 'Comment Warehouse',
+            'label' => 'Warehouse Comment',
             'type' => 'text',
             'sortable' => true,
             'filterable' => true,
             'component' => 'editable.text',
         ],
         'comment_logistics' => [
-            'label' => 'Comment Logistics',
+            'label' => 'Logistics Comment',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+            'component' => 'editable.text',
+        ],
+    ];
+
+    /**
+     * Warehouse table structure.
+     *
+     * @var array
+     */
+    public static $warehouseStructure = [
+        'id' => [
+            'label' => 'ID',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
+        'lifecycle' => [
+            'label' => 'Part Lifecycle',
+            'type' => 'text',
+            'component' => 'warehouse.lifecycle',
+        ],
+        'name' => [
+            'label' => 'Name',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
+        'treatment_1' => [
+            'label' => 'Treatment 1',
+            'type' => 'dropdown',
+            'sortable' => true,
+            'filterable' => true,
+            'filterable_options' => [
+                'Anodize - Natural',
+                'Anodize - Black',
+                'Anodize - Red',
+                'Anodize - Blue',
+                'Blacken',
+                'Powder Coat - Structured White',
+                'Powder Coat - PPM Grey',
+                'Powder Coat - Traffic Yellow',
+                'Electropolish',
+                'Electroplate',
+                'Case Harden',
+                'Vacuum Harden',
+                'Surface Harden',
+                'Teflon Coat',
+                'Sharpen',
+                'Machine',
+                'Tap/Drill',
+                'Bend',
+                'Straighten',
+                'Rubberize',
+                'Skim',
+                'Edge Radius',
+                'Strip',
+                'Matte black powder coated',
+                'Other',
+            ],
+            'component' => 'editable.select',
+        ],
+        'treatment_1_supplier' => [
+            'label' => 'Treatment 1 Supplier',
+            'type' => 'dropdown',
+            'sortable' => true,
+            'filterable' => true,
+            'filterable_options' => 'custom',
+            'component' => 'editable.select',
+        ],
+        'treatment_2' => [
+            'label' => 'Treatment 2',
+            'type' => 'dropdown',
+            'sortable' => true,
+            'filterable' => true,
+            'filterable_options' => [
+                'Anodize - Natural',
+                'Anodize - Black',
+                'Anodize - Red',
+                'Anodize - Blue',
+                'Blacken',
+                'Powder Coat - Structured White',
+                'Powder Coat - PPM Grey',
+                'Powder Coat - Traffic Yellow',
+                'Electropolish',
+                'Electroplate',
+                'Case Harden',
+                'Vacuum Harden',
+                'Surface Harden',
+                'Teflon Coat',
+                'Sharpen',
+                'Machine',
+                'Tap/Drill',
+                'Bend',
+                'Straighten',
+                'Rubberize',
+                'Skim',
+                'Edge Radius',
+                'Strip',
+                'Matte black powder coated',
+                'Other',
+            ],
+            'component' => 'editable.select',
+        ],
+        'treatment_2_supplier' => [
+            'label' => 'Treatment 2 Supplier',
+            'type' => 'dropdown',
+            'sortable' => true,
+            'filterable' => true,
+            'filterable_options' => 'custom',
+            'component' => 'editable.select',
+        ],
+        'po_number' => [
+            'label' => 'PO #',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+            'component' => 'editable.text',
+        ],
+        'supplier_id' => [
+            'label' => 'Supplier',
+            'type' => 'relationship',
+            'sortable' => true,
+            'filterable' => true,
+            'component' => 'editable.select',
+            'relationship_field' => 'name',
+            'relationship_model' => Supplier::class,
+        ],
+        'quantity' => [
+            'label' => 'Qty needed',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
+        'quantity_ordered' => [
+            'label' => 'Qty ordered',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
+        'qty_received' => [
+            'label' => 'Qty received',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+            'component' => 'editable.number',
+            'min' => 0,
+        ],
+        'material' => [
+            'label' => 'Material',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
+        'material_thickness' => [
+            'label' => 'Material Thickness',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
+        'finish' => [
+            'label' => 'Finish',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
+        'used_in_weldment' => [
+            'label' => 'Used in Weldment',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
+        'process_type' => [
+            'label' => 'Process Type',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
+        'status' => [
+            'label' => 'Status',
+            'type' => 'dropdown',
+            'sortable' => true,
+            'filterable' => true,
+            'filterable_options' => [
+                'design' => 'Design',
+                'processing' => 'Processing',
+                'email_sent' => 'Email Sent',
+                'supplier' => 'Supplier',
+                'treatment' => 'Treatment',
+                'qc' => 'QC',
+                'assembly' => 'Assembly',
+            ],
+            'casts' => [
+                'design' => 'Design',
+                'processing' => 'Processing',
+                'email_sent' => 'Email Sent',
+                'supplier' => 'Supplier',
+                'treatment' => 'Treatment',
+                'qc' => 'QC',
+                'assembly' => 'Assembly',
+            ],
+        ],
+        'coc' => [
+            'label' => 'COC',
+            'type' => 'text',
+        ],
+        'lifecycle_stamps' => [
+            'label' => 'Part Lifecycle Stamps',
+            'type' => 'text',
+            'component' => 'warehouse.lifecycle-stamps',
+        ],
+        'qc_issue' => [
+            'label' => 'QC Issue',
+            'type' => 'boolean',
+            'sortable' => true,
+            'filterable' => true,
+            'component' => 'editable.checkbox',
+        ],
+        'qc_issue_at' => [
+            'label' => 'QC Issue logged at',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
+        'qc_issue_reason' => [
+            'label' => 'QC Issue Reason',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+            'component' => 'editable.text',
+        ],
+        'comment_procurement' => [
+            'label' => 'Procurement Comment',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+            'component' => 'editable.text',
+        ],
+        'comment_warehouse' => [
+            'label' => 'Warehouse Comment',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+            'component' => 'editable.text',
+        ],
+        'comment_logistics' => [
+            'label' => 'Logistics Comment',
             'type' => 'text',
             'sortable' => true,
             'filterable' => true,
@@ -331,5 +580,25 @@ class Part extends Model
         }
 
         return $enabled;
+    }
+
+    /**
+     * Get the treatment_1_supplier attribute.
+     *
+     * @return array
+     */
+    public static function getCustomTreatment1SupplierAttribute(): array
+    {
+        return Supplier::orderBy('name')->pluck('name')->toArray();
+    }
+
+    /**
+     * Get the treatment_2_supplier attribute.
+     *
+     * @return array
+     */
+    public static function getCustomTreatment2SupplierAttribute(): array
+    {
+        return Supplier::orderBy('name')->pluck('name')->toArray();
     }
 }
