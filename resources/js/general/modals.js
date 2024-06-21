@@ -3,12 +3,12 @@ export function modals() {
     $('div[id^="order-card-"]').on("click", function () {
         let id = $(this).attr('id').split('-')[2];
         $('#order-modal-' + id).removeClass('hidden').addClass('flex');
-        $('#modal-curtain').removeClass('hidden').addClass('flex');
+        $('#curtain').addClass('curtain-expanded').removeClass('curtain-closed');
     });
 
-    $('#modal-curtain').on("click", function () {
+    $('#curtain').on("click", function () {
         $('.purchase-order-modal').removeClass('flex').addClass('hidden');
-        $('#modal-curtain').removeClass('flex').addClass('hidden');
+        $('#curtain').addClass('curtain-closed').removeClass('curtain-expanded');
     });
 
     // tooltip trigger

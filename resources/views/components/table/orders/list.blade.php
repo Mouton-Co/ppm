@@ -26,7 +26,7 @@
                 </div>
                 <div class="order-card-body-item">
                     <x-icon.submission class="w-5" />
-                    <span>{{ $order->submission->submission_code ?? '## submission deleted' }}</span>
+                    <span>{{ $order->submission->assembly_name ?? '## submission deleted' }}</span>
                 </div>
                 <div class="order-card-body-item">
                     <x-icon.spanner class="w-5" />
