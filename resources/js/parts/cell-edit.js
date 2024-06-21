@@ -91,18 +91,16 @@ export function cellEdit() {
                     },
                     success: function (data) {
                         if (
-                            field == 'treatment_1' &&
-                            value != '-' &&
-                            $('#' + id + '-status').text().includes('Treatment')
+                            field == 'treatment_1' ||
+                            field == 'treatment_2'
                         ) {
-                            $($('input[name="treatment_1_part_received"][part-id="' + id + '"]')).removeAttr('disabled');
-                        }
-                        if (
-                            field == 'treatment_2' &&
-                            value != '-' &&
-                            $('#' + id + '-status').text() == 'Treatment'
-                        ) {
-                            $($('input[name="treatment_2_part_received"][part-id="' + id + '"]')).removeAttr('disabled');
+                            let inputName = field == 'treatment_1' ? 'treatment_1_part_received' : 'treatment_2_part_received';
+                            let input = $('input[name="' + inputName + '"][item-id="' + id + '"]');
+                            if (value == '') {
+                                input.attr('disabled', true);
+                            } else {
+                                input.removeAttr('disabled');
+                            }
                         }
                         if (field == 'supplier->name') {
                             if (value == 0) {
