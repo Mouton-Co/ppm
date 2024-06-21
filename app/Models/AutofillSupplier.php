@@ -34,12 +34,12 @@ class AutofillSupplier extends Model
             'sortable' => true,
             'filterable' => true,
         ],
-        'supplier' => [
+        'supplier_name' => [
             'label' => 'Supplier',
-            'type' => 'relationship',
+            'type' => 'text',
             'sortable' => true,
             'filterable' => true,
-            'relationship_field' => 'name',
+            'relationship' => 'supplier.name',
             'relationship_model' => Supplier::class,
         ],
         'created_at' => [

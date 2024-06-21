@@ -15,8 +15,8 @@
             class="btn btn-sky !max-h-fit max-w-fit !rounded !py-1 !text-xs"
             href="{{ route('submissions.create', [
                 'machine_number' => $datum->machine_nr,
-                'submission_type' => 'additional_datum',
-                'datum_id' => $datum->id,
+                'submission_type' => 0,
+                'project_id' => $datum->id,
                 'notes' => $datum->notes,
             ]) }}"
             target="_blank"

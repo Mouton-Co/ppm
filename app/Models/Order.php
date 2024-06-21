@@ -60,18 +60,18 @@ class Order extends Model
                 'ordered' => 'Ordered',
             ],
         ],
-        'supplier_id' => [
+        'supplier_name' => [
             'label' => 'Supplier',
-            'type' => 'relationship',
+            'type' => 'dropdown',
             'filterable' => true,
-            'relationship_field' => 'name',
+            'relationship' => 'supplier.name',
             'relationship_model' => Supplier::class,
         ],
-        'submission_id' => [
+        'submission_submission_code' => [
             'label' => 'Submission',
-            'type' => 'relationship',
+            'type' => 'text',
             'filterable' => true,
-            'relationship_field' => 'submission_code',
+            'relationship' => 'submission.submission_code',
             'relationship_model' => Submission::class,
         ],
     ];

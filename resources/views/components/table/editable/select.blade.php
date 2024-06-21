@@ -16,19 +16,21 @@
     $structure = $structure ?? $model::structure();
 
     $options = [];
+    $name = $key;
     if (! empty($structure[$key]['filterable_options']) && is_array($structure[$key]['filterable_options'])) {
         $options = $structure[$key]['filterable_options'];
     } elseif (! empty($structure[$key]['filterable_options']) && $structure[$key]['filterable_options'] == 'custom') {
         $customKey = \Str::camel("get_custom_{$key}_attribute");
         $options = $model::$customKey();
-    } elseif ($structure[$key]['type'] == 'relationship') {
-        $options = $structure[$key]['relationship_model']::orderBy($structure[$key]['relationship_field'])->get();
+    } elseif (! empty($structure[$key]['relationship'])) {
+        $options = $structure[$key]['relationship_model']::orderBy(explode('.', $structure[$key]['relationship'])[1])->get();
+        $name = str_replace('.', '->', $structure[$key]['relationship']);
     }
 @endphp
 
 <select
     class="field {{ $bg }} cell-dropdown {{ $key == 'status' ? 'project-status-dropdown' : '' }} !w-[195px] cursor-pointer border-none !ring-0 focus:outline-none focus:ring-0"
-    name="{{ $key }}"
+    name="{{ $name }}"
     item-id="{{ $datum->id }}"
     model="{{ $model }}"
 >
@@ -43,9 +45,9 @@
         @if ($option instanceof \Illuminate\Database\Eloquent\Model)
             <option
                 value="{{ $option->id }}"
-                @if ($option->id === $datum->$key) selected @endif
+                @if ($option->id === $datum->{explode('.', $structure[$key]['relationship'])[0] . '_id'}) selected @endif
             >
-                {{ $option->{$structure[$key]['relationship_field']} }}
+                {{ $option->{explode('.', $structure[$key]['relationship'])[1]} }}
             </option>
         @else
             <option

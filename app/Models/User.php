@@ -68,12 +68,12 @@ class User extends Authenticatable
             'sortable' => true,
             'filterable' => true,
         ],
-        'role' => [
+        'role_role' => [
             'label' => 'Role',
-            'type' => 'relationship',
+            'type' => 'dropdown',
             'sortable' => true,
             'filterable' => true,
-            'relationship_field' => 'role',
+            'relationship' => 'role.role',
             'relationship_model' => Role::class,
         ],
         'created_at' => [

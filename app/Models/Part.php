@@ -103,13 +103,13 @@ class Part extends Model
             'filterable' => true,
             'component' => 'editable.checkbox',
         ],
-        'supplier_id' => [
+        'supplier_name' => [
             'label' => 'Supplier',
-            'type' => 'relationship',
+            'type' => 'dropdown',
             'sortable' => true,
             'filterable' => true,
             'component' => 'editable.select',
-            'relationship_field' => 'name',
+            'relationship' => 'supplier.name',
             'relationship_model' => Supplier::class,
         ],
         'name' => [
@@ -172,12 +172,20 @@ class Part extends Model
             'sortable' => true,
             'filterable' => true,
         ],
-        'submission' => [
-            'label' => 'Submission',
-            'type' => 'relationship',
+        'submission_assembly_name' => [
+            'label' => 'Assembly Name',
+            'type' => 'text',
             'sortable' => true,
             'filterable' => true,
-            'relationship_field' => 'submission_code',
+            'relationship' => 'submission.assembly_name',
+            'relationship_model' => Submission::class,
+        ],
+        'submission_submission_code' => [
+            'label' => 'Submission Code',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+            'relationship' => 'submission.submission_code',
             'relationship_model' => Submission::class,
             'component' => 'procurement.submission',
         ],
@@ -352,13 +360,13 @@ class Part extends Model
             'filterable' => true,
             'component' => 'editable.text',
         ],
-        'supplier_id' => [
+        'supplier_name' => [
             'label' => 'Supplier',
-            'type' => 'relationship',
+            'type' => 'dropdown',
             'sortable' => true,
             'filterable' => true,
             'component' => 'editable.select',
-            'relationship_field' => 'name',
+            'relationship' => 'supplier.name',
             'relationship_model' => Supplier::class,
         ],
         'quantity' => [
@@ -434,6 +442,14 @@ class Part extends Model
                 'qc' => 'QC',
                 'assembly' => 'Assembly',
             ],
+        ],
+        'submission_assembly_name' => [
+            'label' => 'Assembly Name',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+            'relationship' => 'submission.assembly_name',
+            'relationship_model' => Submission::class,
         ],
         'coc' => [
             'label' => 'COC',
