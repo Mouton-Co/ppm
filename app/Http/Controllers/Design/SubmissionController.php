@@ -116,7 +116,7 @@ class SubmissionController extends Controller
     public function index(Request $request)
     {
         $this->checkTableConfigurations('submissions', Submission::class);
-        $submissions = $this->filter(Submission::class, Submission::query(), $request)->paginate(15);
+        $submissions = $this->filter(Submission::class, Submission::query(), $request)->where('submitted', 1)->paginate(15);
 
         if ($submissions->currentPage() > 1 && $submissions->lastPage() < $submissions->currentPage()) {
             return redirect()->route('submissions.index', array_merge(['page' => $submissions->lastPage()], $request->except(['page'])));

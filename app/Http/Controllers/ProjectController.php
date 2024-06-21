@@ -6,6 +6,7 @@ use App\Http\Requests\Project\StoreRequest;
 use App\Models\Project;
 use App\Models\ProjectResponsible;
 use App\Models\ProjectStatus;
+use App\Models\Submission;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -23,6 +24,9 @@ class ProjectController extends Controller
             return redirect()->route('projects.index', array_merge(['page' => $projects->lastPage()], $request->except(['page'])));
         }
 
+        // get all available submissions for link modal
+        $availableSubmissions = Submission::whereNull('project_id')->where('submitted', 1)->get();
+
         return view('generic.index')->with([
             'heading' => 'Projects',
             'table' => 'projects',
@@ -30,6 +34,8 @@ class ProjectController extends Controller
             'indexRoute' => 'projects.index',
             'data' => $projects,
             'model' => Project::class,
+            'slot' => 'components.table.project.link-submission-modal',
+            'availableSubmissions' => $availableSubmissions,
         ]);
     }
 
@@ -199,6 +205,9 @@ class ProjectController extends Controller
     public function unlink($id): \Illuminate\Http\RedirectResponse
     {
         $project = Project::findOrFail($id);
+        $project->submission->update([
+            'project_id' => null,
+        ]);
 
         if (empty($project)) {
             return redirect()->back()->with('error', 'Project not found');
@@ -209,5 +218,42 @@ class ProjectController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Submission unlinked');
+    }
+
+    /**
+     * Link a submission to a project
+     * @param $id
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function link($id, Request $request): \Illuminate\Http\JsonResponse
+    {
+        $project = Project::findOrFail($id);
+
+        if (empty($project)) {
+            return response()->json([
+                'error' => 'Project not found',
+            ]);
+        }
+
+        $project->update([
+            'submission_id' => $request->submission_id,
+        ]);
+
+        $submission = Submission::findOrFail($request->submission_id);
+
+        if (empty($submission)) {
+            return response()->json([
+                'error' => 'Submission not found',
+            ]);
+        }
+
+        $submission->update([
+            'project_id' => $project->id,
+        ]);
+
+        return response()->json([
+            'success' => 'Submission linked to project',
+        ]);
     }
 }
