@@ -11,17 +11,17 @@
     </div>
 @else
     <div class="flex w-full justify-start">
-        <a
-            class="btn btn-sky !max-h-fit max-w-fit !rounded !py-1 !text-xs"
+        <div
+            class="btn btn-sky !max-h-fit max-w-fit !rounded !py-1 !text-xs link-submission-button"
+            project-id="{{ $datum->id }}"
             href="{{ route('submissions.create', [
                 'machine_number' => $datum->machine_nr,
                 'submission_type' => 0,
                 'project_id' => $datum->id,
                 'notes' => $datum->notes,
             ]) }}"
-            target="_blank"
         >
             {{ __('Link submission') }}
-        </a>
+        </div>
     </div>
 @endif

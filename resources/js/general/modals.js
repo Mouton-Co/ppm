@@ -58,4 +58,31 @@ export function modals() {
         $("*[id^='unlink-modal-']").removeClass('hidden').addClass('hidden');
         $("*[id^='unlink-modal-popup-']").removeClass('hidden');
     });
+
+    // link submission modal
+    $('.link-submission-button').on("click", function () {
+        $("#link-submission-modal").removeClass('hidden');
+        $("#curtain").addClass('curtain-expanded').removeClass('curtain-closed');
+        $("#link-submission-popup").removeClass('modal-close').addClass('modal-popup');
+        $('#create-new-submission-button').attr('href', $(this).attr('href'));
+        $('#link-submission-button').attr('project-id', $(this).attr('project-id'));
+    });
+    $('#curtain, #cancel-link-submission-button').on("click", function () {
+        $("#curtain").addClass('curtain-closed').removeClass('curtain-expanded');
+        $("#link-submission-popup").removeClass('modal-popup').addClass('modal-close');
+        $("#link-submission-modal").removeClass('hidden').addClass('hidden');
+    });
+    $('#link-submission-button').on("click", function () {
+        $.ajax({ // route('projects.link')
+            type: 'POST',
+            url: '/project/link/' + $(this).attr('project-id'),
+            data: {
+                _token: $('meta[name="csrf-token"]').attr('content'),
+                submission_id: $('#link-submission-select').val()
+            },
+            success: function (data) {
+                location.reload();
+            }
+        });
+    });
 }
