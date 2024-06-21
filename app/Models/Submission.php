@@ -106,20 +106,20 @@ class Submission extends Model
             'sortable' => true,
             'filterable' => true,
         ],
-        'user' => [
+        'user_name' => [
             'label' => 'Submitted by',
-            'type' => 'relationship',
+            'type' => 'dropdown',
             'sortable' => true,
             'filterable' => true,
-            'relationship_field' => 'name',
+            'relationship' => 'user.name',
             'relationship_model' => User::class,
         ],
-        'project' => [
+        'project_coc' => [
             'label' => 'Project COC',
-            'type' => 'relationship',
+            'type' => 'dropdown',
             'sortable' => true,
             'filterable' => true,
-            'relationship_field' => 'coc',
+            'relationship' => 'project.coc',
             'relationship_model' => Project::class,
         ],
     ];

@@ -147,12 +147,12 @@ class Project extends Model
             'component' => 'editable.text',
             'tooltip' => true,
         ],
-        'submission' => [
+        'submission_submission_code' => [
             'label' => 'Submission',
-            'type' => 'relationship',
+            'type' => 'text',
             'sortable' => true,
             'filterable' => true,
-            'relationship_field' => 'submission_code',
+            'relationship' => 'submission.submission_code',
             'relationship_model' => Submission::class,
             'component' => 'project.submission',
         ],

@@ -65,43 +65,49 @@
                         key="{{ $key }}"
                     />
                 @elseif ($structure[$key]['type'] == 'dropdown')
-                    <x-filters.dropdown-pill
-                        label="{{ $structure[$key]['label'] }}"
-                        key="{{ $key }}"
-                    >
-                        @if ($structure[$key]['filterable_options'] == 'custom')
-                            @php
-                                $customKey = \Str::camel("get_custom_{$key}_attribute");
-                                $options = $model::$customKey();
-                            @endphp
-                        @else
-                            @php
-                                $options = $structure[$key]['filterable_options'];
-                            @endphp
-                        @endif
-                        @foreach ($options as $optionKey => $optionValue)
-                            <option
-                                value="{{ $optionKey }}"
-                                @if ($optionKey == $value) selected @endif
-                            >
-                                {{ $optionValue }}
-                            </option>
-                        @endforeach
-                    </x-filters.dropdown-pill>
-                @elseif ($structure[$key]['type'] == 'relationship')
-                    <x-filters.dropdown-pill
-                        label="{{ $structure[$key]['label'] }}"
-                        key="{{ $key }}"
-                    >
-                        @foreach ($structure[$key]['relationship_model']::all() as $option)
-                            <option
-                                value="{{ $option->id }}"
-                                @if ($option->id == $value) selected @endif
-                            >
-                                {{ $option->{$structure[$key]['relationship_field']} }}
-                            </option>
-                        @endforeach
-                    </x-filters.dropdown-pill>
+                    @if (!empty($structure[$key]['relationship']))
+                        @php
+                            $relationshipModel = $structure[$key]['relationship_model'];
+                            $relationshipField = explode('.', $structure[$key]['relationship'])[1];
+                        @endphp
+                        <x-filters.dropdown-pill
+                            label="{{ $structure[$key]['label'] }}"
+                            key="{{ $key }}"
+                        >
+                            @foreach ($relationshipModel::orderBy($relationshipField)->get() as $option)
+                                <option
+                                    value="{{ $option->$relationshipField }}"
+                                    @if ($option->$relationshipField == $value) selected @endif
+                                >
+                                    {{ $option->$relationshipField }}
+                                </option>
+                            @endforeach
+                        </x-filters.dropdown-pill>
+                    @else
+                        <x-filters.dropdown-pill
+                            label="{{ $structure[$key]['label'] }}"
+                            key="{{ $key }}"
+                        >
+                            @if ($structure[$key]['filterable_options'] == 'custom')
+                                @php
+                                    $customKey = \Str::camel("get_custom_{$key}_attribute");
+                                    $options = $model::$customKey();
+                                @endphp
+                            @else
+                                @php
+                                    $options = $structure[$key]['filterable_options'];
+                                @endphp
+                            @endif
+                            @foreach ($options as $optionKey => $optionValue)
+                                <option
+                                    value="{{ $optionKey }}"
+                                    @if ($optionKey == $value) selected @endif
+                                >
+                                    {{ $optionValue }}
+                                </option>
+                            @endforeach
+                        </x-filters.dropdown-pill>
+                    @endif
                 @elseif ($structure[$key]['type'] == 'boolean')
                     <x-filters.dropdown-pill
                         label="{{ $structure[$key]['label'] }}"

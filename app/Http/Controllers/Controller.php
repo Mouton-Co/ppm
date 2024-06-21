@@ -44,8 +44,6 @@ class Controller extends BaseController
                 $component = $this->renderTextPill($request, $field);
             } elseif ($field['type'] == 'dropdown') {
                 $component = $this->renderDropdownPill($request, $field);
-            } elseif ($field['type'] == 'relationship') {
-                $component = $this->renderRelationshipPill($request, $field);
             } elseif ($field['type'] == 'boolean') {
                 $component = $this->renderBooleanPill($request, $field);
             }
@@ -62,50 +60,33 @@ class Controller extends BaseController
      * @param array $field
      * @return array
      */
-    protected function renderRelationshipPill($request, $field): array
-    {
-        $slot = "";
-        $selected = 'selected';
-        $options = $field['relationship_model']::all();
-        if (! empty($options)) {
-            foreach ($options as $option) {
-                $slot .= "<option value='" . $option->id . "' $selected>" . $option->{$field['relationship_field']} . "</option>";
-                $selected = '';
-            }
-        }
-
-        return [
-            'field' => $request->field,
-            'html' => view('components.filters.dropdown-pill', [
-                'label' => $field['label'],
-                'key' => $request->field,
-                'slot' => $slot,
-            ])->render(),
-        ];
-    }
-
-    /**
-     * Get the pill html for the filter
-     * @param Request $request
-     * @param array $field
-     * @return array
-     */
     protected function renderDropdownPill($request, $field): array
     {
         $slot = "";
         $selected = 'selected';
 
-        if ($field['filterable_options'] == 'custom') {
-            $customKey = \Str::camel("get_custom_{$request->field}_attribute");
-            $options =  $request->model::$customKey();
+        if (! empty($field['relationship'])) {
+            $relationshipModel = $field['relationship_model'];
+            $relationshipField = explode('.', $field['relationship'])[1];
+            $options = $relationshipModel::orderBy($relationshipField)->get();
+            foreach ($options as $option) {
+                $slot .= "<option value='{$option->$relationshipField}' $selected>{$option->$relationshipField}</option>";
+                $selected = '';
+            }
         } else {
-            $options = $field['filterable_options'];
+            if ($field['filterable_options'] == 'custom') {
+                $customKey = \Str::camel("get_custom_{$request->field}_attribute");
+                $options =  $request->model::$customKey();
+            } else {
+                $options = $field['filterable_options'];
+            }
+    
+            foreach ($options as $key => $value) {
+                $slot .= "<option value='$key' $selected>$value</option>";
+                $selected = '';
+            }
         }
 
-        foreach ($options as $key => $value) {
-            $slot .= "<option value='$key' $selected>$value</option>";
-            $selected = '';
-        }
 
         return [
             'field' => $request->field,
@@ -167,8 +148,13 @@ class Controller extends BaseController
 
         foreach ($this->structure as $key => $value) {
             if ($this->request->has($key)) {
-                if ($this->structure[$key]['type'] == 'relationship') {
-                    $query->where(str_replace('_id', '', $key) . '_id', $this->request->get($key));
+                if (! empty($this->structure[$key]['relationship'])) {
+                    $query->whereRelation(
+                        explode('.', $this->structure[$key]['relationship'])[0],
+                        explode('.', $this->structure[$key]['relationship'])[1],
+                        'like',
+                        "%{$this->request->get($key)}%"
+                    );
                 } else {
                     $query->where($key, 'like', "%{$this->request->get($key)}%");
                 }
@@ -177,34 +163,46 @@ class Controller extends BaseController
 
         if ($this->request->has('query')) {
             $query = $query->where(function ($subquery) {
-                $first = true;
                 foreach ($this->structure as $key => $value) {
                     if (!empty($value['filterable']) && $value['filterable']) {
-                        if ($first) {
-                            if ($value['type'] == 'relationship') {
-                                $subquery->whereHas(str_replace('_id', '', $key), function ($subsubquery) use ($key) {
-                                    $subsubquery->where($this->structure[$key]['relationship_field'], 'like', "%{$this->request->get('query')}%");
-                                });
-                            } else {
-                                $subquery->where($key, 'like', "%{$this->request->get('query')}%");
-                            }
-                            $first = false;
+                        if (! empty($this->structure[$key]['relationship'])) {
+                            $subquery->orWhereRelation(
+                                explode('.', $this->structure[$key]['relationship'])[0],
+                                explode('.', $this->structure[$key]['relationship'])[1],
+                                'like',
+                                "%{$this->request->get('query')}%"
+                            );
                         } else {
-                            if ($value['type'] == 'relationship') {
-                                $subquery->orWhereHas(str_replace('_id', '', $key), function ($subsubquery) use ($key) {
-                                    $subsubquery->where($this->structure[$key]['relationship_field'], 'like', "%{$this->request->get('query')}%");
-                                });
-                            } else {
-                                $subquery->orWhere($key, 'like', "%{$this->request->get('query')}%");
-                            }
+                            $subquery->orWhere($key, 'like', "%{$this->request->get('query')}%");
                         }
                     }
                 }
             });
         }
 
-        if ($this->request->has('order') && $this->request->has('order_by')) {
-            $query->orderBy($this->request->get('order_by'), $this->request->get('order'));
+        if (
+            $this->request->has('order') &&
+            $this->request->has('order_by') &&
+            array_key_exists($this->request->get('order_by'), $this->structure) &&
+            $this->structure[$this->request->get('order_by')]['sortable']
+        ) {
+            $order = $this->request->get('order') == 'asc' ? 'asc' : 'desc';
+            $orderBy = $this->request->get('order_by');
+            
+            if (! empty($this->structure[$orderBy]['relationship'])) {
+                $model = $this->structure[$orderBy]['relationship_model'];
+                $table = app($model)->getTable();
+                list($relationship, $field) = explode('.', $this->structure[$orderBy]['relationship']);
+                $query->orderBy(
+                    $model::select($field)
+                        ->whereColumn("{$relationship}_id", "{$table}.id")
+                        ->orderBy($field, $order)
+                        ->limit(1),
+                    $order
+                );
+            } else {
+                $query->orderBy($orderBy, $order);
+            }
         }
 
         return $query;
