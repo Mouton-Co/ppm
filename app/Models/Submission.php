@@ -122,6 +122,12 @@ class Submission extends Model
             'relationship' => 'project.coc',
             'relationship_model' => Project::class,
         ],
+        'created_at' => [
+            'label' => 'Created at',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
     ];
 
     public static $actions = [

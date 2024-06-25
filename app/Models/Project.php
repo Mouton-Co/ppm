@@ -156,6 +156,18 @@ class Project extends Model
             'relationship_model' => Submission::class,
             'component' => 'project.submission',
         ],
+        'created_at' => [
+            'label' => 'Created at',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
+        'updated_at' => [
+            'label' => 'Updated at',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
     ];
 
     /**
