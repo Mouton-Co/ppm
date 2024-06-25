@@ -78,6 +78,12 @@ export function filters() {
     $('#filter').on('click', function () {
         $('#form').trigger('submit');
     });
+    
+    $(document).on("keypress", ".submit-on-enter" , function(e) {
+        if (e.which == 13) {
+            $('#form').trigger('submit');
+        }
+    });
 
     // sortable list of items
     jQuery('.sortable-list').sortable({

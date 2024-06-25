@@ -3,7 +3,7 @@
         {{ $label ?? 'No label' }}
     </div>
     <input
-        class="h-full w-40 rounded-r border-0 bg-sky-700 py-0 pl-2 pr-6 text-sm focus:ring-0"
+        class="h-full w-40 rounded-r border-0 bg-sky-700 py-0 pl-2 pr-6 text-sm focus:ring-0 submit-on-enter"
         name="{{ $key ?? 'no-key' }}"
         type="text"
         value="{{ $value ?? '' }}"
