@@ -35,7 +35,7 @@
 
         {{-- query filter --}}
         <input
-            class="h-full w-full border-0 bg-transparent p-0 text-sm text-white focus:ring-0"
+            class="h-full w-full border-0 bg-transparent p-0 text-sm text-white focus:ring-0 submit-on-enter"
             name="query"
             type="text"
             value="{{ request()->query('query') ?? '' }}"
