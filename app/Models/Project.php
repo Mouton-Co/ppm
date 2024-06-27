@@ -29,7 +29,8 @@ class Project extends Model
         'customer_comment',
         'commisioner_comment',
         'logistics_comment',
-        'submission_id'
+        'submission_id',
+        'user_id',
     ];
 
     /**
@@ -168,6 +169,14 @@ class Project extends Model
             'sortable' => true,
             'filterable' => true,
         ],
+        'created_by' => [
+            'label' => 'Created by',
+            'type' => 'dropdown',
+            'sortable' => true,
+            'filterable' => true,
+            'relationship' => 'user.name',
+            'relationship_model' => User::class,
+        ],
     ];
 
     /**
@@ -189,6 +198,16 @@ class Project extends Model
     public function submission(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Submission::class);
+    }
+
+    /**
+     * Get the user that owns the project.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     /**
