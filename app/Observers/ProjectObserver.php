@@ -20,7 +20,7 @@ class ProjectObserver
             ->first();
 
         if (! empty($group)) {
-            $group->mail('New CoC Ticket Created', 'emails.project.created', $project);
+            $group->mail("{$project->country} CoC {$project->coc}", 'emails.project.created', $project);
         }
     }
 

@@ -9,15 +9,12 @@
 </head>
 
 <body>
-    <p>Good day,</p>
-
-    <p>A CoC Item has been added.</p>
     <p>
-        CoC Nr: {{ $datum->coc }}<br>
-        Link to CoC item: <a href="{{ route('projects.edit', $datum->id) }}">
-            {{ route('projects.edit', $datum->id) }}
-        </a><br>
-        New Status: {{ $datum->status }}
+        {{ $datum->coc }} was created by <b>{{ $datum->user->name }}</b><br>
+        Noticed issue: <b>{{ $datum->noticed_issue }}</b><br>
+        Currently responsible: <b>{{ $datum->currently_responsible }}</b><br>
+        Current status: <b>{{ $datum->status }}</b><br>
+        Link: <a href="{{ route('projects.edit', $datum->id) }}">{{ route('projects.edit', $datum->id) }}</a>
     </p>
 </body>
 
