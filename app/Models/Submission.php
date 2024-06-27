@@ -69,6 +69,8 @@ class Submission extends Model
                 'Correction',
                 'New BOM',
                 'Replacement',
+                'Modification',
+                'Workshop',
             ],
         ],
         'current_unit_number' => [
