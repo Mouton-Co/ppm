@@ -46,10 +46,7 @@ class ProjectController extends Controller
     {
         $statuses = ProjectStatus::orderBy('name')->get();
 
-        $responsibles = array_merge(
-            ProjectResponsible::pluck('name')->toArray(),
-            User::pluck('name')->toArray()
-        );
+        $responsibles = array_merge(ProjectResponsible::pluck('name')->toArray(), User::pluck('name')->toArray());
         sort($responsibles);
 
         return view('project.create', [
@@ -63,7 +60,11 @@ class ProjectController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        Project::create($request->validated());
+        Project::create(
+            array_merge($request->validated(), [
+                'user_id' => auth()->user()->id,
+            ]),
+        );
 
         return redirect()->route('projects.index')->with('success', 'Project created successfully');
     }
@@ -74,10 +75,7 @@ class ProjectController extends Controller
     public function edit(Project $project)
     {
         $statuses = ProjectStatus::orderBy('name')->get();
-        $responsibles = array_merge(
-            ProjectResponsible::pluck('name')->toArray(),
-            User::pluck('name')->toArray()
-        );
+        $responsibles = array_merge(ProjectResponsible::pluck('name')->toArray(), User::pluck('name')->toArray());
         sort($responsibles);
 
         return view('project.edit', [
@@ -128,7 +126,7 @@ class ProjectController extends Controller
 
         // generate new coc number in format machineNr_###
         $coc = $machineNr . '_' . str_pad($highest + 1, 3, '0', STR_PAD_LEFT);
-        
+
         return response()->json(['coc' => $coc]);
     }
 
@@ -143,9 +141,12 @@ class ProjectController extends Controller
         $project = Project::findOrFail($id);
 
         if (empty($project)) {
-            return response()->json([
-                'message' => 'Project not found',
-            ], 404);
+            return response()->json(
+                [
+                    'message' => 'Project not found',
+                ],
+                404,
+            );
         }
 
         // if currently_responsible is updated from 'Design' to anything update status to `Design`
@@ -156,14 +157,14 @@ class ProjectController extends Controller
         }
 
         // if PO is added update status to `Order placed`
-        if ($request->field === 'related_pos' && ! empty($request->value)) {
+        if ($request->field === 'related_pos' && !empty($request->value)) {
             $project->update([
                 'status' => 'Order placed',
             ]);
         }
 
         // if waybill is added change status to `Shipped`
-        if ($request->field === 'waybill_nr' && ! empty($request->value)) {
+        if ($request->field === 'waybill_nr' && !empty($request->value)) {
             $project->update([
                 'status' => 'Shipped',
             ]);
@@ -182,7 +183,7 @@ class ProjectController extends Controller
                 'resolved_at' => null,
             ]);
         }
-        
+
         $project->update([
             $request->field => $request->value,
         ]);
