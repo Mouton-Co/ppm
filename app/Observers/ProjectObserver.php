@@ -46,22 +46,6 @@ class ProjectObserver
                 $group->mail("Status Change for Machine # {$project->machine_nr}", 'emails.project.status', $project);
             }
         }
-
-        if ($project->isDirty('currently_responsible')) {
-            $group = RecipientGroup::where('field', "Currently responsible")
-                ->where('value', $project->currently_responsible)
-                ->first();
-
-            if (! empty($group)) {
-                $group->mail('New CoC Ticket', 'emails.project.assigned-department', $project);
-            }
-
-            $individual = User::where('name', $project->currently_responsible)->first();
-
-            if (! empty($individual)) {
-                Mail::to($individual->email)->send(new ProjectUpdate('New CoC Ticket', 'emails.project.assigned-individual', $project));
-            }
-        }
     }
 
     /**
