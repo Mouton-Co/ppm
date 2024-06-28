@@ -49,3 +49,5 @@
         </div>
     </div>
 </div>
+
+@include('components.confirmation-modal')

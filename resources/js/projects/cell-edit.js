@@ -31,12 +31,42 @@ export function cellEditProject() {
                     value: value
                 },
                 success: function (data) {
+                    if (field == 'currently_responsible') {
+                        promptNotificationPopup(id);
+                    }
                     $('#' + data.update.id + '-status select').val(data.update.status);
                     $('#' + data.update.id + '-resolved_at').text(data.update.resolved_at == null ? '-' : data.update.resolved_at);
                 }
             });
         }, 200);
     }
+
+    function promptNotificationPopup(id) {
+        $("#confirmation-modal").removeClass('hidden').attr('datum-id', id);
+        $("#curtain").addClass('curtain-expanded').removeClass('curtain-closed');
+        $("#confirmation-modal-popup").removeClass('modal-close').addClass('modal-popup');
+    }
+
+    $('#curtain, #confirmation-modal-no').on("click", function () {
+        $("#curtain").addClass('curtain-closed').removeClass('curtain-expanded');
+        $("#confirmation-modal-popup").removeClass('modal-popup').addClass('modal-close');
+        $("#confirmation-modal").removeClass('hidden').addClass('hidden');
+    });
+
+    $('#confirmation-modal-yes').on("click", function () {
+        $("#curtain").addClass('curtain-closed').removeClass('curtain-expanded');
+        $("#confirmation-modal-popup").removeClass('modal-popup').addClass('modal-close');
+        $("#confirmation-modal").removeClass('hidden').addClass('hidden');
+        let id = $("#confirmation-modal").attr('datum-id');
+        $.ajax({
+            type: 'POST',
+            url: 'project/send-update/' + id,
+            data: {
+                _token: $('meta[name="csrf-token"]').attr('content'),
+                id: id
+            }
+        });
+    });
 
     // change status dropdown colour
     $(".project-status-dropdown[model='\App\Models\Project']").on("change", function () {

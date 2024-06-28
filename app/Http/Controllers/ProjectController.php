@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Project\StoreRequest;
+use App\Mail\ProjectUpdate;
 use App\Models\Project;
 use App\Models\ProjectResponsible;
 use App\Models\ProjectStatus;
+use App\Models\RecipientGroup;
 use App\Models\Submission;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class ProjectController extends Controller
 {
@@ -256,5 +259,31 @@ class ProjectController extends Controller
         return response()->json([
             'success' => 'Submission linked to project',
         ]);
+    }
+
+    /**
+     * Send an update to the currently responsible department or individual
+     *
+     * @param $id
+     */
+    public function sendUpdate($id): void
+    {
+        $project = Project::findOrFail($id);
+
+        if (! empty($project)) {
+            $group = RecipientGroup::where('field', "Currently responsible")
+                ->where('value', $project->currently_responsible)
+                ->first();
+    
+            if (! empty($group)) {
+                $group->mail('New CoC Ticket', 'emails.project.assigned-department', $project);
+            }
+    
+            $individual = User::where('name', $project->currently_responsible)->first();
+    
+            if (! empty($individual)) {
+                Mail::to($individual->email)->send(new ProjectUpdate('New CoC Ticket', 'emails.project.assigned-individual', $project));
+            }
+        }
     }
 }

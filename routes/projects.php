@@ -14,3 +14,4 @@ Route::get('project/coc/{machine_nr}', [ProjectController::class, 'generateCoc']
 Route::post('project/update/ajax/{id}', [ProjectController::class, 'updateAjax'])->name('projects.update.ajax');
 Route::post('project/unlink/{id}', [ProjectController::class, 'unlink'])->name('projects.unlink');
 Route::post('project/link/{id}', [ProjectController::class, 'link'])->name('projects.link');
+Route::post('project/send-update/{id}', [ProjectController::class, 'sendUpdate'])->name('projects.send-update');
