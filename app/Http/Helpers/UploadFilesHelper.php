@@ -332,24 +332,31 @@ class UploadFilesHelper
                 $file = str_replace(' ', '', $file);
                 switch ($fileType) {
                     case 'step':
-                    case 'stp':
                         $exists = ($file == "$fileName.stp") || ($file == "$fileName.step");
                         break;
-                    case 'dwg':
                     case 'dxf':
-                        $exists = ($file == "$fileName.dwg") || ($file == "$fileName.dxf")
-                            || ($file == $fileName.'_R.dwg') || ($file == $fileName.'_R.dxf');
+                        $exists = ($file == "$fileName.dxf") || ($file == "{$fileName}_R.dxf");
+                        break;
+                    case 'dwg':
+                        $exists = ($file == "$fileName.dwg") || ($file == "{$fileName}_R.dwg");
                         break;
                     case 'pdf/dwg':
-                        $exists = ($file == "$fileName.pdf") || ($file == "$fileName.dwg") ||
-                            ($file == "$fileName.dxf");
+                        $exists = ($file == "$fileName.pdf") || ($file == "$fileName.dwg") || ($file == "{$fileName}_R.dwg");
                         break;
                     case 'pdf/step':
-                        $exists = ($file == "$fileName.pdf") || ($file == "$fileName.step");
+                        $exists = ($file == "$fileName.pdf") || ($file == "$fileName.step") || ($file == "{$fileName}.stp");
+                        break;
+                    case 'pdf/dxf':
+                        $exists = ($file == "$fileName.pdf") || ($file == "$fileName.dxf") || ($file == "{$fileName}_R.dxf");
                         break;
                     case 'dwg/step':
-                        $exists = ($file == "$fileName.dwg") || ($file == "$fileName.dxf") ||
-                            ($file == "$fileName.step") || ($file == "$fileName.stp");
+                        $exists = ($file == "$fileName.dwg") || ($file == "$fileName.step") || ($file == "{$fileName}_R.dwg") || ($file == "{$fileName}.stp");
+                        break;
+                    case 'dwg/dxf':
+                        $exists = ($file == "$fileName.dwg") || ($file == "$fileName.dxf") || ($file == "{$fileName}_R.dxf") || ($file == "{$fileName}_R.dwg");
+                        break;
+                    case 'step/dxf':
+                        $exists = ($file == "$fileName.stp") || ($file == "$fileName.step") || ($file == "$fileName.dxf") || ($file == "{$fileName}_R.dxf");
                         break;
                     default:
                         $exists = $file == "$fileName.$fileType";
