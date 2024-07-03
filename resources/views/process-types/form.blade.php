@@ -52,6 +52,24 @@
     </li>
     <li>
         <div class="flex items-center h-5 gap-1 translate-y-1 relative w-fit">
+            <input type="checkbox" name="required_files[dxf]" id="dxf"
+            @if (
+                (!empty($processType->required_files) && in_array('DXF', explode(',', $processType->required_files)))
+                || old('required_files.dxf') == 'on'
+            )
+                checked
+            @endif
+            @if (!empty($processType) && $processType->isDisabled('dxf'))
+                disabled class="bg-gray-300"
+            @endif>
+            <img src="{{ asset('images/dwg.png') }}" alt="None" class="w-5 h-5">
+            <div class="h-full text-gray-300 text-sm">DXF</div>
+            <div class="strikethrough {{ !empty($processType) && $processType->isDisabled('dxf') ? '' : 'hidden' }}"
+            id="dxf-strikethrough"></div>
+        </div>
+    </li>
+    <li>
+        <div class="flex items-center h-5 gap-1 translate-y-1 relative w-fit">
             <input type="checkbox" name="required_files[step]" id="step"
             @if (
                 (!empty($processType->required_files) && in_array('STEP', explode(',', $processType->required_files)))
@@ -120,6 +138,31 @@
     </li>
     <li>
         <div class="flex items-center h-5 gap-1 translate-y-1 relative w-fit">
+            <input type="checkbox" name="required_files[pdfOrDxf]" id="pdfOrDxf"
+            @if (
+                (
+                    !empty($processType->required_files) &&
+                    in_array('PDF/DXF', explode(',', $processType->required_files))
+                ) ||
+                old('required_files.pdfOrDxf') == 'on'
+            )
+                checked
+            @endif
+            @if (!empty($processType) && $processType->isDisabled('pdfOrDxf'))
+                disabled class="bg-gray-300"
+            @endif>
+            <img src="{{ asset('images/pdf.png') }}" alt="None" class="w-5 h-5">
+            <div class="h-full text-gray-300 text-sm">PDF</div>
+            <div class="h-full text-gray-300 text-sm px-1">OR</div>
+            <img src="{{ asset('images/dwg.png') }}" alt="None" class="w-5 h-5">
+            <div class="h-full text-gray-300 text-sm">DXF</div>
+            <div class="strikethrough {{
+                !empty($processType) && $processType->isDisabled('pdfOrDxf') ? '' : 'hidden'
+            }}" id="pdfOrDxf-strikethrough"></div>
+        </div>
+    </li>
+    <li>
+        <div class="flex items-center h-5 gap-1 translate-y-1 relative w-fit">
             <input type="checkbox" name="required_files[dwgOrStep]" id="dwgOrStep"
             @if (
                 (
@@ -141,6 +184,56 @@
             <div class="strikethrough {{
                 !empty($processType) && $processType->isDisabled('dwgOrStep') ? '' : 'hidden'
             }}" id="dwgOrStep-strikethrough"></div>
+        </div>
+    </li>
+    <li>
+        <div class="flex items-center h-5 gap-1 translate-y-1 relative w-fit">
+            <input type="checkbox" name="required_files[dwgOrDxf]" id="dwgOrDxf"
+            @if (
+                (
+                    !empty($processType->required_files) &&
+                    in_array('DWG/DXF', explode(',', $processType->required_files))
+                ) ||
+                old('required_files.dwgOrDxf') == 'on'
+            )
+                checked
+            @endif
+            @if (!empty($processType) && $processType->isDisabled('dwgOrDxf'))
+                disabled class="bg-gray-300"
+            @endif>
+            <img src="{{ asset('images/dwg.png') }}" alt="None" class="w-5 h-5">
+            <div class="h-full text-gray-300 text-sm">DWG</div>
+            <div class="h-full text-gray-300 text-sm px-1">OR</div>
+            <img src="{{ asset('images/dwg.png') }}" alt="None" class="w-5 h-5">
+            <div class="h-full text-gray-300 text-sm">DXF</div>
+            <div class="strikethrough {{
+                !empty($processType) && $processType->isDisabled('dwgOrDxf') ? '' : 'hidden'
+            }}" id="dwgOrDxf-strikethrough"></div>
+        </div>
+    </li>
+    <li>
+        <div class="flex items-center h-5 gap-1 translate-y-1 relative w-fit">
+            <input type="checkbox" name="required_files[stepOrDxf]" id="stepOrDxf"
+            @if (
+                (
+                    !empty($processType->required_files) &&
+                    in_array('STEP/DXF', explode(',', $processType->required_files))
+                ) ||
+                old('required_files.stepOrDxf') == 'on'
+            )
+                checked
+            @endif
+            @if (!empty($processType) && $processType->isDisabled('stepOrDxf'))
+                disabled class="bg-gray-300"
+            @endif>
+            <img src="{{ asset('images/step.png') }}" alt="None" class="w-5 h-5">
+            <div class="h-full text-gray-300 text-sm">STEP</div>
+            <div class="h-full text-gray-300 text-sm px-1">OR</div>
+            <img src="{{ asset('images/dwg.png') }}" alt="None" class="w-5 h-5">
+            <div class="h-full text-gray-300 text-sm">DXF</div>
+            <div class="strikethrough {{
+                !empty($processType) && $processType->isDisabled('stepOrDxf') ? '' : 'hidden'
+            }}" id="stepOrDxf-strikethrough"></div>
         </div>
     </li>
 </ul>
