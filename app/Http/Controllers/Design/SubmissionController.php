@@ -147,7 +147,7 @@ class SubmissionController extends Controller
             ]);
         }
 
-        return view('submissions.show')->with([
+        return view('submissions.view')->with([
             'submission' => $submission,
         ]);
     }
