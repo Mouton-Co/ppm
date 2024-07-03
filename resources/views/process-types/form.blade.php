@@ -5,7 +5,7 @@
 <label class="label-dark" for="process_type">{{ __('Process type') }}</label>
 <input type="text" id="process_type" name="process_type" required
     class="{{ !empty($errors->get('process_type')) ? 'field-error' : 'field-dark' }} mb-5"
-    value="{{ $processType->process_type ?? old('process_type') }}">
+    value="{{ old('process_type') ?? $processType->process_type ?? '' }}">
 @if (!empty($errors->get('process_type')))
     @foreach ($errors->get('process_type') as $error)
         @include('components.error-message', ['error' => $error, 'hidden' => 'false', 'class' => 'mb-5'])
@@ -37,8 +37,11 @@
                     name="required_files[{{ strtolower($option) }}]"
                     id="{{ strtolower($option) }}"
                     @if (
-                        (!empty($processType->required_files) && in_array($option, explode(',', $processType->required_files))) ||
-                        old('required_files.' . strtolower($option)) == 'on'
+                        old('required_files.' . strtolower($option)) == 'on' ||
+                        (
+                            !empty($processType->required_files) &&
+                            in_array(str_replace('OR', '/', $option), explode(',', $processType->required_files))
+                        )
                     )
                         checked
                     @endif

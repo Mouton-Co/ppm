@@ -47,7 +47,7 @@ class ProcessTypeController extends Controller
         $requiredFiles = [];
         foreach ($request->required_files as $key => $value) {
             if ($value === 'on') {
-                $requiredFiles[] = str_contains($key, 'Or') ?
+                $requiredFiles[] = str_contains(strtoupper($key), 'OR') ?
                     str_replace('OR', '/', strtoupper($key)) :
                     strtoupper($key);
             }

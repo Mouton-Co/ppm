@@ -78,12 +78,16 @@ class ProcessType extends Model
     {
         $disabled = false;
 
-        if (in_array('PDF/DWG', explode(',', $this->required_files))) {
-            $disabled = in_array($field, ['pdf', 'dwg', 'pdfOrStep', 'dwgOrStep']);
-        } elseif (in_array('PDF/STEP', explode(',', $this->required_files))) {
-            $disabled = in_array($field, ['pdf', 'step', 'pdfOrDwg', 'dwgOrStep']);
-        } elseif (in_array('DWG/STEP', explode(',', $this->required_files))) {
-            $disabled = in_array($field, ['dwg', 'step', 'pdfOrDwg', 'pdfOrStep']);
+        if (str_contains($this->required_files, '/')) {
+            foreach (explode(',', $this->required_files) as $requiredFile) {
+                if (
+                    str_contains($requiredFile, '/') &&
+                    str_replace('OR', '/', strtoupper($field)) != strtoupper($requiredFile)
+                ) {
+                    $disabled = str_contains(strtoupper($field), explode('/', $requiredFile)[0]) ||
+                        str_contains(strtoupper($field), explode('/', $requiredFile)[1]);
+                }
+            }
         }
 
         return $disabled;
