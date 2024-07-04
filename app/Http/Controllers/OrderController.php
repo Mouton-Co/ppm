@@ -60,6 +60,26 @@ class OrderController extends Controller
     }
 
     /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy($id)
+    {
+        $order = Order::find($id);
+
+        if (! empty($order)) {
+            $order->delete();
+
+            return redirect()->route('orders.index')->withSuccess(
+                'Order deleted.'
+            );
+        }
+
+        return redirect()->route('orders.index')->withErrors(
+            'Order not found.'
+        );
+    }
+
+    /**
      * Generate all oustanding orders from the procurement table.
      * Orders are generated for all the parts that have PO numbers, suppliers and haven't been ordered yet.
      */

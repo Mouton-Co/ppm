@@ -56,7 +56,14 @@
                 class="order-card-{{ $order->status }} smaller-than-572:min-w-full max-h-[700px] min-w-[34rem] overflow-y-scroll">
                 <div class="order-card-header">
                     <span>PO {{ $order->po_number ?? 'N/A' }}</span>
-                    <x-order.status :status="$order->status ?? 'N/A'" />
+                    <div class="flex gap-3">
+                        <x-order.status :status="$order->status ?? 'N/A'" />
+                        <x-icon.trash
+                            route="{{ route('orders.delete', $order->id) }}"
+                            item-id="{{ $order->id }}"
+                            class="w-5 aspect-square text-red-400 hover:text-red-600 delete-po"
+                        />
+                    </div>
                 </div>
                 <div class="order-card-body">
                     @foreach ($order->parts()->get() as $part)
@@ -95,3 +102,6 @@
         </div>
     @endforeach
 </ul>
+
+{{-- delete modal --}}
+@include('components.generic-delete-modal')

@@ -6,9 +6,21 @@ export function modals() {
         $('#curtain').addClass('curtain-expanded').removeClass('curtain-closed');
     });
 
-    $('#curtain').on("click", function () {
+    $('#curtain, #generic-delete-modal-cancel').on("click", function () {
         $('.purchase-order-modal').removeClass('flex').addClass('hidden');
         $('#curtain').addClass('curtain-closed').removeClass('curtain-expanded');
+        $('#generic-delete-modal').removeClass('flex').addClass('hidden');
+        $('#generic-delete-modal-popup').removeClass('modal-popup').addClass('modal-close');
+    });
+
+    $('.delete-po').on("click", function () {
+        $('.purchase-order-modal').removeClass('flex').addClass('hidden');
+        $('#generic-delete-modal').removeClass('hidden').addClass('flex');
+        $('#generic-delete-modal-popup').removeClass('modal-close').addClass('modal-popup');
+        $('#curtain').addClass('curtain-expanded').removeClass('curtain-closed');
+        $('#heading').html("Are you sure?");
+        $('#message').html("Are you sure you want to delete this purchase order?");
+        $('#generic-delete-modal-form').attr('action', $(this).attr('route'));
     });
 
     // tooltip trigger
