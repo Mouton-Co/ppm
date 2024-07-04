@@ -6,7 +6,7 @@
     <label class="label-dark" for="assembly_name">{{ __('Assemly name') }}</label>
     <input type="text" id="assembly_name" name="assembly_name" class="field-dark mb-5" required>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5 mb-5">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5 mb-5">
         <div class="w-full">
             <label class="label-dark" for="machine_number">{{ __('Machine number') }}</label>
             <input type="text" name="machine_number" id="machine_number" required class="field-dark"
@@ -24,7 +24,7 @@
             </select>
         </div>
         <div class="w-full">
-            <label class="label-dark" for="current_unit_number">{{ __('Current unit number') }}</label>
+            <label class="label-dark text-nowrap" for="current_unit_number">{{ __('Current unit number') }}</label>
             <select class="w-full field-dark" name="current_unit_number" id="current_unit_number" required>
                 <option value="">{{ __('--Please select--') }}</option>
                 @foreach ($unit_numbers as $key => $unit_number)
@@ -43,6 +43,10 @@
                     </option>
                 @endforeach
             </select>
+        </div>
+        <div class="w-full">
+            <label class="label-dark" for="project_id">{{ __('Quantity') }}</label>
+            <input type="number" name="quantity" min="1" max="100" value="1" class="w-full field-dark">
         </div>
     </div>
 

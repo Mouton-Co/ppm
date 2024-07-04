@@ -26,7 +26,7 @@ class PartsController extends Controller
     /**
      * Store parts for the given submission
      */
-    public function storeParts(Submission $submission)
+    public function storeParts(Submission $submission, int $quantity = 1)
     {
         $uploadFilesHelper = new UploadFilesHelper();
         $excel = $submission->excel_sheet;
@@ -37,7 +37,7 @@ class PartsController extends Controller
             for ($i = 0; $i < count($matrix['Item Number']); $i++) {
                 $part = new Part();
                 $part->name = $matrix['File Name'][$i];
-                $part->quantity = $matrix['Quantity'][$i];
+                $part->quantity = $matrix['Quantity'][$i] * $quantity;
                 $part->material = $matrix['Material'][$i];
                 $part->material_thickness = $matrix['Material Thickness'][$i];
                 $part->finish = $matrix['Finish'][$i];
