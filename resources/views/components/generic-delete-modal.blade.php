@@ -30,7 +30,8 @@
                 <input
                     class="btn-sky"
                     type="submit"
-                    value="{{ __('Delete') }}"
+                    id="generic-delete-modal-form-submit"
+                    value="{{ $button ?? __('Delete') }}"
                 >
                 <button
                     class="btn-sky-light"

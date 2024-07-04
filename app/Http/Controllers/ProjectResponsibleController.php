@@ -10,6 +10,15 @@ use Illuminate\Http\Request;
 class ProjectResponsibleController extends Controller
 {
     /**
+     * ProjectResponsibleController constructor.
+     */
+    public function __construct()
+    {
+        $this->model = ProjectResponsible::class;
+        $this->route = 'project-responsibles';
+    }
+    
+    /**
      * Display a listing of the resource.
      */
     public function index(Request $request)

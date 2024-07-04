@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('text');
             $table->foreignId('supplier_id')->constrained('suppliers')->cascadeOnDelete();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

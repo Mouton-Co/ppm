@@ -5,10 +5,11 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Project extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -188,6 +189,8 @@ class Project extends Model
         'create' => 'Create new',
         'edit' => 'Edit',
         'delete' => 'Delete',
+        'restore' => 'Restore',
+        'trash' => 'Trash',
     ];
 
     /**

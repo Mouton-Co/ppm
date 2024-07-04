@@ -18,6 +18,15 @@ class SubmissionController extends Controller
     public $request;
 
     /**
+     * SubmissionController constructor.
+     */
+    public function __construct()
+    {
+        $this->model = Submission::class;
+        $this->route = 'submissions';
+    }
+
+    /**
      * View for creating a new submission
      *
      * @return View
@@ -167,12 +176,8 @@ class SubmissionController extends Controller
             ]);
         }
 
-        // delete files for submission
-        Storage::disk('local')->deleteDirectory('files/'.$submission->submission_code);
-
-        // delete parts and files
+        // delete parts
         foreach ($submission->parts as $part) {
-            $part->files()->delete();
             $part->delete();
         }
 
@@ -188,6 +193,56 @@ class SubmissionController extends Controller
 
         return redirect()->route('submissions.index')->with([
             'success' => "Submission $code deleted",
+        ]);
+    }
+
+    /**
+     * Restore the specified resource from storage.
+     */
+    public function restore(string $id)
+    {
+        $datum = $this->model::withTrashed()->find($id);
+
+        if (empty($datum)) {
+            return redirect()->route("{$this->route}.index");
+        }
+
+        // restore parts
+        foreach ($datum->parts()->withTrashed()->get() as $part) {
+            $part->restore();
+        }
+        
+        $datum->restore();
+
+        return redirect()->route("{$this->route}.index", ['archived' => "true"])->with([
+            'success' => "Item has been restored",
+        ]);
+    }
+
+    /**
+     * Trash the specified resource from storage.
+     */
+    public function trash(string $id)
+    {
+        $datum = $this->model::withTrashed()->find($id);
+
+        if (empty($datum)) {
+            return redirect()->route("{$this->route}.index");
+        }
+
+        // delete files for submission
+        Storage::disk('local')->deleteDirectory('files/'.$datum->submission_code);
+
+        // delete parts and files
+        foreach ($datum->parts()->withTrashed()->get() as $part) {
+            $part->files()->delete();
+            $part->forceDelete();
+        }
+        
+        $datum->forceDelete();
+
+        return redirect()->route("{$this->route}.index", ['archived' => "true"])->with([
+            'success' => "Item has been permanently deleted",
         ]);
     }
 }

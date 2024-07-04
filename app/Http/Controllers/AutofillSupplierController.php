@@ -11,6 +11,15 @@ use Illuminate\Http\Request;
 class AutofillSupplierController extends Controller
 {
     /**
+     * AutofillSupplierController constructor.
+     */
+    public function __construct()
+    {
+        $this->model = AutofillSupplier::class;
+        $this->route = 'autofill-suppliers';
+    }
+
+    /**
      * Display a listing of the resource.
      */
     public function index(Request $request)

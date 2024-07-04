@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('phone_2')->nullable();
             $table->foreignId('supplier_id')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

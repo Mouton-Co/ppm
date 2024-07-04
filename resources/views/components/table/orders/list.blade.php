@@ -17,28 +17,28 @@
             </div>
             <div class="order-card-body">
                 <div class="order-card-body-item">
-                    <x-icon.company class="w-5" />
+                    <x-icon.company class="w-5 min-w-[1.25rem]" />
                     <span>{{ $order->supplier?->name ?? 'N/A' }}</span>
                 </div>
                 <div class="order-card-body-item">
-                    <x-icon.email class="w-5" />
+                    <x-icon.email class="w-5 min-w-[1.25rem]" />
                     <span>{{ $order->supplier?->representatives()->first()->email ?? 'N/A' }}</span>
                 </div>
                 <div class="order-card-body-item">
-                    <x-icon.submission class="w-5" />
+                    <x-icon.submission class="w-5 min-w-[1.25rem]" />
                     <span>{{ $order->submission->assembly_name ?? '## submission deleted' }}</span>
                 </div>
                 <div class="order-card-body-item">
-                    <x-icon.spanner class="w-5" />
+                    <x-icon.spanner class="w-5 min-w-[1.25rem]" />
                     <span>Total parts: {{ $order->total_parts ?? 'N/A' }}</span>
                 </div>
                 <div class="order-card-body-item">
-                    <x-icon.datetime class="w-5" />
+                    <x-icon.datetime class="w-5 min-w-[1.25rem]" />
                     <span>{{ $order->created_at ?? 'N/A' }}</span>
                 </div>
             </div>
             <div class="order-card-footer">
-                <div>
+                <div class="text-nowrap">
                     {{ __('Purchase order summary') }} <span aria-hidden="true">&rarr;</span>
                 </div>
                 @if ($order->status == 'ordered')
@@ -58,11 +58,26 @@
                     <span>PO {{ $order->po_number ?? 'N/A' }}</span>
                     <div class="flex gap-3">
                         <x-order.status :status="$order->status ?? 'N/A'" />
-                        <x-icon.trash
-                            route="{{ route('orders.delete', $order->id) }}"
-                            item-id="{{ $order->id }}"
-                            class="w-5 aspect-square text-red-400 hover:text-red-600 delete-po"
-                        />
+                        @if (request()->has('archived') && request()->archived == "true")
+                            <x-icon.refresh
+                                id="restore-button"
+                                route="{{ route('orders.restore', $order->id) }}"
+                                item-id="{{ $order->id }}"
+                                class="w-5 aspect-square text-sky-500 hover:text-sky-700 delete-po"
+                            />
+                            <x-icon.trash
+                                id="trash-button"
+                                route="{{ route('orders.trash', $order->id) }}"
+                                item-id="{{ $order->id }}"
+                                class="w-5 aspect-square text-red-400 hover:text-red-600 delete-po"
+                            />
+                        @else
+                            <x-icon.trash
+                                route="{{ route('orders.delete', $order->id) }}"
+                                item-id="{{ $order->id }}"
+                                class="w-5 aspect-square text-red-400 hover:text-red-600 delete-po"
+                            />
+                        @endif
                     </div>
                 </div>
                 <div class="order-card-body">
@@ -82,20 +97,26 @@
                     </div>
                 @else
                     <div class="order-card-footer flex items-center justify-between">
-                        <a
-                            class="hover:text-sky-600"
-                            href="{{ route('email.purchase-order.render', $order->id) }}"
-                        >
-                            <span>{{ __('Prepare email') }}</span>
-                            <span aria-hidden="true">&rarr;</span>
-                        </a>
-                        <a
-                            class="text-right hover:text-sky-600"
-                            href="{{ route('orders.complete', $order->id) }}"
-                        >
-                            <span>{{ __('Mark as ordered') }}</span>
-                            <span aria-hidden="true">&rarr;</span>
-                        </a>
+                        @if (request()->has('archived') && request()->archived == "true")
+                            <span class="text-gray-500 text-sm py-2 w-full text-center">
+                                {{ __('Purchase order is archived') }}
+                            </span>
+                        @else
+                            <a
+                                class="hover:text-sky-600"
+                                href="{{ route('email.purchase-order.render', $order->id) }}"
+                            >
+                                <span>{{ __('Prepare email') }}</span>
+                                <span aria-hidden="true">&rarr;</span>
+                            </a>
+                            <a
+                                class="text-right hover:text-sky-600"
+                                href="{{ route('orders.complete', $order->id) }}"
+                            >
+                                <span>{{ __('Mark as ordered') }}</span>
+                                <span aria-hidden="true">&rarr;</span>
+                            </a>
+                        @endif
                     </div>
                 @endif
             </div>

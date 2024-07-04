@@ -11,6 +11,15 @@ use Illuminate\Http\Request;
 class RepresentativeController extends Controller
 {
     /**
+     * RepresentativeController constructor.
+     */
+    public function __construct()
+    {
+        $this->model = Representative::class;
+        $this->route = 'representatives';
+    }
+    
+    /**
      * Display a listing of the resource.
      */
     public function index(Request $request)

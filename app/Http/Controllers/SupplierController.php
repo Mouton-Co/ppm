@@ -12,6 +12,15 @@ use Illuminate\Http\Request;
 class SupplierController extends Controller
 {
     /**
+     * SupplierController constructor.
+     */
+    public function __construct()
+    {
+        $this->model = Supplier::class;
+        $this->route = 'suppliers';
+    }
+    
+    /**
      * Display a listing of the resource.
      */
     public function index(Request $request)

@@ -6,11 +6,19 @@ use App\Http\Requests\Order\StoreRequest;
 use App\Http\Requests\Order\UpdateRequest;
 use App\Models\Order;
 use App\Models\Part;
-use App\Models\Submission;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
+    /**
+     * OrderController constructor.
+     */
+    public function __construct()
+    {
+        $this->model = Order::class;
+        $this->route = 'orders';
+    }
+
     /**
      * Display a listing of the resource.
      */

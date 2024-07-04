@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('size')->nullable();
             $table->foreignId('part_id');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -76,6 +76,7 @@ export function filters() {
 
     // submit filter form
     $('#filter').on('click', function () {
+        $('input[name="archived"]').val($('input[name="archived-checkbox"]').prop('checked'))
         $('#form').trigger('submit');
     });
     

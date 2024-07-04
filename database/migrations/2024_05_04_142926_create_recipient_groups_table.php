@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('value')->nullable();
             $table->text('recipients')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
