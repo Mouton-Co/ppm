@@ -128,6 +128,7 @@ class OrderController extends Controller
                 'part_ordered' => true,
                 'part_ordered_at' => now(),
                 'status' => 'supplier',
+                'qty_received' => 0,
             ]);
         }
 
