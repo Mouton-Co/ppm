@@ -92,7 +92,7 @@ class SubmissionController extends Controller
         $fmh->makeFilesPermanent($submission->submission_code);
 
         $partsController = new PartsController();
-        $partsController->storeParts($submission);
+        $partsController->storeParts($submission, $request->get('quantity') ?? 1);
 
         // send out email to recipients
         $group = RecipientGroup::where('field', "Item created")
