@@ -52,7 +52,7 @@ class PartsController extends Controller
                 }
                 $part->quantity_in_stock = 0;
                 $part->quantity_ordered = $part->quantity;
-                $part->qty_received = $part->quantity;
+                $part->qty_received = 0;
 
                 $part->save();
 
@@ -168,6 +168,7 @@ class PartsController extends Controller
                 break;
             case 'raw_part_received':
                 $part->status = $part->$field ? 'treatment' : 'supplier';
+                $part->qty_received = $part->quantity_ordered;
                 break;
             case 'completed_part_received':
                 $part->status = $part->$field ? 'qc' : 'treatment';
@@ -191,6 +192,7 @@ class PartsController extends Controller
         return response()->json([
             'success' => true,
             'part_id' => $part->id,
+            'qty_received' => $part->qty_received,
             'status' => $field == 'qc_issue' && $part->$field ?
                 'QC Issue' :
                 Part::$statuses[$part->status],

@@ -66,7 +66,11 @@ export function cellEdit() {
 
                         // set stamp value
                         $("#" + data['part_id'] + "-" + field + "_at").html(checkboxValues['at']);
+
                     });
+
+                    // set quantity received
+                    $('input[item-id="' + data['part_id'] + '"][name="qty_received"]').val(data['qty_received']);
                 }
             });
         }, 200);
