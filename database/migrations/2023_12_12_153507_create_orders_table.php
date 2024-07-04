@@ -20,6 +20,7 @@ return new class extends Migration
             $table->foreignId('supplier_id')->nullable();
             $table->foreignId('submission_id')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

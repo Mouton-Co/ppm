@@ -10,6 +10,15 @@ use Illuminate\Http\Request;
 class ProcessTypeController extends Controller
 {
     /**
+     * ProcessTypeController constructor.
+     */
+    public function __construct()
+    {
+        $this->model = ProcessType::class;
+        $this->route = 'process-types';
+    }
+    
+    /**
      * Display a listing of the resource.
      */
     public function index(Request $request)

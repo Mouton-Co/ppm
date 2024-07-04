@@ -13,6 +13,15 @@ use Illuminate\Http\Request;
 class RecipientGroupController extends Controller
 {
     /**
+     * RecipientGroupController constructor.
+     */
+    public function __construct()
+    {
+        $this->model = RecipientGroup::class;
+        $this->route = 'recipient-groups';
+    }
+    
+    /**
      * Display a listing of the resource.
      */
     public function index(Request $request)

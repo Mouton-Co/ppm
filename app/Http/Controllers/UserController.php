@@ -12,6 +12,15 @@ use Illuminate\Support\Facades\Hash;
 class UserController extends Controller
 {
     /**
+     * UserController constructor.
+     */
+    public function __construct()
+    {
+        $this->model = User::class;
+        $this->route = 'user';
+    }
+
+    /**
      * Display a listing of the resource.
      */
     public function index(Request $request)

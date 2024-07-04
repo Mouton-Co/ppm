@@ -42,8 +42,17 @@ return new class extends Migration
             $table->datetime('qc_issue_at')->nullable();
             $table->string('qc_issue_reason')->nullable();
             $table->string('treatment_1')->nullable();
+            $table->string('treatment_1_supplier')->nullable();
             $table->string('treatment_2')->nullable();
+            $table->string('treatment_2_supplier')->nullable();
+            $table->text('comment_procurement')->nullable();
+            $table->text('comment_warehouse')->nullable();
+            $table->text('comment_logistics')->nullable();
+            $table->integer('quantity_in_stock')->nullable();
+            $table->integer('quantity_ordered')->nullable();
+            $table->integer('qty_received')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

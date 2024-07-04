@@ -10,6 +10,15 @@ use Illuminate\Http\Request;
 class ProjectStatusController extends Controller
 {
     /**
+     * ProjectStatusController constructor.
+     */
+    public function __construct()
+    {
+        $this->model = ProjectStatus::class;
+        $this->route = 'project-statuses';
+    }
+    
+    /**
      * Display a listing of the resource.
      */
     public function index(Request $request)

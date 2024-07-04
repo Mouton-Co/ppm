@@ -27,6 +27,11 @@ class Controller extends BaseController
     public $structure;
 
     /**
+     * @var string
+     */
+    public $route;
+
+    /**
      * Get the pill html for the filter
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -146,6 +151,12 @@ class Controller extends BaseController
         $this->model = $model;
         $this->structure = $structure ?? $model::$structure;
 
+        // show archived
+        if ($this->request->has('archived') && $this->request->get('archived') == 'true'){
+            $query = $query->onlyTrashed();
+        }
+
+        // filter params
         foreach ($this->structure as $key => $value) {
             if ($this->request->has($key)) {
                 if (! empty($this->structure[$key]['relationship'])) {
@@ -161,6 +172,7 @@ class Controller extends BaseController
             }
         }
 
+        // query
         if ($this->request->has('query')) {
             $query = $query->where(function ($subquery) {
                 foreach ($this->structure as $key => $value) {
@@ -180,6 +192,7 @@ class Controller extends BaseController
             });
         }
 
+        // order by
         if (
             $this->request->has('order') &&
             $this->request->has('order_by') &&
@@ -248,5 +261,41 @@ class Controller extends BaseController
             auth()->user()->configurations = json_encode($configs);
             auth()->user()->save();
         }
+    }
+
+    /**
+     * Restore the specified resource from storage.
+     */
+    public function restore(string $id)
+    {
+        $datum = $this->model::withTrashed()->find($id);
+
+        if (empty($datum)) {
+            return redirect()->route("{$this->route}.index");
+        }
+        
+        $datum->restore();
+
+        return redirect()->route("{$this->route}.index", ['archived' => "true"])->with([
+            'success' => "Item has been restored",
+        ]);
+    }
+
+    /**
+     * Trash the specified resource from storage.
+     */
+    public function trash(string $id)
+    {
+        $datum = $this->model::withTrashed()->find($id);
+
+        if (empty($datum)) {
+            return redirect()->route("{$this->route}.index");
+        }
+        
+        $datum->forceDelete();
+
+        return redirect()->route("{$this->route}.index", ['archived' => "true"])->with([
+            'success' => "Item has been permanently deleted",
+        ]);
     }
 }

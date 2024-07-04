@@ -17,4 +17,6 @@ Route::middleware(['admin'])->group(function () {
     Route::get('/user/create', [UserController::class, 'create'])->name('user.create');
     Route::post('/user/store', [UserController::class, 'store'])->name('user.store');
     Route::delete('/user/delete/{id}', [UserController::class, 'destroy'])->name('user.destroy');
+    Route::post('/user/restore/{id}', [UserController::class, 'restore'])->name('user.restore');
+    Route::post('/user/trash/{id}', [UserController::class, 'trash'])->name('user.trash');
 });

@@ -27,7 +27,9 @@ return new class extends Migration
             $table->text('commisioner_comment')->nullable();
             $table->text('logistics_comment')->nullable();
             $table->foreignId('submission_id')->nullable();
+            $table->foreignId('user_id')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

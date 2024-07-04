@@ -18,3 +18,5 @@ Route::post('/submission', [SubmissionController::class, 'store'])->name('store.
 Route::get('/submisssions', [SubmissionController::class, 'index'])->name('submissions.index');
 Route::get('/submission/{id}', [SubmissionController::class, 'view'])->name('submissions.show');
 Route::delete('/submission/{id}', [SubmissionController::class, 'destroy'])->name('submissions.destroy');
+Route::post('/submissions/restore/{id}', [SubmissionController::class, 'restore'])->name('submissions.restore');
+Route::post('/submissions/trash/{id}', [SubmissionController::class, 'trash'])->name('submissions.trash');

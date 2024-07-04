@@ -23,6 +23,26 @@ export function modals() {
         $('#generic-delete-modal-form').attr('action', $(this).attr('route'));
     });
 
+    $('#restore-button').on("click", function () {
+        $('#generic-delete-modal').removeClass('hidden').addClass('flex');
+        $('#generic-delete-modal-popup').removeClass('modal-close').addClass('modal-popup');
+        $('#curtain').addClass('curtain-expanded').removeClass('curtain-closed');
+        $('#heading').html("Are you sure?");
+        $('#message').html("Are you sure you want to restore this item?");
+        $('#generic-delete-modal-form-submit').val("Restore");
+        $('#generic-delete-modal-form').attr('action', $(this).attr('route'));
+    });
+
+    $('#trash-button').on("click", function () {
+        $('#generic-delete-modal').removeClass('hidden').addClass('flex');
+        $('#generic-delete-modal-popup').removeClass('modal-close').addClass('modal-popup');
+        $('#curtain').addClass('curtain-expanded').removeClass('curtain-closed');
+        $('#heading').html("Warning. Are you sure?");
+        $('#message').html("Are you sure you want to permanently delete this item? This action cannot be undone.");
+        $('#generic-delete-modal-form-submit').val("Trash");
+        $('#generic-delete-modal-form').attr('action', $(this).attr('route'));
+    });
+
     // tooltip trigger
     $('.tooltip-trigger').hover(function () {
         let id = $(this).attr('tooltip-id');

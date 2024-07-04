@@ -10,3 +10,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::resource('representatives', RepresentativeController::class)->except(['show']);
+Route::post('representatives/restore/{id}', [RepresentativeController::class, 'restore'])->name('representatives.restore');
+Route::post('representatives/trash/{id}', [RepresentativeController::class, 'trash'])->name('representatives.trash');

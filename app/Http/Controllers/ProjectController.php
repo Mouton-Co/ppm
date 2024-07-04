@@ -16,6 +16,15 @@ use Illuminate\Support\Facades\Mail;
 class ProjectController extends Controller
 {
     /**
+     * ProjectController constructor.
+     */
+    public function __construct()
+    {
+        $this->model = Project::class;
+        $this->route = 'projects';
+    }
+
+    /**
      * Display a listing of the resource.
      */
     public function index(Request $request)

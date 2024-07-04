@@ -6,11 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Http\Helpers\StringHelper;
 use App\Mail\ProjectUpdate;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Mail;
 
 class RecipientGroup extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -68,6 +69,8 @@ class RecipientGroup extends Model
         'create' => 'Create new',
         'edit' => 'Edit',
         'delete' => 'Delete',
+        'restore' => 'Restore',
+        'trash' => 'Trash',
     ];
 
     /**

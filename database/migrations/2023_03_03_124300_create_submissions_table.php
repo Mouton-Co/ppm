@@ -21,7 +21,9 @@ return new class extends Migration
             $table->text('notes')->nullable();
             $table->boolean('submitted')->default(0);
             $table->foreignId('user_id');
+            $table->foreignId('project_id')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

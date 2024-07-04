@@ -9,6 +9,15 @@
     <div class="mb-2 flex items-center justify-between">
         <h2 class="text-lg text-white">{{ $heading ?? 'Items' }}</h2>
         <div class="flex cursor-pointer gap-2">
+            <div class="flex items-center gap-2">
+                <input
+                    class="rounded"
+                    name="archived-checkbox"
+                    type="checkbox"
+                    @if (request()->has('archived') && request()->get('archived') == 'true') checked @endif
+                >
+                <span class="text-sm text-gray-400">{{ __('Show archived') }}</span>
+            </div>
             <button
                 class="h-7 rounded border border-sky-600 px-2 py-1 text-sm text-sky-600 shadow hover:border-sky-700 hover:bg-sky-700 hover:text-white"
                 id="filter"
@@ -55,6 +64,9 @@
             @endforeach
         @endif
 
+        {{-- show archived --}}
+        <input type="hidden" name="archived" value="{{ request()->has('archived') && request()->get('archived') == 'true' }}">
+        
         {{-- display query filters inside search bar --}}
         @foreach (request()->query() as $key => $value)
             @if (in_array($key, array_keys($structure)))

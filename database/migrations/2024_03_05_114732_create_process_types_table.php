@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('process_type')->nullable();
             $table->string('required_files')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

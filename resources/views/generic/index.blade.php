@@ -9,6 +9,15 @@
     <div class="mb-2 flex items-center justify-between">
         <h2 class="text-lg text-white">{{ $heading ?? 'Items' }}</h2>
         <div class="flex cursor-pointer gap-2">
+            <div class="flex items-center gap-2">
+                <input
+                    class="rounded"
+                    name="archived-checkbox"
+                    type="checkbox"
+                    @if (request()->has('archived') && request()->get('archived') == 'true') checked @endif
+                >
+                <span class="text-sm text-gray-400">{{ __('Show archived') }}</span>
+            </div>
             <button
                 class="h-7 rounded border border-sky-600 px-2 py-1 text-sm text-sky-600 shadow hover:border-sky-700 hover:bg-sky-700 hover:text-white"
                 id="filter"
@@ -35,7 +44,7 @@
 
         {{-- query filter --}}
         <input
-            class="h-full w-full border-0 bg-transparent p-0 text-sm text-white focus:ring-0 submit-on-enter"
+            class="submit-on-enter h-full w-full border-0 bg-transparent p-0 text-sm text-white focus:ring-0"
             name="query"
             type="text"
             value="{{ request()->query('query') ?? '' }}"
@@ -54,6 +63,9 @@
                 @endif
             @endforeach
         @endif
+
+        {{-- show archived --}}
+        <input type="hidden" name="archived" value="{{ request()->has('archived') && request()->get('archived') == 'true' }}">
 
         {{-- display query filters inside search bar --}}
         @foreach (request()->query() as $key => $value)
@@ -295,7 +307,7 @@
                 @foreach ($data as $datum)
                     <tr class="border-b border-gray-700 bg-gray-800">
                         @foreach (auth()->user()->table_configs['tables'][$table]['show'] as $key)
-                            <td class="text-nowrap px-6 py-2 max-w-xs truncate">
+                            <td class="text-nowrap max-w-xs truncate px-6 py-2">
                                 @if (!empty($structure[$key]['component']))
                                     @include('components.table.' . $structure[$key]['component'], [
                                         'datum' => $datum,
@@ -314,35 +326,60 @@
                         @endforeach
                         <td class="text-nowrap px-6 py-2">
                             <div class="flex items-center justify-end gap-3">
-                                @if (!empty($model::$actions['show']))
-                                    <a
-                                        class="cursor-pointer text-sky-600 hover:text-sky-700"
-                                        href="{{ route("$route.show", $datum->id) }}"
-                                    >
-                                        {{ $model::$actions['show'] }}
-                                    </a>
-                                @endif
-                                @if (!empty($model::$actions['edit']))
-                                    <a
-                                        class="cursor-pointer text-sky-600 hover:text-sky-700"
-                                        href="{{ route("$route.edit", $datum->id) }}"
-                                    >
-                                        {{ $model::$actions['edit'] }}
-                                    </a>
-                                @endif
-                                @if (!empty($model::$actions['delete']))
-                                    <span
-                                        class="cursor-pointer text-red-500 hover:text-red-700"
-                                        id="delete-button-{{ $datum->id }}"
-                                    >
-                                        {{ $model::$actions['delete'] }}
-                                    </span>
-                                    @include('components.delete-modal', [
-                                        'model' => $datum,
-                                        'route' => $route,
-                                        'method' => 'DELETE',
-                                        'message' => 'Are you sure you want to delete this item?',
-                                    ])
+                                @if (request()->has('archived') && request()->get('archived') == 'true')
+                                    {{-- archived records --}}
+                                    @if (! empty($model::$actions['restore']))
+                                        <span
+                                            class="cursor-pointer text-sky-600 hover:text-sky-700"
+                                            id="restore-button"
+                                            item-id="{{ $datum->id }}"
+                                            route="{{ route("$route.restore", $datum->id) }}"
+                                        >
+                                            {{ $model::$actions['restore'] }}
+                                        </span>
+                                    @endif
+                                    @if (! empty($model::$actions['trash']))
+                                        <span
+                                            class="cursor-pointer text-red-500 hover:text-red-700"
+                                            id="trash-button"
+                                            item-id="{{ $datum->id }}"
+                                            route="{{ route("$route.trash", $datum->id) }}"
+                                        >
+                                            {{ $model::$actions['trash'] }}
+                                        </span>
+                                    @endif
+                                @else
+                                    {{-- current records --}}
+                                    @if (!empty($model::$actions['show']))
+                                        <a
+                                            class="cursor-pointer text-sky-600 hover:text-sky-700"
+                                            href="{{ route("$route.show", $datum->id) }}"
+                                        >
+                                            {{ $model::$actions['show'] }}
+                                        </a>
+                                    @endif
+                                    @if (!empty($model::$actions['edit']))
+                                        <a
+                                            class="cursor-pointer text-sky-600 hover:text-sky-700"
+                                            href="{{ route("$route.edit", $datum->id) }}"
+                                        >
+                                            {{ $model::$actions['edit'] }}
+                                        </a>
+                                    @endif
+                                    @if (!empty($model::$actions['delete']))
+                                        <span
+                                            class="cursor-pointer text-red-500 hover:text-red-700"
+                                            id="delete-button-{{ $datum->id }}"
+                                        >
+                                            {{ $model::$actions['delete'] }}
+                                        </span>
+                                        @include('components.delete-modal', [
+                                            'model' => $datum,
+                                            'route' => $route,
+                                            'method' => 'DELETE',
+                                            'message' => 'Are you sure you want to delete this item?',
+                                        ])
+                                    @endif
                                 @endif
                             </div>
                         </td>
@@ -351,6 +388,8 @@
             </tbody>
         </table>
     </div>
+
+    @include('components.generic-delete-modal')
 
     {{-- pagination --}}
     {{ $data->appends(request()->query())->links() }}
