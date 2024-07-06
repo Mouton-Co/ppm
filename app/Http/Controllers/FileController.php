@@ -20,12 +20,12 @@ class FileController extends Controller
                 $fileType = $split[count($split) - 1];
                 array_pop($split);
                 $split = implode('.', $split);
-                $fileName = explode('files/'.$part->submission->submission_code.'/', $split)[1];
+                $fileName = explode('files/temp/'.$part->submission->submission_code.'/', $split)[1];
 
                 $file = new File();
                 $file->name = $fileName;
                 $file->file_type = $fileType;
-                $file->location = $fileLocation;
+                $file->location = env('APP_ENV') . '/' .  str_replace('/temp', '', $fileLocation);
                 $file->size = $this->formatSizeUnits(Storage::size($fileLocation));
                 $file->part_id = $part->id;
                 $file->save();
@@ -62,17 +62,11 @@ class FileController extends Controller
     {
         $file = File::find($id);
 
-        return response()->download(storage_path().'/app/'.$file->location);
-    }
+        if (empty($file)) {
+            return redirect()->back()->with('error', 'File not found');
+        }
 
-    /**
-     * Opens the file in the browser
-     */
-    public function open($id)
-    {
-        $file = File::find($id);
-
-        return response()->file(storage_path().'/app/'.$file->location);
+        return Storage::disk('s3')->download($file->location);
     }
 
     /**
@@ -80,6 +74,6 @@ class FileController extends Controller
      */
     public function downloadZip($id)
     {
-        return response()->download(storage_path()."/app/files/$id/$id.zip");
+        return Storage::disk('s3')->download(env('APP_ENV') . "/files/$id/$id.zip");
     }
 }

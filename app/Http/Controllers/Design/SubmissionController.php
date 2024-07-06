@@ -231,7 +231,7 @@ class SubmissionController extends Controller
         }
 
         // delete files for submission
-        Storage::disk('local')->deleteDirectory('files/'.$datum->submission_code);
+        Storage::disk('s3')->deleteDirectory(env('APP_ENV').'/files/'.$datum->submission_code);
 
         // delete parts and files
         foreach ($datum->parts()->withTrashed()->get() as $part) {

@@ -194,13 +194,13 @@ class Submission extends Model
     }
 
     /**
-     * Gets the permanent excel sheet for the submission
+     * Gets the permanent excel sheet for the submission.
      *
      * @return $excelSheet The excel sheet for the submission
      */
     public function getExcelSheetAttribute()
     {
-        $files = Storage::disk('local')->files('files/'.$this->submission_code);
+        $files = Storage::disk('local')->files('files/temp/'.$this->submission_code);
 
         foreach ($files as $fileName) {
             if (str_contains(strtolower($fileName), '.xlsx')) {
@@ -219,6 +219,6 @@ class Submission extends Model
      */
     public function getFilesAttribute()
     {
-        return Storage::disk('local')->files('files/'.$this->submission_code);
+        return Storage::disk('local')->files('files/temp/'.$this->submission_code);
     }
 }
