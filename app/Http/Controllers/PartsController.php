@@ -258,7 +258,8 @@ class PartsController extends Controller
 
             // get latest PO number and increment by 1
             $poPrefix = str_pad($parts[0]->submission->machine_number, 2, '0', STR_PAD_LEFT).
-                '-'.$parts[0]->submission->current_unit_number.'-';
+                '-'.str_pad($parts[0]->submission->current_unit_number, 2, '0', STR_PAD_LEFT).'-';
+
             $latestPo = Part::where('po_number', 'like', $poPrefix.'%')->orderBy('po_number', 'desc')->first();
             $number = ! empty($latestPo) ? (int) explode('-', $latestPo->po_number)[2] + 1 : 1;
             $poNumber = $poPrefix.str_pad($number, 3, '0', STR_PAD_LEFT);
