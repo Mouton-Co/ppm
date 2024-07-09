@@ -444,6 +444,7 @@ class Part extends Model
                 'qc' => 'QC',
                 'assembly' => 'Assembly',
             ],
+            'component' => 'warehouse.status',
         ],
         'submission_assembly_name' => [
             'label' => 'Assembly Name',

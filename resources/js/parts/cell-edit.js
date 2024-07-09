@@ -45,7 +45,11 @@ export function cellEdit() {
                     value: value
                 },
                 success: function (data) {
+                    // set status
                     $("td[item-id='"+data.part_id+"'][item-key='status']").html(data['status']);
+                    
+                    // set qc_issue_logged_at
+                    $("td[item-id='"+data.part_id+"'][item-key='qc_issue_at']").html(data['qc_issue_logged_at']);
 
                     Object.entries(data['checkboxes']).forEach(checkbox => {
                         const [field, checkboxValues] = checkbox;

@@ -196,6 +196,7 @@ class PartsController extends Controller
             'status' => $field == 'qc_issue' && $part->$field ?
                 'QC Issue' :
                 Part::$statuses[$part->status],
+            'qc_issue_logged_at' => $part->qc_issue_at ? Carbon::parse($part->qc_issue_at)->format('Y-m-d H:i:s') : 'N/A',
             'checkboxes' => [
                 'raw_part_received' => [
                     'checked' => $part->raw_part_received,
