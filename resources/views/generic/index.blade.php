@@ -330,8 +330,7 @@
                                     {{-- archived records --}}
                                     @if (! empty($model::$actions['restore']))
                                         <span
-                                            class="cursor-pointer text-sky-600 hover:text-sky-700"
-                                            id="restore-button"
+                                            class="cursor-pointer text-sky-600 hover:text-sky-700 restore-button"
                                             item-id="{{ $datum->id }}"
                                             route="{{ route("$route.restore", $datum->id) }}"
                                         >
@@ -340,8 +339,7 @@
                                     @endif
                                     @if (! empty($model::$actions['trash']))
                                         <span
-                                            class="cursor-pointer text-red-500 hover:text-red-700"
-                                            id="trash-button"
+                                            class="cursor-pointer text-red-500 hover:text-red-700 trash-button"
                                             item-id="{{ $datum->id }}"
                                             route="{{ route("$route.trash", $datum->id) }}"
                                         >
