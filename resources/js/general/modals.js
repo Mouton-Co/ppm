@@ -23,7 +23,7 @@ export function modals() {
         $('#generic-delete-modal-form').attr('action', $(this).attr('route'));
     });
 
-    $('#restore-button').on("click", function () {
+    $('.restore-button').on("click", function () {
         $('#generic-delete-modal').removeClass('hidden').addClass('flex');
         $('#generic-delete-modal-popup').removeClass('modal-close').addClass('modal-popup');
         $('#curtain').addClass('curtain-expanded').removeClass('curtain-closed');
@@ -33,7 +33,7 @@ export function modals() {
         $('#generic-delete-modal-form').attr('action', $(this).attr('route'));
     });
 
-    $('#trash-button').on("click", function () {
+    $('.trash-button').on("click", function () {
         $('#generic-delete-modal').removeClass('hidden').addClass('flex');
         $('#generic-delete-modal-popup').removeClass('modal-close').addClass('modal-popup');
         $('#curtain').addClass('curtain-expanded').removeClass('curtain-closed');

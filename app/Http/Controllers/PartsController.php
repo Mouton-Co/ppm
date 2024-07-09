@@ -35,29 +35,31 @@ class PartsController extends Controller
 
         if (! empty($matrix) && ! empty($matrix['Item Number'])) {
             for ($i = 0; $i < count($matrix['Item Number']); $i++) {
-                $part = new Part();
-                $part->name = $matrix['File Name'][$i];
-                $part->quantity = $matrix['Quantity'][$i] * $quantity;
-                $part->material = $matrix['Material'][$i];
-                $part->material_thickness = $matrix['Material Thickness'][$i];
-                $part->finish = $matrix['Finish'][$i];
-                $part->used_in_weldment = $matrix['Used In Weldment'][$i];
-                $part->process_type = $matrix['Process Type'][$i];
-                $part->manufactured_or_purchased = $matrix['Manufactured or Purchased'][$i];
-                $part->notes = $matrix['Notes'][$i];
-                $part->submission_id = $submission->id;
-
-                if (! is_numeric($part->quantity)) {
-                    $part->quantity = 0;
+                if (! empty($matrix['File Name'][$i])) {
+                    $part = new Part();
+                    $part->name = $matrix['File Name'][$i];
+                    $part->quantity = $matrix['Quantity'][$i] * $quantity;
+                    $part->material = $matrix['Material'][$i];
+                    $part->material_thickness = $matrix['Material Thickness'][$i];
+                    $part->finish = $matrix['Finish'][$i];
+                    $part->used_in_weldment = $matrix['Used In Weldment'][$i];
+                    $part->process_type = $matrix['Process Type'][$i];
+                    $part->manufactured_or_purchased = $matrix['Manufactured or Purchased'][$i];
+                    $part->notes = $matrix['Notes'][$i];
+                    $part->submission_id = $submission->id;
+    
+                    if (! is_numeric($part->quantity)) {
+                        $part->quantity = 0;
+                    }
+                    $part->quantity_in_stock = 0;
+                    $part->quantity_ordered = $part->quantity;
+                    $part->qty_received = 0;
+    
+                    $part->save();
+    
+                    $fileController = new FileController();
+                    $fileController->storeFiles($part);
                 }
-                $part->quantity_in_stock = 0;
-                $part->quantity_ordered = $part->quantity;
-                $part->qty_received = 0;
-
-                $part->save();
-
-                $fileController = new FileController();
-                $fileController->storeFiles($part);
             }
         }
     }
