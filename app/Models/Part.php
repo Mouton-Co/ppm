@@ -117,6 +117,7 @@ class Part extends Model
             'type' => 'text',
             'sortable' => true,
             'filterable' => true,
+            'component' => 'procurement.name',
         ],
         'process_type' => [
             'label' => 'Process Type',
@@ -268,6 +269,7 @@ class Part extends Model
             'type' => 'text',
             'sortable' => true,
             'filterable' => true,
+            'component' => 'procurement.name',
         ],
         'treatment_1' => [
             'label' => 'Treatment 1',

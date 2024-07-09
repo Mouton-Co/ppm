@@ -76,4 +76,18 @@ class FileController extends Controller
     {
         return Storage::disk('s3')->download(env('APP_ENV') . "/files/$id/$id.zip");
     }
+
+    /**
+     * Opens the file in the browser
+     */
+    public function open($id)
+    {
+        $file = File::find($id);
+        
+        if (empty($file)) {
+            return redirect()->back()->with('error', 'File not found');
+        }
+
+        return Storage::disk('s3')->response($file->location);
+    }
 }
