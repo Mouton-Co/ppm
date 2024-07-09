@@ -63,7 +63,7 @@ class PurchaseOrder extends Mailable
 
         foreach ($this->order->parts()->get() as $part) {
             foreach ($part->files as $file) {
-                $attachments[] = Attachment::fromStorage($file->location)
+                $attachments[] = Attachment::fromStorageDisk('s3', $file->location)
                     ->as($file->name.'.'.$file->file_type)
                     ->withMime('application/'.$file->file_type);
             }

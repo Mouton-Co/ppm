@@ -25,7 +25,7 @@ class EmailController extends Controller
         }
 
         Mail::to($request->to)
-            ->cc($request->has('cc') ? explode(',', str_replace(' ', '', $request->cc)) : [])
+            ->cc(! empty($request->cc) ? explode(',', str_replace(' ', '', $request->cc)) : [])
             ->send(new PurchaseOrder($order, $request->subject, $request->body));
 
         $order->status = 'emailed';
