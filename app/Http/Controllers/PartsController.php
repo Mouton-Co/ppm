@@ -374,6 +374,7 @@ class PartsController extends Controller
                 $part->treatment_2_part_received_at = null;
                 $part->completed_part_received_at = null;
                 $part->qc_passed_at = null;
+                $part->qty_received = $part->quantity_ordered;
             } elseif ($request->get('mark_as') == 'treatment_1_part_received') {
                 if (! $part->raw_part_received) {
                     $part->raw_part_received = true;
