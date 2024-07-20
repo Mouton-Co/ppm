@@ -68,7 +68,7 @@ class Project extends Model
             'filterable' => true,
         ],
         'coc' => [
-            'label' => 'COC',
+            'label' => 'Ticket Nr',
             'type' => 'text',
             'sortable' => true,
             'filterable' => true,
