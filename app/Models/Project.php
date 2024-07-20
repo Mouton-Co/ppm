@@ -142,7 +142,7 @@ class Project extends Model
             'tooltip' => true,
         ],
         'logistics_comment' => [
-            'label' => 'Logistics Comment',
+            'label' => 'Notes',
             'type' => 'text',
             'sortable' => true,
             'filterable' => true,
