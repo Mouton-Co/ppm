@@ -19,7 +19,7 @@
 @endif
 
 <div class="flex gap-3 items-center">
-    <label class="label-dark" for="coc">{{ __('COC') }}</label>
+    <label class="label-dark" for="coc">{{ __('Ticket Nr') }}</label>
     <span class="text-slate-500 text-sm">{{ __("*Auto generation recommended") }}</span>
 </div>
 <div class="flex gap-3 items-center mb-5">
@@ -94,7 +94,7 @@ name="status" id="status" required>
     $project->commisioner_comment ?? old('commisioner_comment')
 }}</textarea>
 
-<label class="label-dark" for="logistics_comment">{{ __('Logistics Comment') }}</label>
+<label class="label-dark" for="logistics_comment">{{ __('Notes') }}</label>
 <textarea name="logistics_comment" cols="30" rows="6" class="field-dark mb-5" placeholder="Logistics comment...">{{
     $project->logistics_comment ?? old('logistics_comment')
 }}</textarea>
