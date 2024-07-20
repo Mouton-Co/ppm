@@ -159,7 +159,6 @@
                 <div
                     class="border-dark-field-border flex h-8 w-full items-center border-b bg-gray-700 px-6 py-2 text-xs uppercase text-gray-400">
                     <span class="w-1/2">{{ __('Field') }}</span>
-                    <span class="w-1/2">{{ __('Type') }}</span>
                 </div>
                 @foreach ($structure as $key => $field)
                     @if (!empty($field['filterable']) && $field['filterable'])
@@ -173,7 +172,6 @@
                             structure="{{ json_encode($structure) }}"
                         >
                             <span class="w-1/2">{{ $field['label'] }}</span>
-                            <span class="w-1/2">{{ $field['type'] }}</span>
                         </div>
                     @endif
                 @endforeach
