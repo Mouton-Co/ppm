@@ -8,12 +8,15 @@
         </a>
     </div>
     <nav class="flex flex-1 flex-col">
-        <ul role="list" class="flex flex-1 flex-col gap-y-7">
+        <ul class="flex flex-1 flex-col gap-y-7">
             <li>
-                <ul role="list" class="-mx-2 space-y-1">
+                <ul class="-mx-2 space-y-1">
                     <li>
                         <a class="nav-item-{{ request()->segment(1) == 'projects' ? 'active' : 'default' }}"
-                        href="{{ route('projects.index') }}">
+                        href="{{ route('projects.index', [
+                            'order_by' => 'coc',
+                            'order' => 'asc'
+                        ]) }}">
                             <x-icon.project class="h-6 w-6 shrink-0" />
                             {{ __('Projects') }}
                         </a>
