@@ -10,6 +10,7 @@ use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Storage;
 
 class PurchaseOrder extends Mailable
 {
@@ -60,14 +61,42 @@ class PurchaseOrder extends Mailable
     public function attachments(): array
     {
         $attachments = [];
+        $zipFile = new \PhpZip\ZipFile();
 
+        /**
+         * Add all files of this order to a zip
+         */
         foreach ($this->order->parts()->get() as $part) {
             foreach ($part->files as $file) {
-                $attachments[] = Attachment::fromStorageDisk('s3', $file->location)
-                    ->as($file->name.'.'.$file->file_type)
-                    ->withMime('application/'.$file->file_type);
+                /**
+                 * temporarily store file on local from s3
+                 */
+                Storage::put(
+                    "files/temp/{$file->name}.{$file->file_type}",
+                    Storage::disk('s3')->get($file->location)
+                );
+                
+                /**
+                 * Add file to zip
+                 */
+                $zipFile->addFile(storage_path("app/files/temp/{$file->name}.{$file->file_type}"), "{$file->name}.{$file->file_type}");
             }
         }
+
+        /**
+         * Store zip locally as a temp file
+         */
+        $zipFile
+            ->saveAsFile(storage_path("app/files/temp/{$this->order->po_number}.zip"))
+            ->close();
+
+        
+        /**
+         * Add the zip file as an attachment
+         */
+        $attachments[] = Attachment::fromPath(storage_path("app/files/temp/{$this->order->po_number}.zip"))
+            ->as($this->order->po_number.'.zip')
+            ->withMime('application/zip');
 
         return $attachments;
     }
