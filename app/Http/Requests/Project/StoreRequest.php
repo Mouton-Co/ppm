@@ -27,6 +27,7 @@ class StoreRequest extends FormRequest
             'commisioner_comment' => 'nullable|string',
             'logistics_comment' => 'nullable|string',
             'submission_id' => 'nullable|exists:submissions,id',
+            'costing' => 'required|string|in:APL,CoC',
         ];
     }
 }

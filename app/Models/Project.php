@@ -32,6 +32,7 @@ class Project extends Model
         'logistics_comment',
         'submission_id',
         'user_id',
+        'costing',
     ];
 
     /**
@@ -72,6 +73,17 @@ class Project extends Model
             'type' => 'text',
             'sortable' => true,
             'filterable' => true,
+        ],
+        'costing' => [
+            'label' => 'Costing',
+            'type' => 'dropdown',
+            'sortable' => true,
+            'filterable' => true,
+            'component' => 'editable.select',
+            'filterable_options' => [
+                "CoC" => "CoC",
+                "APL" => "APL",
+            ]
         ],
         'noticed_issue' => [
             'label' => 'Noticed Issue',
