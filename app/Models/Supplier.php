@@ -14,6 +14,7 @@ class Supplier extends Model
     protected $fillable = [
         'name',
         'average_lead_time',
+        'template',
     ];
 
     /*
@@ -33,6 +34,16 @@ class Supplier extends Model
             'type' => 'text',
             'sortable' => true,
             'filterable' => true,
+        ],
+        'template' => [
+            'label' => 'Template',
+            'type' => 'dropdown',
+            'sortable' => true,
+            'filterable' => true,
+            'filterable_options' => [
+                '1' => '1',
+                '2' => '2',
+            ],
         ],
         'average_lead_time' => [
             'label' => 'Average Lead Time',

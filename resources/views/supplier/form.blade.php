@@ -12,6 +12,17 @@
     @endforeach
 @endif
 
+<label class="label-dark" for="name">{{ __('Template') }}</label>
+<select name="template" id="template" class="field-dark mb-5">
+    <option value="1" selected>{{ __("1") }}</option>
+    <option value="2">{{ __("2") }}</option>
+</select>
+@if (!empty($errors->get('template')))
+    @foreach ($errors->get('template') as $error)
+        @include('components.error-message', ['error' => $error, 'hidden' => 'false', 'class' => 'mb-5'])
+    @endforeach
+@endif
+
 <label class="label-dark" for="average_lead_time">{{ __('Average lead time') }}</label>
 <input type="text" id="average_lead_time" name="average_lead_time"
     class="{{ !empty($errors->get('average_lead_time')) ? 'field-error' : 'field-dark' }} mb-5"

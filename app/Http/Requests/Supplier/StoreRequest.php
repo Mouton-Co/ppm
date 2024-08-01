@@ -16,6 +16,7 @@ class StoreRequest extends FormRequest
         return [
             'name' => 'required|string',
             'average_lead_time' => 'string|nullable',
+            'template' => 'integer|in:1,2',
         ];
     }
 }

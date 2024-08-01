@@ -17,6 +17,7 @@ class UpdateRequest extends FormRequest
             'supplier_id' => 'required|string|exists:suppliers,id',
             'name' => 'required|string',
             'average_lead_time' => 'string|nullable',
+            'template' => 'integer|in:1,2',
         ];
     }
 }

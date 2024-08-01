@@ -53,7 +53,37 @@ class EmailController extends Controller
         if (! $order) {
             return redirect()->back()->with('error', 'Order not found');
         }
+        
+        if (empty($order->supplier->template) || $order->supplier->template == 1) {
+            $body = $this->template1($order);
+        } else {
+            $body = $this->template2($order);
+        }
 
+        $emails = array_merge(
+            $order->supplier->representatives()->pluck('email')->toArray(),
+            ['orders@proproject.co.za', 'hanna@proproject.co.za']
+        );
+
+        $to = $emails[0];
+        $cc = implode(', ', array_slice($emails, 1));
+
+        return view('emails.purchase-order', [
+            'order' => $order,
+            'body' => $body,
+            'to' => $to,
+            'cc' => $cc,
+        ]);
+    }
+
+    /**
+     * Template one for purchase order email.
+     *
+     * @param  Order $order
+     * @return string
+     */
+    protected function template1(Order $order): string
+    {
         $body = '<p>Good Day,</p>';
         $body .= '<p>We would like to order the below items, using PO Number: '.$order->po_number.'</p>';
         $body .= "<table style='border-collapse: collapse; width: 99.9915%;' border='1'><colgroup><col style='width: 25.0153%;'><col style='width: 25.0153%;'><col style='width: 25.0153%;'><col style='width: 25.0153%;'></colgroup>";
@@ -76,19 +106,35 @@ class EmailController extends Controller
         $body .= '<p><strong>PPM ERP System</strong></p>';
         $body .= '<pre>Pro Project Machinery (Pty) Ltd.</pre>';
 
-        $emails = array_merge(
-            $order->supplier->representatives()->pluck('email')->toArray(),
-            ['orders@proproject.co.za', 'hanna@proproject.co.za']
-        );
+        return $body;
+    }
 
-        $to = $emails[0];
-        $cc = implode(', ', array_slice($emails, 1));
+    /**
+     * Template two for purchase order email.
+     *
+     * @param  Order $order
+     * @return string $body
+     */
+    protected function template2(Order $order): string
+    {
+        $body = '<p>Good Day,</p>';
+        $body .= '<p>We would like to order the below items, using PO Number: '.$order->po_number.'</p>';
+        $body .= "<table style='border-collapse: collapse; width: 99.9915%;' border='1'><colgroup><col style='width: 25.0153%;'><col style='width: 25.0153%;'></colgroup>";
+        $body .= '<tbody><tr>';
+        $body .= '<td><strong>Part Name</strong></td>';
+        $body .= '<td><strong>Qty</strong></td></tr>';
+        foreach ($order->parts()->get() as $part) {
+            $body .= '<tr>';
+            $body .= "<td>{$part->name}</td>";
+            $body .= "<td>{$part->quantity}</td>";
+            $body .= '</tr>';
+        }
+        $body .= '</tbody></table>';
+        $body .= '<p>For any queries, please email hanna@proproject.co.za</p>';
+        $body .= '<p>Kind regards,</p>';
+        $body .= '<p><strong>PPM ERP System</strong></p>';
+        $body .= '<pre>Pro Project Machinery (Pty) Ltd.</pre>';
 
-        return view('emails.purchase-order', [
-            'order' => $order,
-            'body' => $body,
-            'to' => $to,
-            'cc' => $cc,
-        ]);
+        return $body;
     }
 }
