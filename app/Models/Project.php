@@ -278,6 +278,14 @@ class Project extends Model
      */
     public static function getCustomStatusAttribute(): array
     {
-        return ProjectStatus::orderBy('name')->pluck('name')->toArray();
+        $statuses = ProjectStatus::orderBy('name')->pluck('name')->toArray();
+        array_unshift($statuses, 'All except closed');
+
+        $options = [];
+        foreach ($statuses as $status) {
+            $options[$status] = $status;
+        }
+        
+        return $options;
     }
 }

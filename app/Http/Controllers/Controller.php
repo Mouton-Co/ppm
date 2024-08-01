@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Project;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
@@ -159,6 +160,15 @@ class Controller extends BaseController
         // filter params
         foreach ($this->structure as $key => $value) {
             if ($this->request->has($key)) {
+                
+                /**
+                 * if model is Project and field is status and value is 'all except closed'
+                 * continue and do manually in the controller
+                 */
+                if ($this->model == Project::class && $key == 'status' && $this->request->get('status') == 'All except closed') {
+                    continue;
+                }
+
                 if (! empty($this->structure[$key]['relationship'])) {
                     $query->whereRelation(
                         explode('.', $this->structure[$key]['relationship'])[0],

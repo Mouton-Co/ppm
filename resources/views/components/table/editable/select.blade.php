@@ -36,7 +36,7 @@
 >
     <option
         value=""
-        disabledw
+        disabled
         selected
     >
         {{ __("--Please select--") }}
@@ -50,6 +50,9 @@
                 {{ $option->{explode('.', $structure[$key]['relationship'])[1]} }}
             </option>
         @else
+            @if ($option == 'All except closed')
+                @continue
+            @endif
             <option
                 value="{{ $option }}"
                 @if ($option === $datum->$key) selected @endif
