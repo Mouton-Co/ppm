@@ -15,7 +15,8 @@
                         <a class="nav-item-{{ request()->segment(1) == 'projects' ? 'active' : 'default' }}"
                         href="{{ route('projects.index', [
                             'order_by' => 'coc',
-                            'order' => 'asc'
+                            'order' => 'asc',
+                            'status' => 'All except closed',
                         ]) }}">
                             <x-icon.project class="h-6 w-6 shrink-0" />
                             {{ __('Projects') }}

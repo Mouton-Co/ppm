@@ -30,7 +30,14 @@ class ProjectController extends Controller
     public function index(Request $request)
     {
         $this->checkTableConfigurations('projects', Project::class);
-        $projects = $this->filter(Project::class, Project::query(), $request)->paginate(15);
+        
+        if ($request->has('status') && $request->status === 'All except closed') {
+            $projects = $this->filter(Project::class, Project::query(), $request)
+                ->where('status', '!=', 'Closed')
+                ->paginate(15);
+        } else {
+            $projects = $this->filter(Project::class, Project::query(), $request)->paginate(15);
+        }
 
         if ($projects->currentPage() > 1 && $projects->lastPage() < $projects->currentPage()) {
             return redirect()->route('projects.index', array_merge(['page' => $projects->lastPage()], $request->except(['page'])));
