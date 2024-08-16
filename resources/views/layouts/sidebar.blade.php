@@ -55,7 +55,7 @@
             @if (auth()->user()->role->role == 'Admin')
                 <li>
                     <div class="text-sm font-semibold leading-6 text-gray-400">{{ __("Administration") }}</div>
-                    <ul role="list" class="-mx-2 mt-2 space-y-1">
+                    <ul class="-mx-2 mt-2 space-y-1">
                         <li>
                             <a class="nav-item-{{ request()->segment(1) == 'users' ? 'active' : 'default' }}"
                             href="{{ route('user.index') }}">
@@ -69,6 +69,13 @@
                                     2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
                                 </svg>
                                 <span class="truncate">{{ __('Users') }}</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="nav-item-{{ request()->segment(1) == 'roles' ? 'active' : 'default' }}"
+                            href="{{ route('roles.index') }}">
+                                <x-icon.role class="h-6 w-6 shrink-0" />
+                                <span class="truncate">{{ __('Roles') }}</span>
                             </a>
                         </li>
                         <li>
