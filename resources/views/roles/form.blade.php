@@ -66,6 +66,8 @@
                 <th class="px-6 py-2">{{ __('Read') }}</th>
                 <th class="px-6 py-2">{{ __('Update') }}</th>
                 <th class="px-6 py-2">{{ __('Delete') }}</th>
+                <th class="px-6 py-2">{{ __('Restore') }}</th>
+                <th class="px-6 py-2">{{ __('Force Delete') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -121,6 +123,30 @@
                                 name="delete_{{ $permissionTableKey }}"
                                 type="checkbox"
                                 @if (! empty($role) && $role->hasPermission("delete_{$permissionTableKey}"))
+                                    checked
+                                @endif
+                            >
+                        @endif
+                    </td>
+                    <td class="text-nowrap px-6 pl-8 py-2">
+                        @if (! in_array("restore_{$permissionTableKey}", $permissionTableExcludes))
+                            <input
+                                id="restore-{{ $permissionTableKey }}"
+                                name="restore_{{ $permissionTableKey }}"
+                                type="checkbox"
+                                @if (! empty($role) && $role->hasPermission("restore_{$permissionTableKey}"))
+                                    checked
+                                @endif
+                            >
+                        @endif
+                    </td>
+                    <td class="text-nowrap px-6 pl-8 py-2">
+                        @if (! in_array("force_delete_{$permissionTableKey}", $permissionTableExcludes))
+                            <input
+                                id="force_delete-{{ $permissionTableKey }}"
+                                name="force_delete_{{ $permissionTableKey }}"
+                                type="checkbox"
+                                @if (! empty($role) && $role->hasPermission("force_delete_{$permissionTableKey}"))
                                     checked
                                 @endif
                             >

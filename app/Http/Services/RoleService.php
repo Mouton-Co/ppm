@@ -45,6 +45,8 @@ class RoleService
         'read',
         'update',
         'delete',
+        'restore',
+        'force_delete',
     ];
 
     /**
