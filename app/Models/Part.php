@@ -56,6 +56,7 @@ class Part extends Model
         'treatment_1_supplier',
         'treatment_2_supplier',
         'qty_received',
+        'stage',
     ];
 
     public static $statuses = [
@@ -148,6 +149,14 @@ class Part extends Model
             'filterable' => true,
             'component' => 'editable.number',
             'min' => 0,
+        ],
+        'stage' => [
+            'label' => 'Stage',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+            'component' => 'editable.number',
+            'min' => 1,
         ],
         'material' => [
             'label' => 'Material',
