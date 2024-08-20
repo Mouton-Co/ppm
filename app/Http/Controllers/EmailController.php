@@ -86,18 +86,20 @@ class EmailController extends Controller
     {
         $body = '<p>Good Day,</p>';
         $body .= '<p>We would like to order the below items, using PO Number: '.$order->po_number.'</p>';
-        $body .= "<table style='border-collapse: collapse; width: 99.9915%;' border='1'><colgroup><col style='width: 25.0153%;'><col style='width: 25.0153%;'><col style='width: 25.0153%;'><col style='width: 25.0153%;'></colgroup>";
+        $body .= "<table style='border-collapse: collapse; width: 99.9915%;' border='1'>";
         $body .= '<tbody><tr>';
         $body .= '<td><strong>Part Name</strong></td>';
         $body .= '<td><strong>Qty</strong></td>';
         $body .= '<td><strong>Material</strong></td>';
-        $body .= '<td><strong>Material Thickness</strong></td></tr>';
+        $body .= '<td><strong>Material Thickness</strong></td>';
+        $body .= '<td><strong>Stage</strong></td></tr>';
         foreach ($order->parts()->get() as $part) {
             $body .= '<tr>';
             $body .= "<td>{$part->name}</td>";
             $body .= "<td>{$part->quantity}</td>";
             $body .= "<td>{$part->material}</td>";
             $body .= "<td>{$part->material_thickness}</td>";
+            $body .= "<td>{$part->stage}</td>";
             $body .= '</tr>';
         }
         $body .= '</tbody></table>';
@@ -119,14 +121,16 @@ class EmailController extends Controller
     {
         $body = '<p>Good Day,</p>';
         $body .= '<p>We would like to order the below items, using PO Number: '.$order->po_number.'</p>';
-        $body .= "<table style='border-collapse: collapse; width: 99.9915%;' border='1'><colgroup><col style='width: 25.0153%;'><col style='width: 25.0153%;'></colgroup>";
+        $body .= "<table style='border-collapse: collapse; width: 99.9915%;' border='1'><colgroup><col style='width: 25.0153%;'><col style='width: 25.0153%;'><col style='width: 25.0153%;'></colgroup>";
         $body .= '<tbody><tr>';
         $body .= '<td><strong>Part Name</strong></td>';
-        $body .= '<td><strong>Qty</strong></td></tr>';
+        $body .= '<td><strong>Qty</strong></td>';
+        $body .= '<td><strong>Stage</strong></td></tr>';
         foreach ($order->parts()->get() as $part) {
             $body .= '<tr>';
             $body .= "<td>{$part->name}</td>";
             $body .= "<td>{$part->quantity}</td>";
+            $body .= "<td>{$part->stage}</td>";
             $body .= '</tr>';
         }
         $body .= '</tbody></table>';
