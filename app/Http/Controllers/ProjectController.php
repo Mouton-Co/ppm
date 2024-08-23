@@ -29,6 +29,10 @@ class ProjectController extends Controller
      */
     public function index(Request $request)
     {
+        if ($request->user()->cannot('read', Project::class)) {
+            abort(403);
+        }
+
         $this->checkTableConfigurations('projects', Project::class);
         
         if ($request->has('status') && $request->status === 'All except closed') {
@@ -61,8 +65,12 @@ class ProjectController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
+        if ($request->user()->cannot('create', Project::class)) {
+            abort(403);
+        }
+
         $statuses = ProjectStatus::orderBy('name')->get();
 
         $responsibles = array_merge(ProjectResponsible::pluck('name')->toArray(), User::pluck('name')->toArray());
@@ -79,6 +87,10 @@ class ProjectController extends Controller
      */
     public function store(StoreRequest $request)
     {
+        if ($request->user()->cannot('create', Project::class)) {
+            abort(403);
+        }
+
         Project::create(
             array_merge($request->validated(), [
                 'user_id' => auth()->user()->id,
@@ -91,8 +103,12 @@ class ProjectController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Project $project)
+    public function edit(Request $request, Project $project)
     {
+        if ($request->user()->cannot('update', Project::class)) {
+            abort(403);
+        }
+
         $statuses = ProjectStatus::orderBy('name')->get();
         $responsibles = array_merge(ProjectResponsible::pluck('name')->toArray(), User::pluck('name')->toArray());
         sort($responsibles);
@@ -109,6 +125,10 @@ class ProjectController extends Controller
      */
     public function update(StoreRequest $request, Project $project)
     {
+        if ($request->user()->cannot('update', Project::class)) {
+            abort(403);
+        }
+
         $project->update($request->validated());
 
         return redirect()->back()->with('success', 'Project updated successfully');
@@ -117,8 +137,12 @@ class ProjectController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Project $project)
+    public function destroy(Request $request, Project $project)
     {
+        if ($request->user()->cannot('delete', Project::class)) {
+            abort(403);
+        }
+
         $project->delete();
 
         return redirect()->back()->with('success', 'Project deleted successfully');

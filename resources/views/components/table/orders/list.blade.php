@@ -60,16 +60,14 @@
                         <x-order.status :status="$order->status ?? 'N/A'" />
                         @if (request()->has('archived') && request()->archived == "true")
                             <x-icon.refresh
-                                id="restore-button"
                                 route="{{ route('orders.restore', $order->id) }}"
                                 item-id="{{ $order->id }}"
-                                class="w-5 aspect-square text-sky-500 hover:text-sky-700 delete-po"
+                                class="w-5 aspect-square text-sky-500 hover:text-sky-700 delete-po restore-button"
                             />
                             <x-icon.trash
-                                id="trash-button"
                                 route="{{ route('orders.trash', $order->id) }}"
                                 item-id="{{ $order->id }}"
-                                class="w-5 aspect-square text-red-400 hover:text-red-600 delete-po"
+                                class="w-5 aspect-square text-red-400 hover:text-red-600 delete-po trash-button"
                             />
                         @else
                             <x-icon.trash

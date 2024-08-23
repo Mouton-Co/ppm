@@ -26,6 +26,10 @@ class RecipientGroupController extends Controller
      */
     public function index(Request $request)
     {
+        if ($request->user()->cannot('read', RecipientGroup::class)) {
+            abort(403);
+        }
+
         $this->checkTableConfigurations('recipient-groups', RecipientGroup::class);
         $recipientGroups = $this->filter(RecipientGroup::class, RecipientGroup::query(), $request)->paginate(15);
 
@@ -46,8 +50,12 @@ class RecipientGroupController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
+        if ($request->user()->cannot('create', RecipientGroup::class)) {
+            abort(403);
+        }
+
         $departments = ProjectResponsible::orderBy('name')->get();
         $statuses = ProjectStatus::orderBy('name')->get();
         $machineNumbers = array_unique(Project::select('machine_nr')->orderBy('machine_nr')->pluck('machine_nr')->toArray());
@@ -64,6 +72,10 @@ class RecipientGroupController extends Controller
      */
     public function store(StoreRequest $request)
     {
+        if ($request->user()->cannot('create', RecipientGroup::class)) {
+            abort(403);
+        }
+
         // check to see if field and value combination already exist
         $recipientGroup = RecipientGroup::where('field', $request->field)
             ->where('value', $request->value)
@@ -81,8 +93,12 @@ class RecipientGroupController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(RecipientGroup $recipientGroup)
+    public function edit(Request $request, RecipientGroup $recipientGroup)
     {
+        if ($request->user()->cannot('update', $recipientGroup)) {
+            abort(403);
+        }
+
         $departments = ProjectResponsible::orderBy('name')->get();
         $statuses = ProjectStatus::orderBy('name')->get();
         $machineNumbers = array_unique(Project::select('machine_nr')->orderBy('machine_nr')->pluck('machine_nr')->toArray());
@@ -100,6 +116,10 @@ class RecipientGroupController extends Controller
      */
     public function update(UpdateRequest $request, RecipientGroup $recipientGroup)
     {
+        if ($request->user()->cannot('update', $recipientGroup)) {
+            abort(403);
+        }
+
         // check to see if field and value combination already exist excluding the current record
         $existingGroup = RecipientGroup::where('field', $request->field)
             ->where('value', $request->value)
@@ -117,8 +137,12 @@ class RecipientGroupController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(RecipientGroup $recipientGroup)
+    public function destroy(Request $request, RecipientGroup $recipientGroup)
     {
+        if ($request->user()->cannot('delete', $recipientGroup)) {
+            abort(403);
+        }
+
         $recipientGroup->delete();
 
         return redirect()->route('recipient-groups.index')->with('success', 'Email trigger deleted');

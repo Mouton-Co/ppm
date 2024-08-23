@@ -24,6 +24,10 @@ class AutofillSupplierController extends Controller
      */
     public function index(Request $request)
     {
+        if ($request->user()->cannot('read', AutofillSupplier::class)) {
+            abort(403);
+        }
+
         $this->checkTableConfigurations('autofill-suppliers', AutofillSupplier::class);
         $autofillSuppliers = $this->filter(AutofillSupplier::class, AutofillSupplier::query(), $request)->paginate(15);
 
@@ -44,8 +48,12 @@ class AutofillSupplierController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
+        if ($request->user()->cannot('create', AutofillSupplier::class)) {
+            abort(403);
+        }
+
         return view('autofill-suppliers.create')->with([
             'suppliers' => Supplier::orderBy('name')->get(),
         ]);
@@ -56,6 +64,10 @@ class AutofillSupplierController extends Controller
      */
     public function store(StoreRequest $request)
     {
+        if ($request->user()->cannot('create', AutofillSupplier::class)) {
+            abort(403);
+        }
+
         $created = AutofillSupplier::create($request->validated());
 
         if (! $created) {
@@ -68,8 +80,12 @@ class AutofillSupplierController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(AutofillSupplier $autofillSupplier)
+    public function edit(Request $request, AutofillSupplier $autofillSupplier)
     {
+        if ($request->user()->cannot('update', AutofillSupplier::class)) {
+            abort(403);
+        }
+
         return view('autofill-suppliers.edit')->with([
             'autofillSupplier' => $autofillSupplier,
             'suppliers' => Supplier::orderBy('name')->get(),
@@ -81,6 +97,10 @@ class AutofillSupplierController extends Controller
      */
     public function update(UpdateRequest $request, AutofillSupplier $autofillSupplier)
     {
+        if ($request->user()->cannot('update', AutofillSupplier::class)) {
+            abort(403);
+        }
+
         $updated = $autofillSupplier->update($request->validated());
 
         if (! $updated) {
@@ -95,6 +115,10 @@ class AutofillSupplierController extends Controller
      */
     public function destroy(AutofillSupplier $autofillSupplier)
     {
+        if (request()->user()->cannot('delete', AutofillSupplier::class)) {
+            abort(403);
+        }
+
         $deleted = $autofillSupplier->delete();
 
         if (! $deleted) {

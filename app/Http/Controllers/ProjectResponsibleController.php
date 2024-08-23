@@ -23,6 +23,10 @@ class ProjectResponsibleController extends Controller
      */
     public function index(Request $request)
     {
+        if ($request->user()->cannot('read', ProjectResponsible::class)) {
+            abort(403);
+        }
+
         $this->checkTableConfigurations('project-responsibles', ProjectResponsible::class);
         $projectResponsibles = $this->filter(ProjectResponsible::class, ProjectResponsible::query(), $request)->paginate(15);
 
@@ -43,8 +47,12 @@ class ProjectResponsibleController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
+        if ($request->user()->cannot('create', ProjectResponsible::class)) {
+            abort(403);
+        }
+
         return view('project-responsible.create');
     }
 
@@ -53,6 +61,10 @@ class ProjectResponsibleController extends Controller
      */
     public function store(StoreRequest $request)
     {
+        if ($request->user()->cannot('create', ProjectResponsible::class)) {
+            abort(403);
+        }
+
         ProjectResponsible::create($request->validated());
 
         return redirect()->route('project-responsibles.index')->with('success', 'Responsible created successfully');
@@ -61,8 +73,12 @@ class ProjectResponsibleController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ProjectResponsible $projectResponsible)
+    public function edit(Request $request, ProjectResponsible $projectResponsible)
     {
+        if ($request->user()->cannot('update', $projectResponsible)) {
+            abort(403);
+        }
+
         return view('project-responsible.edit', [
             'projectResponsible' => $projectResponsible,
         ]);
@@ -73,6 +89,10 @@ class ProjectResponsibleController extends Controller
      */
     public function update(UpdateRequest $request, ProjectResponsible $projectResponsible)
     {
+        if ($request->user()->cannot('update', $projectResponsible)) {
+            abort(403);
+        }
+
         $projectResponsible->update($request->validated());
 
         return redirect()->route('project-responsibles.index')->with('success', 'Responsible updated successfully');
@@ -81,8 +101,12 @@ class ProjectResponsibleController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ProjectResponsible $projectResponsible)
+    public function destroy(Request $request, ProjectResponsible $projectResponsible)
     {
+        if ($request->user()->cannot('delete', $projectResponsible)) {
+            abort(403);
+        }
+
         $projectResponsible->delete();
 
         return redirect()->route('project-responsibles.index')->with('success', 'Responsible deleted successfully');

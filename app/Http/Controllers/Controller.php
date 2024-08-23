@@ -276,8 +276,12 @@ class Controller extends BaseController
     /**
      * Restore the specified resource from storage.
      */
-    public function restore(string $id)
+    public function restore(Request $request, string $id)
     {
+        if ($request->user()->cannot('restore', Project::class)) {
+            abort(403);
+        }
+
         $datum = $this->model::withTrashed()->find($id);
 
         if (empty($datum)) {
@@ -294,8 +298,12 @@ class Controller extends BaseController
     /**
      * Trash the specified resource from storage.
      */
-    public function trash(string $id)
+    public function trash(Request $request, string $id)
     {
+        if ($request->user()->cannot('forceDelete', Project::class)) {
+            abort(403);
+        }
+
         $datum = $this->model::withTrashed()->find($id);
 
         if (empty($datum)) {

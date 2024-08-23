@@ -38,7 +38,7 @@ class RoleController extends Controller
     /**
      * @var array
      */
-    protected array $permissionTableExcludes = ['update_design', 'create_procurement', 'delete_procurement', 'create_warehouse', 'delete_warehouse'];
+    protected array $permissionTableExcludes = ['update_design', 'create_procurement', 'delete_procurement', 'restore_procurement', 'force_delete_procurement', 'create_warehouse', 'delete_warehouse', 'restore_warehouse', 'force_delete_warehouse'];
 
     /**
      * @var RoleService
@@ -60,6 +60,10 @@ class RoleController extends Controller
      */
     public function index(Request $request)
     {
+        if ($request->user()->cannot('read', Role::class)) {
+            abort(403);
+        }
+
         $this->checkTableConfigurations('roles', Role::class);
 
         $roles = $this->filter(Role::class, Role::query(), $request)->paginate(15);
@@ -81,8 +85,12 @@ class RoleController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
+        if ($request->user()->cannot('create', Role::class)) {
+            abort(403);
+        }
+
         return view('roles.create', [
             'landingPages' => $this->landingPages,
             'permissionTable' => $this->permissionTable,
@@ -95,6 +103,10 @@ class RoleController extends Controller
      */
     public function store(StoreRequest $request)
     {
+        if ($request->user()->cannot('create', Role::class)) {
+            abort(403);
+        }
+
         Role::create(array_merge($request->validated(), ['permissions' => json_encode($this->service->formatPermissionsFromRequest($request))]));
 
         return redirect()->route('roles.index')->with('success', 'Role created successfully.');
@@ -103,8 +115,12 @@ class RoleController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Request $request, string $id)
     {
+        if ($request->user()->cannot('update', Role::class)) {
+            abort(403);
+        }
+
         $role = Role::findOrFail($id);
 
         return view('roles.edit', [
@@ -120,6 +136,10 @@ class RoleController extends Controller
      */
     public function update(UpdateRequest $request, string $id)
     {
+        if ($request->user()->cannot('update', Role::class)) {
+            abort(403);
+        }
+
         $role = Role::findOrFail($id);
 
         $role->update(array_merge($request->validated(), ['permissions' => json_encode($this->service->formatPermissionsFromRequest($request))]));
@@ -130,8 +150,12 @@ class RoleController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request, string $id)
     {
+        if ($request->user()->cannot('delete', Role::class)) {
+            abort(403);
+        }
+
         Role::findOrFail($id)->delete();
 
         return redirect()->route('roles.index')->with('success', 'Role deleted successfully.');

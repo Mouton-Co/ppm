@@ -24,6 +24,10 @@ class OrderController extends Controller
      */
     public function index(Request $request)
     {
+        if ($request->user()->cannot('read', Order::class)) {
+            abort(403);
+        }
+
         $orders = $this->filter(Order::class, Order::query(), $request)->paginate(15);
 
         if ($orders->currentPage() > 1 && $orders->lastPage() < $orders->currentPage()) {
@@ -44,6 +48,10 @@ class OrderController extends Controller
      */
     public function store(StoreRequest $request)
     {
+        if ($request->user()->cannot('create', Order::class)) {
+            abort(403);
+        }
+
         Order::create($request->validated());
 
         return redirect()->route('orders.index')->withSuccess(
@@ -56,6 +64,10 @@ class OrderController extends Controller
      */
     public function update(UpdateRequest $request)
     {
+        if ($request->user()->cannot('update', Order::class)) {
+            abort(403);
+        }
+
         $order = Order::find($request->id);
 
         if (! empty($order)) {
@@ -70,8 +82,12 @@ class OrderController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
+        if ($request->user()->cannot('delete', Order::class)) {
+            abort(403);
+        }
+
         $order = Order::find($id);
 
         if (! empty($order)) {
@@ -91,8 +107,12 @@ class OrderController extends Controller
      * Generate all oustanding orders from the procurement table.
      * Orders are generated for all the parts that have PO numbers, suppliers and haven't been ordered yet.
      */
-    public function generate()
+    public function generate(Request $request)
     {
+        if ($request->user()->cannot('create', Order::class)) {
+            abort(403);
+        }
+
         $poNumbers = Part::whereNotNull('po_number')
             ->whereNotNull('supplier_id')
             ->where('part_ordered', false)
@@ -136,8 +156,12 @@ class OrderController extends Controller
     /**
      * Mark the order as ordered.
      */
-    public function markOrdered($id)
+    public function markOrdered(Request $request, $id)
     {
+        if ($request->user()->cannot('update', Order::class)) {
+            abort(403);
+        }
+
         $order = Order::find($id);
 
         if (empty($order)) {

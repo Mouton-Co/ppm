@@ -57,22 +57,4 @@ class ProjectStatus extends Model
         'restore' => 'Restore',
         'trash' => 'Trash',
     ];
-
-    /**
-     * Check if the status can be edited
-     * @return bool
-     */
-    public function canEdit(): bool
-    {
-        switch ($this->name) {
-            case 'Prepare':
-            case 'Closed':
-            case 'Work in Progress':
-            case 'Design':
-            case 'Waiting for customer':
-                return false;
-            default:
-                return true;
-        }
-    }
 }

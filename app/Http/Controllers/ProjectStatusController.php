@@ -23,6 +23,10 @@ class ProjectStatusController extends Controller
      */
     public function index(Request $request)
     {
+        if ($request->user()->cannot('read', ProjectStatus::class)) {
+            abort(403);
+        }
+
         $this->checkTableConfigurations('project-statuses', ProjectStatus::class);
         $projectStatuses = $this->filter(ProjectStatus::class, ProjectStatus::query(), $request)->paginate(15);
 
@@ -43,8 +47,12 @@ class ProjectStatusController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
+        if ($request->user()->cannot('create', ProjectStatus::class)) {
+            abort(403);
+        }
+
         return view('project-status.create');
     }
 
@@ -53,6 +61,10 @@ class ProjectStatusController extends Controller
      */
     public function store(StoreRequest $request)
     {
+        if ($request->user()->cannot('create', ProjectStatus::class)) {
+            abort(403);
+        }
+
         ProjectStatus::create($request->validated());
 
         return redirect()->route('project-statuses.index')->with('success', 'Status created successfully');
@@ -61,8 +73,12 @@ class ProjectStatusController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ProjectStatus $projectStatus)
+    public function edit(Request $request, ProjectStatus $projectStatus)
     {
+        if ($request->user()->cannot('update', $projectStatus)) {
+            abort(403);
+        }
+
         return view('project-status.edit', [
             'projectStatus' => $projectStatus,
         ]);
@@ -73,6 +89,10 @@ class ProjectStatusController extends Controller
      */
     public function update(UpdateRequest $request, ProjectStatus $projectStatus)
     {
+        if ($request->user()->cannot('update', $projectStatus)) {
+            abort(403);
+        }
+
         $projectStatus->update($request->validated());
 
         return redirect()->route('project-statuses.index')->with('success', 'Status updated successfully');
@@ -81,8 +101,12 @@ class ProjectStatusController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ProjectStatus $projectStatus)
+    public function destroy(Request $request, ProjectStatus $projectStatus)
     {
+        if ($request->user()->cannot('delete', $projectStatus)) {
+            abort(403);
+        }
+        
         $projectStatus->delete();
 
         return redirect()->back()->with('success', 'Status deleted successfully');
