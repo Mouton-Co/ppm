@@ -33,6 +33,9 @@
     name="{{ $name }}"
     item-id="{{ $datum->id }}"
     model="{{ $model }}"
+    @if (! auth()->user()->can_access)
+        disabled
+    @endif
 >
     <option
         value=""

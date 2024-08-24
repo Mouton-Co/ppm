@@ -11,51 +11,71 @@
         <ul class="flex flex-1 flex-col gap-y-7">
             <li>
                 <ul class="-mx-2 space-y-1">
-                    <li>
-                        <a class="nav-item-{{ request()->segment(1) == 'projects' ? 'active' : 'default' }}"
-                        href="{{ route('projects.index', [
-                            'order_by' => 'coc',
-                            'order' => 'asc',
-                            'status' => 'All except closed',
-                        ]) }}">
-                            <x-icon.project class="h-6 w-6 shrink-0" />
-                            {{ __('Projects') }}
-                        </a>
-                    </li>
-                    <li>
-                        <a class="nav-item-{{ request()->segment(1) == 'submisssions' ? 'active' : 'default' }}"
-                        href="{{ route('submissions.index') }}">
-                            <x-icon.submission class="h-6 w-6 shrink-0" />
-                            {{ __('Design') }}
-                        </a>
-                    </li>
-                    <li>
-                        <a class="nav-item-{{ request()->segment(2) == 'procurement' ? 'active' : 'default' }}"
-                        href="{{ route('parts.procurement.index', ['status' => 'processing']) }}">
-                            <x-icon.procurement class="h-6 w-6 shrink-0" />
-                            {{ __('Procurement') }}
-                        </a>
-                    </li>
-                    <li>
-                        <a class="nav-item-{{ request()->segment(2) == 'warehouse' ? 'active' : 'default' }}"
-                        href="{{ route('parts.warehouse.index', ['status' => 'supplier']) }}">
-                            <x-icon.warehouse class="h-6 w-6 shrink-0" />
-                            {{ __('Warehouse') }}
-                        </a>
-                    </li>
-                    <li>
-                        <a class="nav-item-{{ request()->segment(1) == 'orders' ? 'active' : 'default' }}"
-                        href="{{ route('orders.index') }}">
-                            <x-icon.order class="h-6 w-6 shrink-0" />
-                            {{ __('Purchase Orders') }}
-                        </a>
-                    </li>
+                    @can('read', App\Models\Project::class)
+                        <li>
+                            <a class="nav-item-{{ request()->segment(1) == 'projects' ? 'active' : 'default' }}"
+                            href="{{ route('projects.index', [
+                                'order_by' => 'coc',
+                                'order' => 'asc',
+                                'status' => 'All except closed',
+                            ]) }}">
+                                <x-icon.project class="h-6 w-6 shrink-0" />
+                                {{ __('Projects') }}
+                            </a>
+                        </li>
+                    @endcan
+                    @can('read', App\Models\Submission::class)
+                        <li>
+                            <a class="nav-item-{{ request()->segment(1) == 'submisssions' ? 'active' : 'default' }}"
+                            href="{{ route('submissions.index') }}">
+                                <x-icon.submission class="h-6 w-6 shrink-0" />
+                                {{ __('Design') }}
+                            </a>
+                        </li>
+                    @endcan
+                    @if (auth()->user()->role->hasPermission('read_procurement'))
+                        <li>
+                            <a class="nav-item-{{ request()->segment(2) == 'procurement' ? 'active' : 'default' }}"
+                            href="{{ route('parts.procurement.index', ['status' => 'processing']) }}">
+                                <x-icon.procurement class="h-6 w-6 shrink-0" />
+                                {{ __('Procurement') }}
+                            </a>
+                        </li>
+                    @endif
+                    @if (auth()->user()->role->hasPermission('read_warehouse'))
+                        <li>
+                            <a class="nav-item-{{ request()->segment(2) == 'warehouse' ? 'active' : 'default' }}"
+                            href="{{ route('parts.warehouse.index', ['status' => 'supplier']) }}">
+                                <x-icon.warehouse class="h-6 w-6 shrink-0" />
+                                {{ __('Warehouse') }}
+                            </a>
+                        </li>
+                    @endif
+                    @can('read', App\Models\Order::class)
+                        <li>
+                            <a class="nav-item-{{ request()->segment(1) == 'orders' ? 'active' : 'default' }}"
+                            href="{{ route('orders.index') }}">
+                                <x-icon.order class="h-6 w-6 shrink-0" />
+                                {{ __('Purchase Orders') }}
+                            </a>
+                        </li>
+                    @endcan
                 </ul>
             </li>
-            @if (auth()->user()->role->role == 'Admin')
-                <li>
+            <li>
+                @if (
+                    auth()->user()->role->hasPermission('read_users') ||
+                    auth()->user()->role->hasPermission('read_roles') ||
+                    auth()->user()->role->hasPermission('read_suppliers') ||
+                    auth()->user()->role->hasPermission('read_representatives') ||
+                    auth()->user()->role->hasPermission('read_autofill_suppliers') ||
+                    auth()->user()->role->hasPermission('read_process_types') ||
+                    auth()->user()->role->hasPermission('read_project_statuses')
+                )
                     <div class="text-sm font-semibold leading-6 text-gray-400">{{ __("Administration") }}</div>
-                    <ul class="-mx-2 mt-2 space-y-1">
+                @endif
+                <ul class="-mx-2 mt-2 space-y-1">
+                    @can('read', App\Models\User::class)
                         <li>
                             <a class="nav-item-{{ request()->segment(1) == 'users' ? 'active' : 'default' }}"
                             href="{{ route('user.index') }}">
@@ -71,6 +91,8 @@
                                 <span class="truncate">{{ __('Users') }}</span>
                             </a>
                         </li>
+                    @endcan
+                    @can('read', App\Models\Role::class)
                         <li>
                             <a class="nav-item-{{ request()->segment(1) == 'roles' ? 'active' : 'default' }}"
                             href="{{ route('roles.index') }}">
@@ -78,6 +100,8 @@
                                 <span class="truncate">{{ __('Roles') }}</span>
                             </a>
                         </li>
+                    @endcan
+                    @can('read', App\Models\Supplier::class)
                         <li>
                             <a class="nav-item-{{ request()->segment(1) == 'suppliers' ? 'active' : 'default' }}"
                             href="{{ route('suppliers.index') }}">
@@ -85,6 +109,8 @@
                                 <span class="truncate">{{ __('Suppliers') }}</span>
                             </a>
                         </li>
+                    @endcan
+                    @can('read', App\Models\Representative::class)
                         <li>
                             <a class="nav-item-{{ request()->segment(1) == 'representatives' ? 'active' : 'default' }}"
                             href="{{ route('representatives.index') }}">
@@ -92,6 +118,8 @@
                                 <span class="truncate">{{ __('Representatives') }}</span>
                             </a>
                         </li>
+                    @endcan
+                    @can('read', App\Models\AutofillSupplier::class)
                         <li>
                             <a href="{{ route('autofill-suppliers.index') }}"
                             class="nav-item-{{ request()->segment(1) == 'autofill-suppliers' ? 'active' : 'default' }}">
@@ -99,6 +127,8 @@
                                 <span class="truncate">{{ __('Autofill Suppliers') }}</span>
                             </a>
                         </li>
+                    @endcan
+                    @can('read', App\Models\ProcessType::class)
                         <li>
                             <a href="{{ route('process-types.index') }}"
                             class="nav-item-{{ request()->segment(1) == 'process-types' ? 'active' : 'default' }}">
@@ -106,6 +136,8 @@
                                 <span class="truncate">{{ __('Process Types') }}</span>
                             </a>
                         </li>
+                    @endcan
+                    @can('read', App\Models\ProjectStatus::class)
                         <li>
                             <a href="{{ route('project-statuses.index') }}"
                             class="nav-item-{{ request()->segment(1) == 'project-statuses' ? 'active' : 'default' }}">
@@ -113,6 +145,8 @@
                                 <span class="truncate">{{ __('Project statuses') }}</span>
                             </a>
                         </li>
+                    @endcan
+                    @can('read', App\Models\ProjectResponsibles::class)
                         <li>
                             <a href="{{ route('project-responsibles.index') }}"
                             class="nav-item-{{
@@ -130,6 +164,8 @@
                                 <span class="truncate">{{ __('Departments') }}</span>
                             </a>
                         </li>
+                    @endcan
+                    @can('read', App\Models\RecipientGroup::class)
                         <li>
                             <a href="{{ route('recipient-groups.index') }}"
                             class="nav-item-{{
@@ -139,9 +175,9 @@
                                 <span class="truncate">{{ __('Email triggers') }}</span>
                             </a>
                         </li>
-                    </ul>
-                </li>
-            @endif
+                    @endcan
+                </ul>
+            </li>
         </ul>
     </nav>
 </div>

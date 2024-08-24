@@ -1,7 +1,9 @@
 {{-- generate orders --}}
-<a href="{{ route('orders.generate') }}" class="btn-sky max-w-fit mb-2">
-    {{ __('Generate orders') }}
-</a>
+@can('create', App\Models\Order::class)
+    <a href="{{ route('orders.generate') }}" class="btn-sky max-w-fit mb-2">
+        {{ __('Generate orders') }}
+    </a>
+@endcan
 
 {{-- list of orders --}}
 <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
@@ -59,22 +61,28 @@
                     <div class="flex gap-3">
                         <x-order.status :status="$order->status ?? 'N/A'" />
                         @if (request()->has('archived') && request()->archived == "true")
-                            <x-icon.refresh
-                                route="{{ route('orders.restore', $order->id) }}"
-                                item-id="{{ $order->id }}"
-                                class="w-5 aspect-square text-sky-500 hover:text-sky-700 delete-po restore-button"
-                            />
-                            <x-icon.trash
-                                route="{{ route('orders.trash', $order->id) }}"
-                                item-id="{{ $order->id }}"
-                                class="w-5 aspect-square text-red-400 hover:text-red-600 delete-po trash-button"
-                            />
+                            @can('restore', App/Models/Order::class)
+                                <x-icon.refresh
+                                    route="{{ route('orders.restore', $order->id) }}"
+                                    item-id="{{ $order->id }}"
+                                    class="w-5 aspect-square text-sky-500 hover:text-sky-700 delete-po restore-button"
+                                />
+                            @endcan
+                            @can('forceDelete', App/Models/Order::class)
+                                <x-icon.trash
+                                    route="{{ route('orders.trash', $order->id) }}"
+                                    item-id="{{ $order->id }}"
+                                    class="w-5 aspect-square text-red-400 hover:text-red-600 delete-po trash-button"
+                                />
+                            @endcan
                         @else
-                            <x-icon.trash
-                                route="{{ route('orders.delete', $order->id) }}"
-                                item-id="{{ $order->id }}"
-                                class="w-5 aspect-square text-red-400 hover:text-red-600 delete-po"
-                            />
+                            @can('delete', App/Models/Order::class)
+                                <x-icon.trash
+                                    route="{{ route('orders.delete', $order->id) }}"
+                                    item-id="{{ $order->id }}"
+                                    class="w-5 aspect-square text-red-400 hover:text-red-600 delete-po"
+                                />
+                            @endcan
                         @endif
                     </div>
                 </div>
@@ -100,20 +108,22 @@
                                 {{ __('Purchase order is archived') }}
                             </span>
                         @else
-                            <a
-                                class="hover:text-sky-600"
-                                href="{{ route('email.purchase-order.render', $order->id) }}"
-                            >
-                                <span>{{ __('Prepare email') }}</span>
-                                <span aria-hidden="true">&rarr;</span>
-                            </a>
-                            <a
-                                class="text-right hover:text-sky-600"
-                                href="{{ route('orders.complete', $order->id) }}"
-                            >
-                                <span>{{ __('Mark as ordered') }}</span>
-                                <span aria-hidden="true">&rarr;</span>
-                            </a>
+                            @can('update', App\Models\Order::class)
+                                <a
+                                    class="hover:text-sky-600"
+                                    href="{{ route('email.purchase-order.render', $order->id) }}"
+                                >
+                                    <span>{{ __('Prepare email') }}</span>
+                                    <span aria-hidden="true">&rarr;</span>
+                                </a>
+                                <a
+                                    class="text-right hover:text-sky-600"
+                                    href="{{ route('orders.complete', $order->id) }}"
+                                >
+                                    <span>{{ __('Mark as ordered') }}</span>
+                                    <span aria-hidden="true">&rarr;</span>
+                                </a>
+                            @endcan
                         @endif
                     </div>
                 @endif

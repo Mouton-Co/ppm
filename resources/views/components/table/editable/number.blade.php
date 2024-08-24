@@ -5,5 +5,8 @@
     value="{{ $datum->$key }}"
     item-id="{{ $datum->id }}"
     model="{{ $model }}"
+    @if (! auth()->user()->can_access)
+        disabled
+    @endif
     @if (!empty($structure[$key]['min']) || $structure[$key]['min'] == 0) min="{{ $structure[$key]['min'] }}" @endif
 >
