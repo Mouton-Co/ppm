@@ -292,7 +292,8 @@ class PartsController extends Controller
          * run through autofill suppliers table first and autofill them
          */
         foreach (AutofillSupplier::all() as $autofillSupplier) {
-            $parts = Part::where('supplier_id', null)
+            $parts = $this->filter(Part::class, Part::query(), $request, Part::$procurementStructure)
+                ->where('supplier_id', null)
                 ->where('name', 'like', '%'.$autofillSupplier->text.'%')
                 ->where('part_ordered', false)
                 ->get();
@@ -306,7 +307,10 @@ class PartsController extends Controller
         /**
          * all parts with no supplier and that's not ordered yet
          */
-        $parts = Part::where('supplier_id', null)->where('part_ordered', false)->get();
+        $parts = $this->filter(Part::class, Part::query(), $request, Part::$procurementStructure)
+            ->where('supplier_id', null)
+            ->where('part_ordered', false)
+            ->get();
 
         foreach ($parts as $part) {
             switch ($part->process_type) {
@@ -315,21 +319,29 @@ class PartsController extends Controller
                 case 'LCM':
                 case 'LCBM':
                 case 'LCBW':
-                    if (! empty($request->input('lc_supplier'))) {
-                        $part->supplier_id = $request->input('lc_supplier');
+                    if (
+                        $request->has('lc_supplier') &&
+                        ! empty($lcSupplier = Supplier::find($request->get('lc_supplier')))
+                    ) {
+                        $part->supplier_id = $lcSupplier->id;
                         $part->save();
                     }
                     break;
                 case 'MCH':
-                    if (! empty($request->input('part_supplier'))) {
-                        $part->supplier_id = $request->input('part_supplier');
+                    if (
+                        $request->has('part_supplier') &&
+                        ! empty($partSupplier = Supplier::find($request->get('part_supplier')))
+                    ) {
+                        $part->supplier_id = $partSupplier->id;
                         $part->save();
                     }
                     break;
                 case 'TLC':
                 case 'TLCM':
-                    $part->supplier_id = Supplier::where('name', 'Schuurman Tube')->first()->id;
-                    $part->save();
+                    if (! empty($schuurman = Supplier::where('name', 'Schuurman Tube')->first())) {
+                        $part->supplier_id = $schuurman->id;
+                        $part->save();
+                    }
                     break;
                 default:
                     break;

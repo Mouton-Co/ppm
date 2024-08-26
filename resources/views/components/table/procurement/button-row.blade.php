@@ -15,7 +15,7 @@
 
     <form
         class="flex items-center gap-3"
-        action="{{ route('parts.autofill-suppliers') }}"
+        action="{{ route('parts.autofill-suppliers', request()->query()) }}"
         method="post"
     >
         @csrf
@@ -28,7 +28,6 @@
 
         @php
             $options = App\Models\Supplier::all()->pluck('name', 'id')->toArray();
-            array_unshift($options, '--Please Select--');
         @endphp
 
         <label
@@ -39,6 +38,9 @@
             class="field-dark editable-cell-dropdown !w-[195px] cursor-pointer border-none bg-transparent focus:outline-none"
             name="lc_supplier"
         >
+            <option value="0">
+                {{ __("--Please select--") }}
+            </option>
             @foreach ($options as $optionKey => $optionValue)
                 <option value="{{ $optionKey }}">
                     {{ $optionValue }}
@@ -53,6 +55,9 @@
             class="field-dark editable-cell-dropdown !w-[195px] cursor-pointer border-none bg-transparent focus:outline-none"
             name="part_supplier"
         >
+            <option value="0">
+                {{ __("--Please select--") }}
+            </option>
             @foreach ($options as $optionKey => $optionValue)
                 <option value="{{ $optionKey }}">
                     {{ $optionValue }}
