@@ -43,7 +43,7 @@ return [
     ],
     'Process Type' => [
         'required' => true,
-        'allowed' => '/App/Models/ProcessType::class',
+        'allowed' => '/App\Models\ProcessType::class',
     ],
     'Notes' => '',
     'Manufactured or Purchased' => [

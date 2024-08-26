@@ -1,4 +1,4 @@
-@if (auth()->user()->hasPermission('update_warehouse'))
+@if (auth()->user()->role->hasPermission('update_warehouse'))
     <hr>
     <div class="my-2 flex flex-col gap-3 overflow-x-scroll">
         <form

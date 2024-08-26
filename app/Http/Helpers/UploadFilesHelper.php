@@ -231,7 +231,7 @@ class UploadFilesHelper
                         ! empty($headingData['required']) && $headingData['required'] // if required
                         && ! empty($headingData['allowed']) // and has allowed value
                     ) {
-                        if ($headingData['allowed'] == '/App/Models/ProcessType::class') {
+                        if ($headingData['allowed'] == '/App\Models\ProcessType::class') {
                             $processTypes = array_map('strtolower', ProcessType::all()->pluck('process_type')->toArray());
                             if (! in_array(strtolower($matrix[$heading][$i]), $processTypes)) {
                                 return [

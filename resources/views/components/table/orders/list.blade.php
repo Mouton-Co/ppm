@@ -61,14 +61,14 @@
                     <div class="flex gap-3">
                         <x-order.status :status="$order->status ?? 'N/A'" />
                         @if (request()->has('archived') && request()->archived == "true")
-                            @can('restore', App/Models/Order::class)
+                            @can('restore', App\Models\Order::class)
                                 <x-icon.refresh
                                     route="{{ route('orders.restore', $order->id) }}"
                                     item-id="{{ $order->id }}"
                                     class="w-5 aspect-square text-sky-500 hover:text-sky-700 delete-po restore-button"
                                 />
                             @endcan
-                            @can('forceDelete', App/Models/Order::class)
+                            @can('forceDelete', App\Models\Order::class)
                                 <x-icon.trash
                                     route="{{ route('orders.trash', $order->id) }}"
                                     item-id="{{ $order->id }}"
@@ -76,7 +76,7 @@
                                 />
                             @endcan
                         @else
-                            @can('delete', App/Models/Order::class)
+                            @can('delete', App\Models\Order::class)
                                 <x-icon.trash
                                     route="{{ route('orders.delete', $order->id) }}"
                                     item-id="{{ $order->id }}"

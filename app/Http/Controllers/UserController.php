@@ -95,16 +95,6 @@ class UserController extends Controller
         $user = User::find($id);
         $roles = Role::all();
 
-        // if user not found OR
-        // if not admin AND not editing own profile
-        if (
-            empty($user)
-            || ($user->id != auth()->user()->id
-                && auth()->user()->role->role != 'Admin')
-        ) {
-            return redirect()->route('dashboard');
-        }
-
         return view('user.edit')->with([
             'user' => $user,
             'roles' => $roles,
