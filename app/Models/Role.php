@@ -39,6 +39,12 @@ class Role extends Model
             'sortable' => true,
             'filterable' => true,
         ],
+        'landing_page' => [
+            'label' => 'Landing Page',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
         'created_at' => [
             'label' => 'Created At',
             'type' => 'datetime',
