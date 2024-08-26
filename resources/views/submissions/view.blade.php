@@ -69,7 +69,7 @@
             <div class="details-list">
                 <dt class="details-list-title">{{ __('Type of submission') }}</dt>
                 <dd class="details-list-value">
-                    {{ config('dropdowns.submission_types.' . $submission->submission_type) ?? 'N/A' }}
+                    {{ App\Models\Submission::$structure['submission_type']['casts'][$submission->submission_type] ?? 'N/A' }}
                 </dd>
             </div>
             <div class="details-list">

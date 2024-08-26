@@ -73,6 +73,14 @@ class Submission extends Model
                 'Modification',
                 'Workshop',
             ],
+            'casts' => [
+                0 => 'Additional Project',
+                1 => 'Correction',
+                2 => 'New BOM',
+                3 => 'Replacement',
+                4 => 'Modification',
+                5 => 'Workshop',
+            ]
         ],
         'current_unit_number' => [
             'label' => 'Unit Number',
