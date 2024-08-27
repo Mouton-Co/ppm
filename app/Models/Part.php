@@ -241,6 +241,13 @@ class Part extends Model
             'filterable' => true,
             'component' => 'editable.text',
         ],
+        'replaced_by_submission' => [
+            'label' => 'Replaced by',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+            'component' => 'editable.text',
+        ],
         'comment_procurement' => [
             'label' => 'Procurement Comment',
             'type' => 'text',
@@ -502,6 +509,13 @@ class Part extends Model
         ],
         'job_card' => [
             'label' => 'Job Card #',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+            'component' => 'editable.text',
+        ],
+        'replaced_by_submission' => [
+            'label' => 'Replaced by',
             'type' => 'text',
             'sortable' => true,
             'filterable' => true,

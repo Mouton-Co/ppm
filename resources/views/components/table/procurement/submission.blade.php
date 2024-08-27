@@ -5,7 +5,7 @@
             href="{{ route('zip.download', $datum->submission->submission_code) }}"
             download
         >
-            <x-icon.zip class="h-6 text-gray-300 hover:text-sky-700" />
+            <x-icon.zip class="h-6 hover:text-sky-700 {{ ! empty($datum->replaced_by_submission) ? 'text-red-500' : 'text-gray-300' }}" />
         </a>
     @else
         <x-icon.zip class="h-6 text-gray-300" />
@@ -19,7 +19,7 @@
             ]) }}"
             target="_blank"
         >
-            <x-icon.part class="h-5 text-gray-300 hover:text-sky-700" />
+            <x-icon.part class="h-5 hover:text-sky-700 {{ ! empty($datum->replaced_by_submission) ? 'text-red-500' : 'text-gray-300' }}" />
         </a>
     @else
         <x-icon.part class="h-5 text-gray-300" />
