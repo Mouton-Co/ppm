@@ -5,6 +5,10 @@
     if ($model == 'App\Models\Part' && $key == 'po_number' && empty($datum->supplier_id)) {
         $disabled = true;
     }
+
+    if (! auth()->user()->can_access) {
+        $disabled = true;
+    }
 @endphp
 
 <input

@@ -25,6 +25,10 @@ class SupplierController extends Controller
      */
     public function index(Request $request)
     {
+        if ($request->user()->cannot('read', Supplier::class)) {
+            abort(403);
+        }
+
         $this->checkTableConfigurations('suppliers', Supplier::class);
         $suppliers = $this->filter(Supplier::class, Supplier::query(), $request)->paginate(15);
 
@@ -45,8 +49,12 @@ class SupplierController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
+        if ($request->user()->cannot('create', Supplier::class)) {
+            abort(403);
+        }
+
         return view('supplier.create');
     }
 
@@ -55,6 +63,10 @@ class SupplierController extends Controller
      */
     public function store(StoreRequest $request)
     {
+        if ($request->user()->cannot('create', Supplier::class)) {
+            abort(403);
+        }
+
         $supplier = Supplier::create($request->all());
 
         return redirect()
@@ -67,8 +79,12 @@ class SupplierController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Request $request, string $id)
     {
+        if ($request->user()->cannot('update', Supplier::class)) {
+            abort(403);
+        }
+
         $supplier = Supplier::find($id);
 
         if (empty($supplier)) {
@@ -89,6 +105,10 @@ class SupplierController extends Controller
      */
     public function update(UpdateRequest $request, string $id)
     {
+        if ($request->user()->cannot('update', Supplier::class)) {
+            abort(403);
+        }
+
         $supplier = Supplier::find($id);
 
         if (empty($supplier)) {
@@ -113,6 +133,10 @@ class SupplierController extends Controller
      */
     public function destroy(string $id)
     {
+        if (auth()->user()->cannot('delete', Supplier::class)) {
+            abort(403);
+        }
+
         $supplier = Supplier::find($id);
         $name = $supplier->name;
 

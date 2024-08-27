@@ -24,6 +24,10 @@ class RepresentativeController extends Controller
      */
     public function index(Request $request)
     {
+        if ($request->user()->cannot('read', Representative::class)) {
+            abort(403);
+        }
+
         $this->checkTableConfigurations('representatives', Representative::class);
         $representatives = $this->filter(Representative::class, Representative::query(), $request)->paginate(15);
 
@@ -44,8 +48,12 @@ class RepresentativeController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
+        if ($request->user()->cannot('create', Representative::class)) {
+            abort(403);
+        }
+
         return view('representative.create')->with([
             'suppliers' => Supplier::orderBy('name')->get(),
         ]);
@@ -56,6 +64,10 @@ class RepresentativeController extends Controller
      */
     public function store(StoreRequest $request)
     {
+        if ($request->user()->cannot('create', Representative::class)) {
+            abort(403);
+        }
+
         $representative = Representative::create($request->all());
 
         return redirect()->route('representatives.index')->with([
@@ -66,8 +78,12 @@ class RepresentativeController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Request $request, string $id)
     {
+        if ($request->user()->cannot('update', Representative::class)) {
+            abort(403);
+        }
+
         $representative = Representative::find($id);
 
         if (empty($representative)) {
@@ -87,6 +103,10 @@ class RepresentativeController extends Controller
      */
     public function update(UpdateRequest $request, string $id)
     {
+        if ($request->user()->cannot('update', Representative::class)) {
+            abort(403);
+        }
+
         $representative = Representative::find($id);
 
         if (empty($representative)) {
@@ -105,8 +125,12 @@ class RepresentativeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request, string $id)
     {
+        if ($request->user()->cannot('delete', Representative::class)) {
+            abort(403);
+        }
+
         $representative = Representative::find($id);
         $name = $representative->name;
 

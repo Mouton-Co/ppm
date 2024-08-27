@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Exports\BomExcel;
 use App\Http\Helpers\UploadFilesHelper;
-use App\Http\Requests\Parts\IndexRequest;
 use App\Http\Requests\Parts\MarkAsRequest;
 use App\Http\Requests\Parts\UpdateCheckboxRequest;
 use App\Http\Requests\Parts\UpdateRequest;
@@ -70,6 +69,10 @@ class PartsController extends Controller
      */
     public function index(Request $request)
     {
+        if (! $request->user()->role->hasPermission('read_procurement')) {
+            abort(403);
+        }
+
         $this->checkTableConfigurations('procurement', Part::class, Part::$procurementStructure);
         $parts = $this->filter(Part::class, Part::query(), $request, Part::$procurementStructure)->paginate(15);
 
@@ -93,6 +96,10 @@ class PartsController extends Controller
      */
     public function warehouseIndex(Request $request)
     {
+        if (! $request->user()->role->hasPermission('read_warehouse')) {
+            abort(403);
+        }
+
         $this->checkTableConfigurations('warehouse', Part::class, Part::$warehouseStructure);
         $parts = $this->filter(Part::class, Part::query(), $request, Part::$warehouseStructure)->paginate(15);
 
@@ -116,6 +123,13 @@ class PartsController extends Controller
      */
     public function update(UpdateRequest $request)
     {
+        if (
+            ! $request->user()->role->hasPermission('update_procurement') ||
+            ! $request->user()->role->hasPermission('update_warehouse')
+        ) {
+            abort(403);
+        }
+
         $part = Part::find($request->get('id'));
 
         if (! empty($request->get('field'))) {
@@ -151,6 +165,13 @@ class PartsController extends Controller
      */
     public function updateCheckbox(UpdateCheckboxRequest $request)
     {
+        if (
+            ! $request->user()->role->hasPermission('update_procurement') ||
+            ! $request->user()->role->hasPermission('update_warehouse')
+        ) {
+            abort(403);
+        }
+
         $part = Part::find($request->get('id'));
 
         if (empty($part)) {
@@ -250,8 +271,12 @@ class PartsController extends Controller
     /**
      * Generate PO numbers for all parts
      */
-    public function generatePoNumbers()
+    public function generatePoNumbers(Request $request)
     {
+        if (! $request->user()->role->hasPermission('update_procurement')) {
+            abort(403);
+        }
+
         // all parts grouped by submission with no PO number
         $submissions = Part::where('po_number', null)->where('supplier_id', '!=', null)
             ->get()->groupBy('submission_id');
@@ -288,6 +313,10 @@ class PartsController extends Controller
      */
     public function autofillSuppliers(Request $request)
     {
+        if (! $request->user()->role->hasPermission('update_procurement')) {
+            abort(403);
+        }
+
         /**
          * run through autofill suppliers table first and autofill them
          */
@@ -356,6 +385,10 @@ class PartsController extends Controller
      */
     public function markAs(MarkAsRequest $request)
     {
+        if (! $request->user()->role->hasPermission('update_warehouse')) {
+            abort(403);
+        }
+
         $parts = Part::where('po_number', $request->get('po_number'))->get();
 
         if ($parts->isEmpty()) {

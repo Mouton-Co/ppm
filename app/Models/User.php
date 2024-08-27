@@ -131,4 +131,71 @@ class User extends Authenticatable
             return null;
         }
     }
+
+    /**
+     * Returns true if editable component is accessible to user
+     * @return bool
+     */
+    public function getCanAccessAttribute(): bool
+    {
+        $access = false;
+
+        if (request()->segment(1) == 'projects' && auth()->user()->role->hasPermission('update_projects')) {
+            $access = true;
+        }
+
+        if (request()->segment(1) == 'submisssions' && auth()->user()->role->hasPermission('update_submissions')) {
+            $access = true;
+        }
+
+        if (request()->segment(2) == 'procurement' && auth()->user()->role->hasPermission('update_procurement')) {
+            $access = true;
+        }
+
+        if (request()->segment(2) == 'warehouse' && auth()->user()->role->hasPermission('update_warehouse')) {
+            $access = true;
+        }
+
+        if (request()->segment(1) == 'orders' && auth()->user()->role->hasPermission('update_orders')) {
+            $access = true;
+        }
+
+        if (request()->segment(1) == 'users' && auth()->user()->role->hasPermission('update_users')) {
+            $access = true;
+        }
+
+        if (request()->segment(1) == 'roles' && auth()->user()->role->hasPermission('update_roles')) {
+            $access = true;
+        }
+        
+        if (request()->segment(1) == 'suppliers' && auth()->user()->role->hasPermission('update_suppliers')) {
+            $access = true;
+        }
+
+        if (request()->segment(1) == 'representatives' && auth()->user()->role->hasPermission('update_representatives')) {
+            $access = true;
+        }
+
+        if (request()->segment(1) == 'autofill-suppliers' && auth()->user()->role->hasPermission('update_autofill_suppliers')) {
+            $access = true;
+        }
+
+        if (request()->segment(1) == 'process-types' && auth()->user()->role->hasPermission('update_process_types')) {
+            $access = true;
+        }
+
+        if (request()->segment(1) == 'project-statuses' && auth()->user()->role->hasPermission('update_project_statuses')) {
+            $access = true;
+        }
+
+        if (request()->segment(1) == 'project-responsibles' && auth()->user()->role->hasPermission('update_project_responsibles')) {
+            $access = true;
+        }
+
+        if (request()->segment(1) == 'recipient-groups' && auth()->user()->role->hasPermission('update_recipient_groups')) {
+            $access = true;
+        }
+
+        return $access;
+    }
 }

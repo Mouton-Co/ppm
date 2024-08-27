@@ -24,7 +24,7 @@
             >
                 {{ __('Filter') }}
             </button>
-            @if (!empty($model::$actions['create']))
+            @if (! empty($model::$actions['create']) && auth()->user()->can('create', $model))
                 <a
                     class="block h-7 rounded border border-sky-700 bg-sky-700 px-2 py-1 text-sm text-white shadow hover:border-sky-600 hover:bg-sky-600"
                     href="{{ route("$route.create") }}"
@@ -326,7 +326,7 @@
                             <div class="flex items-center justify-end gap-3">
                                 @if (request()->has('archived') && request()->get('archived') == 'true')
                                     {{-- archived records --}}
-                                    @if (! empty($model::$actions['restore']))
+                                    @if (! empty($model::$actions['restore']) && auth()->user()->can('restore', $model))
                                         <span
                                             class="cursor-pointer text-sky-600 hover:text-sky-700 restore-button"
                                             item-id="{{ $datum->id }}"
@@ -335,7 +335,7 @@
                                             {{ $model::$actions['restore'] }}
                                         </span>
                                     @endif
-                                    @if (! empty($model::$actions['trash']))
+                                    @if (! empty($model::$actions['trash']) && auth()->user()->can('forceDelete', $model))
                                         <span
                                             class="cursor-pointer text-red-500 hover:text-red-700 trash-button"
                                             item-id="{{ $datum->id }}"
@@ -346,7 +346,7 @@
                                     @endif
                                 @else
                                     {{-- current records --}}
-                                    @if (!empty($model::$actions['show']))
+                                    @if (! empty($model::$actions['show']) && auth()->user()->can('read', $model))
                                         <a
                                             class="cursor-pointer text-sky-600 hover:text-sky-700"
                                             href="{{ route("$route.show", $datum->id) }}"
@@ -354,7 +354,7 @@
                                             {{ $model::$actions['show'] }}
                                         </a>
                                     @endif
-                                    @if (!empty($model::$actions['edit']))
+                                    @if (! empty($model::$actions['edit']) && auth()->user()->can('update', $model))
                                         <a
                                             class="cursor-pointer text-sky-600 hover:text-sky-700"
                                             href="{{ route("$route.edit", $datum->id) }}"
@@ -362,7 +362,7 @@
                                             {{ $model::$actions['edit'] }}
                                         </a>
                                     @endif
-                                    @if (!empty($model::$actions['delete']))
+                                    @if (! empty($model::$actions['delete']) && auth()->user()->can('delete', $model))
                                         <span
                                             class="cursor-pointer text-red-500 hover:text-red-700"
                                             id="delete-button-{{ $datum->id }}"

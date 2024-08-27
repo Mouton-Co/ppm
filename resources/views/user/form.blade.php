@@ -23,41 +23,34 @@
 @endif
 
 <label class="label-dark" for="role">{{ __('Role') }}</label>
-<select {{ (!empty($edit) && $edit) && (auth()->user()->id == $user->id) ? 'disabled' : '' }}
+<select {{ (!empty($edit) && $edit) && (auth()->user()->cannot('update', App\Models\Role::class)) ? 'disabled' : '' }}
     class="w-full {{ !empty($errors->get('role')) ? 'field-error' : 'field-dark' }} mb-5" name="role" id="role">
     @foreach ($roles as $role)
-        <option {{ !empty($user->role->id) && $role->id == $user->role->id ? 'selected' : '' }}
+        <option {{ ! empty($user) && $role->id == $user->role->id ? 'selected' : '' }}
         value="{{ $role->id }}">
             {{ $role->role }}
         </option>
     @endforeach
 </select>
-{{-- if select is disabled still send through role_id --}}
-@if ((!empty($edit) && $edit) && (auth()->user()->id == $user->id))
-    <input type="hidden" name="role" value="{{ $user->role->id }}">
-@endif
-@if (!empty($errors->get('role')))
-    @foreach ($errors->get('role') as $error)
-        @include('components.error-message', ['error' => $error, 'hidden' => 'false', 'class' => 'mb-5'])
-    @endforeach
-@endif
 
-<label class="label-dark" for="password">{{ __('Password') }}</label>
-<input type="password" id="password" name="password"
-    class="{{ !empty($errors->get('password')) || !empty($errors->get('confirm_password'))
-    ? 'field-error' : 'field-dark' }} mb-5">
-@if (!empty($errors->get('password')))
-    @foreach ($errors->get('password') as $error)
-        @include('components.error-message', ['error' => $error, 'hidden' => 'false', 'class' => 'mb-5'])
-    @endforeach
-@endif
+@if (empty($edit) || (! empty($user) && $user->id == auth()->user()->id))
+    <label class="label-dark" for="password">{{ __('Password') }}</label>
+    <input type="password" id="password" name="password"
+        class="{{ !empty($errors->get('password')) || !empty($errors->get('confirm_password'))
+        ? 'field-error' : 'field-dark' }} mb-5">
+    @if (!empty($errors->get('password')))
+        @foreach ($errors->get('password') as $error)
+            @include('components.error-message', ['error' => $error, 'hidden' => 'false', 'class' => 'mb-5'])
+        @endforeach
+    @endif
 
-<label class="label-dark" for="confirm_password">{{ __('Confirm password') }}</label>
-<input type="password" id="confirm_password" name="confirm_password"
-    class="{{ !empty($errors->get('password')) || !empty($errors->get('confirm_password'))
-    ? 'field-error' : 'field-dark' }} mb-5">
-@if (!empty($errors->get('confirm_password')))
-    @foreach ($errors->get('confirm_password') as $error)
-        @include('components.error-message', ['error' => $error, 'hidden' => 'false', 'class' => 'mb-5'])
-    @endforeach
+    <label class="label-dark" for="confirm_password">{{ __('Confirm password') }}</label>
+    <input type="password" id="confirm_password" name="confirm_password"
+        class="{{ !empty($errors->get('password')) || !empty($errors->get('confirm_password'))
+        ? 'field-error' : 'field-dark' }} mb-5">
+    @if (!empty($errors->get('confirm_password')))
+        @foreach ($errors->get('confirm_password') as $error)
+            @include('components.error-message', ['error' => $error, 'hidden' => 'false', 'class' => 'mb-5'])
+        @endforeach
+    @endif
 @endif

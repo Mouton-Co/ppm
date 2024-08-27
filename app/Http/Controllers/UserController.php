@@ -25,6 +25,10 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        if ($request->user()->cannot('read', User::class)) {
+            abort(403);
+        }
+
         $this->checkTableConfigurations('users', User::class);
         $users = $this->filter(User::class, User::query(), $request)->paginate(15);
 
@@ -45,8 +49,12 @@ class UserController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
+        if ($request->user()->cannot('create', User::class)) {
+            abort(403);
+        }
+
         $roles = Role::all();
 
         return view('user.create')->with([
@@ -59,6 +67,10 @@ class UserController extends Controller
      */
     public function store(UserStoreRequest $request)
     {
+        if ($request->user()->cannot('create', User::class)) {
+            abort(403);
+        }
+
         User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -76,18 +88,12 @@ class UserController extends Controller
      */
     public function edit(string $id)
     {
+        if (auth()->user()->cannot('update', User::class)) {
+            abort(403);
+        }
+
         $user = User::find($id);
         $roles = Role::all();
-
-        // if user not found OR
-        // if not admin AND not editing own profile
-        if (
-            empty($user)
-            || ($user->id != auth()->user()->id
-                && auth()->user()->role->role != 'Admin')
-        ) {
-            return redirect()->route('dashboard');
-        }
 
         return view('user.edit')->with([
             'user' => $user,
@@ -101,6 +107,10 @@ class UserController extends Controller
      */
     public function update(UserUpdateRequest $request, string $id)
     {
+        if (auth()->user()->cannot('update', User::class)) {
+            abort(403);
+        }
+
         $user = User::find($id);
 
         if (empty($user)) {
@@ -127,6 +137,10 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
+        if (auth()->user()->cannot('delete', User::class)) {
+            abort(403);
+        }
+
         $user = User::find($id);
 
         if (empty($user)) {

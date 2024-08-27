@@ -31,8 +31,15 @@ class SubmissionController extends Controller
      *
      * @return View
      */
-    public function show()
+    public function show(Request $request)
     {
+        if (
+            $request->user()->cannot('read', Submission::class) ||
+            $request->user()->cannot('create', Submission::class)
+        ) {
+            abort(403);
+        }
+
         $user = User::find(auth()->user()->id);
         $timestamp = Carbon::now()->format('YmdGis');
 
@@ -70,6 +77,10 @@ class SubmissionController extends Controller
      */
     public function store(Request $request)
     {
+        if ($request->user()->cannot('create', Submission::class)) {
+            abort(403);
+        }
+
         $submission = Submission::where('submission_code', $request->get('submission_code'))->first();
 
         if (empty($submission)) {
@@ -124,6 +135,10 @@ class SubmissionController extends Controller
      */
     public function index(Request $request)
     {
+        if ($request->user()->cannot('read', Submission::class)) {
+            abort(403);
+        }
+
         $this->checkTableConfigurations('submissions', Submission::class);
         $submissions = $this->filter(Submission::class, Submission::query(), $request)->where('submitted', 1)->paginate(15);
 
@@ -146,8 +161,12 @@ class SubmissionController extends Controller
      *
      * @return View
      */
-    public function view($id)
+    public function view(Request $request, $id)
     {
+        if ($request->user()->cannot('read', Submission::class)) {
+            abort(403);
+        }
+
         $submission = Submission::find($id);
 
         if (empty($submission)) {
@@ -166,8 +185,12 @@ class SubmissionController extends Controller
      *
      * @return Redirect
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
+        if ($request->user()->cannot('delete', Submission::class)) {
+            abort(403);
+        }
+
         $submission = Submission::find($id);
 
         if (empty($submission)) {
@@ -199,8 +222,12 @@ class SubmissionController extends Controller
     /**
      * Restore the specified resource from storage.
      */
-    public function restore(string $id)
+    public function restore(Request $request, string $id)
     {
+        if ($request->user()->cannot('restore', Submission::class)) {
+            abort(403);
+        }
+
         $datum = $this->model::withTrashed()->find($id);
 
         if (empty($datum)) {
@@ -222,8 +249,12 @@ class SubmissionController extends Controller
     /**
      * Trash the specified resource from storage.
      */
-    public function trash(string $id)
+    public function trash(Request $request, string $id)
     {
+        if ($request->user()->cannot('trash', Submission::class)) {
+            abort(403);
+        }
+        
         $datum = $this->model::withTrashed()->find($id);
 
         if (empty($datum)) {

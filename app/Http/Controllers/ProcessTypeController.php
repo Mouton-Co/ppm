@@ -23,6 +23,10 @@ class ProcessTypeController extends Controller
      */
     public function index(Request $request)
     {
+        if ($request->user()->cannot('read', ProcessType::class)) {
+            abort(403);
+        }
+
         $this->checkTableConfigurations('process_types', ProcessType::class);
         $processTypes = $this->filter(ProcessType::class, ProcessType::query(), $request)->paginate(15);
 
@@ -43,8 +47,12 @@ class ProcessTypeController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
+        if ($request->user()->cannot('create', ProcessType::class)) {
+            abort(403);
+        }
+
         return view('process-types.create');
     }
 
@@ -53,6 +61,10 @@ class ProcessTypeController extends Controller
      */
     public function store(StoreRequest $request)
     {
+        if ($request->user()->cannot('create', ProcessType::class)) {
+            abort(403);
+        }
+
         $requiredFiles = [];
         foreach ($request->required_files as $key => $value) {
             if ($value === 'on') {
@@ -77,8 +89,12 @@ class ProcessTypeController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ProcessType $processType)
+    public function edit(Request $request, ProcessType $processType)
     {
+        if ($request->user()->cannot('update', ProcessType::class)) {
+            abort(403);
+        }
+
         return view('process-types.edit')->with([
             'processType' => $processType,
         ]);
@@ -89,6 +105,10 @@ class ProcessTypeController extends Controller
      */
     public function update(UpdateRequest $request, ProcessType $processType)
     {
+        if ($request->user()->cannot('update', ProcessType::class)) {
+            abort(403);
+        }
+
         $requiredFiles = [];
         foreach ($request->required_files as $key => $value) {
             if ($value === 'on') {
@@ -113,8 +133,12 @@ class ProcessTypeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ProcessType $processType)
+    public function destroy(Request $request, ProcessType $processType)
     {
+        if ($request->user()->cannot('delete', ProcessType::class)) {
+            abort(403);
+        }
+
         $deleted = $processType->delete();
 
         if (! $deleted) {
