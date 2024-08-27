@@ -9,6 +9,7 @@ use App\Http\Requests\Parts\UpdateCheckboxRequest;
 use App\Http\Requests\Parts\UpdateRequest;
 use App\Http\Services\PartService;
 use App\Models\AutofillSupplier;
+use App\Models\Order;
 use App\Models\Part;
 use App\Models\Submission;
 use App\Models\Supplier;
@@ -306,6 +307,46 @@ class PartsController extends Controller
         }
 
         return redirect()->back();
+    }
+
+    /**
+     * Search and replace the given PO numbers
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function searchReplacePo(Request $request): \Illuminate\Http\RedirectResponse
+    {
+        if (! $request->user()->role->hasPermission('update_procurement')) {
+            abort(403);
+        }
+
+        /**
+         * check to see if an order for replace po already exists
+         */
+        if (! empty(Order::where('po_number', $request->get('replace_po'))->first())) {
+            return redirect()->back()->with([
+                'error' => 'Order with PO number '.$request->get('replace_po').' already exists',
+            ]);
+        }
+        
+        /**
+         * get all the parts for the current filter and replace the po number
+         */
+        $parts = $this->filter(Part::class, Part::query(), $request, Part::$procurementStructure)
+            ->where('po_number', $request->get('search_po'))
+            ->get();
+
+        if (! empty($parts)) {
+            foreach ($parts as $part) {
+                $part->po_number = $request->get('replace_po');
+                $part->save();
+            }
+        }
+
+        return redirect()->back()->with([
+            'success' => 'PO number '.$request->get('search_po').' replaced with '.$request->get('replace_po'),
+        ]);
     }
 
     /**

@@ -67,4 +67,38 @@
             </select>
         </form>
     </div>
+    <form
+        class="my-2 flex gap-3 overflow-x-scroll"
+        action="{{ route('parts.search-replace-po', request()->query()) }}"
+        method="POST"
+    >
+        @csrf
+        <div class="flex items-center justify-start gap-2">
+            <label
+                class="min-w-fit text-white"
+                for="search_po"
+            >{{ __('Bulk update PO numbers') }}</label>
+            <input
+                class="field-dark min-w-[300px]"
+                name="search_po"
+                type="text"
+                placeholder="Search..."
+                required
+            >
+        </div>
+        <div class="flex items-center justify-start gap-2">
+            <input
+                class="field-dark min-w-[300px]"
+                name="replace_po"
+                type="text"
+                placeholder="Replace with..."
+                required
+            >
+        </div>
+        <button
+            class="btn-sky text-nowrap max-w-fit"
+            type="submit"
+        >{{ __('Search and replace') }}
+        </button>
+    </form>
 @endif
