@@ -29,7 +29,7 @@
 @endphp
 
 <select
-    class="field {{ $bg }} cell-dropdown {{ $key == 'status' ? 'project-status-dropdown' : '' }} !w-[195px] cursor-pointer border-none !ring-0 focus:outline-none focus:ring-0"
+    class="field {{ $bg }} cell-dropdown {{ $key == 'status' ? 'project-status-dropdown' : '' }} !w-[195px] cursor-pointer border-none !ring-0 focus:outline-none focus:ring-0 @if (! empty($datum->replaced_by_submission)) !text-red-500 @endif"
     name="{{ $name }}"
     item-id="{{ $datum->id }}"
     model="{{ $model }}"

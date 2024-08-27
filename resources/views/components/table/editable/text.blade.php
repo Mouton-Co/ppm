@@ -8,7 +8,7 @@
 @endphp
 
 <input
-    class="cell-text tooltip-trigger {{ $disabled ? 'cursor-not-allowed' : 'cursor-text' }} h-full border-none bg-transparent px-0 text-sm hover:bg-sky-700 hover:text-white focus:outline-none focus:ring-0"
+    class="cell-text tooltip-trigger {{ $disabled ? 'cursor-not-allowed' : 'cursor-text' }} h-full border-none bg-transparent px-0 text-sm hover:bg-sky-700 hover:text-white focus:outline-none focus:ring-0 {{ ! empty($widthFull) && $widthFull ? 'w-full' : '' }}"
     name="{{ $key }}"
     type="{{ $key == 'date_stamp' ? 'date' : 'text' }}"
     value="{{ $datum->$key }}"

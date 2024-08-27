@@ -173,6 +173,19 @@
                         <dt class="details-list-title">{{ __('Notes') }}</dt>
                         <dd class="details-list-value">{{ $part->notes ?? '' }}</dd>
                     </div>
+
+                    {{-- editable text field for replaced by --}}
+                    <div class="details-list pl-4 sm:pl-4 md:pl-4">
+                        <dt class="details-list-title">{{ __('Replaced by') }}</dt>
+                        <dd class="details-list-value">
+                            <x-table.editable.text
+                                :model="App\Models\Part::class"
+                                key="replaced_by_submission"
+                                :datum="$part"
+                                :widthFull="true"
+                            />
+                        </dd>
+                    </div>
     
                     @if (count($part->files))
                         <div class="details-list pl-4 sm:pl-4 md:pl-4 grid-33-66 sm:gap-2 md:gap-2">
