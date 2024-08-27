@@ -182,7 +182,7 @@ class UploadFilesController extends Controller
                         ],
                         [
                             'type' => 'error',
-                            'text' => 'Files required: ',
+                            'text' => 'Files still required: ',
                             'list' => $requiredFiles,
                             'list_files' => 'true',
                         ],
