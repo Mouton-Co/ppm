@@ -18,4 +18,5 @@ Route::prefix('parts')->group(function () {
     Route::post('generate-po-numbers', [PartsController::class, 'generatePoNumbers'])
         ->name('parts.generate-po-numbers');
     Route::post('mark-as', [PartsController::class, 'markAs'])->name('parts.mark-as');
+    Route::post('search-replace-po', [PartsController::class, 'searchReplacePo'])->name('parts.search-replace-po');
 });
