@@ -303,7 +303,7 @@
                     </tr>
                 @endif
                 @foreach ($data as $datum)
-                    <tr class="border-b border-gray-700 bg-gray-800">
+                    <tr class="border-b border-gray-700 bg-gray-800 @if (! empty($datum->replaced_by_submission)) text-red-500 @endif">
                         @foreach (auth()->user()->table_configs['tables'][$table]['show'] as $key)
                             <td class="text-nowrap max-w-xs truncate px-6 py-2" item-id="{{ $datum->id }}" item-key="{{ $key }}">
                                 @if (!empty($structure[$key]['component']))

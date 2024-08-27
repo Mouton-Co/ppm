@@ -57,6 +57,7 @@ class Part extends Model
         'treatment_2_supplier',
         'qty_received',
         'stage',
+        'job_card',
     ];
 
     public static $statuses = [
@@ -232,6 +233,20 @@ class Part extends Model
             'type' => 'text',
             'sortable' => true,
             'filterable' => true,
+        ],
+        'job_card' => [
+            'label' => 'Job Card #',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+            'component' => 'editable.text',
+        ],
+        'replaced_by_submission' => [
+            'label' => 'Replaced by',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+            'component' => 'editable.text',
         ],
         'comment_procurement' => [
             'label' => 'Procurement Comment',
@@ -487,6 +502,20 @@ class Part extends Model
         ],
         'qc_issue_reason' => [
             'label' => 'QC Issue Reason',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+            'component' => 'editable.text',
+        ],
+        'job_card' => [
+            'label' => 'Job Card #',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+            'component' => 'editable.text',
+        ],
+        'replaced_by_submission' => [
+            'label' => 'Replaced by',
             'type' => 'text',
             'sortable' => true,
             'filterable' => true,

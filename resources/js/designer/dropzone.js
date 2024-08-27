@@ -203,7 +203,7 @@ function writeSubmissionFeedback() {
                     if (line.list_files != undefined && line.list_files == "true") {
                         // output a checked list if it is files
                         let checked = (element.checked != undefined && element.checked) == "true"
-                        ? 'line-through'
+                        ? 'hidden'
                         : "";
                         $('#submission-feedback').append(
                             "<li class='text-sm flex items-center gap-2 "+element.color+" "+checked+"'>"+element.text+"</li>"

@@ -69,7 +69,7 @@
             <div class="details-list">
                 <dt class="details-list-title">{{ __('Type of submission') }}</dt>
                 <dd class="details-list-value">
-                    {{ config('dropdowns.submission_types.' . $submission->submission_type) ?? 'N/A' }}
+                    {{ App\Models\Submission::$structure['submission_type']['casts'][$submission->submission_type] ?? 'N/A' }}
                 </dd>
             </div>
             <div class="details-list">
@@ -172,6 +172,19 @@
                     <div class="details-list pl-4 sm:pl-4 md:pl-4">
                         <dt class="details-list-title">{{ __('Notes') }}</dt>
                         <dd class="details-list-value">{{ $part->notes ?? '' }}</dd>
+                    </div>
+
+                    {{-- editable text field for replaced by --}}
+                    <div class="details-list pl-4 sm:pl-4 md:pl-4">
+                        <dt class="details-list-title">{{ __('Replaced by') }}</dt>
+                        <dd class="details-list-value">
+                            <x-table.editable.text
+                                :model="App\Models\Part::class"
+                                key="replaced_by_submission"
+                                :datum="$part"
+                                :widthFull="true"
+                            />
+                        </dd>
                     </div>
     
                     @if (count($part->files))
