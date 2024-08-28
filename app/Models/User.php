@@ -144,7 +144,11 @@ class User extends Authenticatable
             $access = true;
         }
 
-        if (request()->segment(1) == 'submisssions' && auth()->user()->role->hasPermission('update_submissions')) {
+        if (
+            (request()->segment(1) == 'submissions' ||
+            request()->segment(1) == 'submission') &&
+            auth()->user()->role->hasPermission('update_design')
+        ) {
             $access = true;
         }
 
