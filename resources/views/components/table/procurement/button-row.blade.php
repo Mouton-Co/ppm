@@ -2,7 +2,7 @@
     <hr>
     <div class="my-2 flex gap-3 overflow-x-scroll">
         <form
-            action="{{ route('parts.generate-po-numbers') }}"
+            action="{{ route('parts.generate-po-numbers', request()->query()) }}"
             method="post"
         >
             @csrf

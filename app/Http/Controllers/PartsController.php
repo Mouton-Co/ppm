@@ -278,13 +278,21 @@ class PartsController extends Controller
             abort(403);
         }
 
-        // all parts grouped by submission with no PO number
-        $submissions = Part::where('po_number', null)->where('supplier_id', '!=', null)
-            ->get()->groupBy('submission_id');
+        // all parts grouped by submission with no PO number with current filters
+        $submissions = $this->filter(Part::class, Part::query(), $request, Part::$procurementStructure)
+            ->where('po_number', null)
+            ->where('supplier_id', '!=', null)
+            ->get()
+            ->groupBy('submission_id');
 
         foreach ($submissions as $parts) {
-            $suppliers = Part::where('po_number', null)->where('submission_id', $parts[0]->submission_id)
-                ->where('supplier_id', '!=', null)->get()->groupBy('supplier_id');
+            // all parts grouped by supplier with current filters
+            $suppliers = $this->filter(Part::class, Part::query(), $request, Part::$procurementStructure)
+                ->where('po_number', null)
+                ->where('submission_id', $parts[0]->submission_id)
+                ->where('supplier_id', '!=', null)
+                ->get()
+                ->groupBy('supplier_id');
 
             // get latest PO number and increment by 1
             $poPrefix = str_pad($parts[0]->submission->machine_number, 2, '0', STR_PAD_LEFT).
