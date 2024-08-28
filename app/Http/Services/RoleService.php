@@ -30,7 +30,6 @@ class RoleService
      * @var array
      */
     protected array $excludes = [
-        'update_design',
         'create_procurement',
         'delete_procurement',
         'create_warehouse',

@@ -38,7 +38,7 @@ class RoleController extends Controller
     /**
      * @var array
      */
-    protected array $permissionTableExcludes = ['update_design', 'create_procurement', 'delete_procurement', 'restore_procurement', 'force_delete_procurement', 'create_warehouse', 'delete_warehouse', 'restore_warehouse', 'force_delete_warehouse'];
+    protected array $permissionTableExcludes = ['create_procurement', 'delete_procurement', 'restore_procurement', 'force_delete_procurement', 'create_warehouse', 'delete_warehouse', 'restore_warehouse', 'force_delete_warehouse'];
 
     /**
      * @var RoleService
