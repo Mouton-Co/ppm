@@ -133,8 +133,8 @@ return [
             'type' => 'life-cycle-stamps',
             'options' => [
                 'raw_part_received_at' => 'Raw Part Received At',
-                'treatment_1_part_received_at' => 'Treatment 1 Received At',
-                'treatment_2_part_received_at' => 'Treatment 2 Received At',
+                'treatment_1_part_received_at' => 'Treatment 1 Set At',
+                'treatment_2_part_received_at' => 'Treatment 2 Set At',
                 'completed_part_received_at' => 'Completed Part Received At',
                 'qc_passed_at' => 'QC Passed At',
             ],
