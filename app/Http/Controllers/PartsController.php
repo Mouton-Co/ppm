@@ -374,6 +374,7 @@ class PartsController extends Controller
                 ->where('supplier_id', null)
                 ->where('name', 'like', '%'.$autofillSupplier->text.'%')
                 ->where('part_ordered', false)
+                ->where('name', 'not like', '%PPM%')
                 ->get();
 
             foreach ($parts as $part) {
@@ -388,6 +389,7 @@ class PartsController extends Controller
         $parts = $this->filter(Part::class, Part::query(), $request, Part::$procurementStructure)
             ->where('supplier_id', null)
             ->where('part_ordered', false)
+            ->where('name', 'not like', '%PPM%')
             ->get();
 
         foreach ($parts as $part) {
@@ -397,19 +399,13 @@ class PartsController extends Controller
                 case 'LCM':
                 case 'LCBM':
                 case 'LCBW':
-                    if (
-                        $request->has('lc_supplier') &&
-                        ! empty($lcSupplier = Supplier::find($request->get('lc_supplier')))
-                    ) {
+                    if (! empty($lcSupplier = Supplier::where('name', 'LC')->first())) {
                         $part->supplier_id = $lcSupplier->id;
                         $part->save();
                     }
                     break;
                 case 'MCH':
-                    if (
-                        $request->has('part_supplier') &&
-                        ! empty($partSupplier = Supplier::find($request->get('part_supplier')))
-                    ) {
+                    if (! empty($partSupplier = Supplier::where('name', 'MCH')->first())) {
                         $part->supplier_id = $partSupplier->id;
                         $part->save();
                     }
