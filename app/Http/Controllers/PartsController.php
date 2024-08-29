@@ -374,7 +374,7 @@ class PartsController extends Controller
                 ->where('supplier_id', null)
                 ->where('name', 'like', '%'.$autofillSupplier->text.'%')
                 ->where('part_ordered', false)
-                ->where('name', 'not like', '%PPM%')
+                ->where('name', 'not like', 'PPM%')
                 ->get();
 
             foreach ($parts as $part) {
@@ -389,7 +389,6 @@ class PartsController extends Controller
         $parts = $this->filter(Part::class, Part::query(), $request, Part::$procurementStructure)
             ->where('supplier_id', null)
             ->where('part_ordered', false)
-            ->where('name', 'not like', '%PPM%')
             ->get();
 
         foreach ($parts as $part) {
