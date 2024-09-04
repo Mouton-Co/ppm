@@ -90,7 +90,7 @@
                     @foreach ($order->parts()->get() as $part)
                         <div class="order-card-body-item w-full justify-between">
                             <span>{{ $part->name ?? 'N/A' }}</span>
-                            <span>{{ $part->quantity ?? 'N/A' }}</span>
+                            <span>{{ $part->quantity_ordered ?? 'N/A' }}</span>
                         </div>
                     @endforeach
                 </div>
