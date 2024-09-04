@@ -23,10 +23,34 @@ class FileController extends Controller
                 $fileName = explode('files/temp/'.$part->submission->submission_code.'/', $split)[1];
 
                 $file = new File();
+
+                /*
+                * For dwg and dxf files
+                * - If file does not have _R, append _R to it
+                */
+                if (
+                    ($fileType === 'dwg' ||
+                    $fileType === 'dxf') &&
+                    ! str_contains($fileName, '_R')
+                ) {
+                    $fileName .= '_R';
+                }
+
+                $file->size = $this->formatSizeUnits(Storage::size($fileLocation));
+                $fileLocation = str_replace(".{$fileType}", '', $fileLocation);
+
+                if (
+                    $fileType === 'dwg' ||
+                    $fileType === 'dxf'
+                ) {
+                    $fileLocation .= "_R.{$fileType}";
+                } else {
+                    $fileLocation .= ".{$fileType}";
+                }
+
                 $file->name = $fileName;
                 $file->file_type = $fileType;
                 $file->location = env('APP_ENV') . '/' .  str_replace('/temp', '', $fileLocation);
-                $file->size = $this->formatSizeUnits(Storage::size($fileLocation));
                 $file->part_id = $part->id;
                 $file->save();
             }
