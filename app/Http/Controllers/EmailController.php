@@ -93,7 +93,7 @@ class EmailController extends Controller
         $body .= '<td><strong>Material</strong></td>';
         $body .= '<td><strong>Material Thickness</strong></td>';
         $body .= '<td><strong>Stage</strong></td></tr>';
-        foreach ($order->parts()->get() as $part) {
+        foreach ($order->parts()->orderBy('stage')->orderBy('name')->get() as $part) {
             $body .= '<tr>';
             $body .= "<td>{$part->name}</td>";
             $body .= "<td>{$part->quantity_ordered}</td>";
@@ -126,7 +126,7 @@ class EmailController extends Controller
         $body .= '<td><strong>Part Name</strong></td>';
         $body .= '<td><strong>Qty</strong></td>';
         $body .= '<td><strong>Stage</strong></td></tr>';
-        foreach ($order->parts()->get() as $part) {
+        foreach ($order->parts()->orderBy('stage')->orderBy('name')->get() as $part) {
             $body .= '<tr>';
             $body .= "<td>{$part->name}</td>";
             $body .= "<td>{$part->quantity_ordered}</td>";
