@@ -419,6 +419,14 @@ class Part extends Model
             'component' => 'editable.number',
             'min' => 0,
         ],
+        'quantity_in_stock' => [
+            'label' => 'Qty in stock',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+            'component' => 'editable.number',
+            'min' => 0,
+        ],
         'material' => [
             'label' => 'Material',
             'type' => 'text',
