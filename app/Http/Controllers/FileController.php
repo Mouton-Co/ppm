@@ -40,8 +40,9 @@ class FileController extends Controller
                 $fileLocation = str_replace(".{$fileType}", '', $fileLocation);
 
                 if (
-                    $fileType === 'dwg' ||
-                    $fileType === 'dxf'
+                    ($fileType === 'dwg' ||
+                    $fileType === 'dxf')
+                    && ! str_contains($fileLocation, '_R')
                 ) {
                     $fileLocation .= "_R.{$fileType}";
                 } else {

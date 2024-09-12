@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Role;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Artisan;
 
 class RoleSeeder extends Seeder
 {
@@ -22,5 +23,7 @@ class RoleSeeder extends Seeder
                 'role' => $role,
             ]);
         }
+        
+        Artisan::call('app:initialise-role-permissions');
     }
 }
