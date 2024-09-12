@@ -228,6 +228,10 @@ class Part extends Model
             'label' => 'COC',
             'type' => 'text',
         ],
+        'machine_number' => [
+            'label' => 'Machine #',
+            'type' => 'text',
+        ],
         'part_ordered_at' => [
             'label' => 'Part Ordered At',
             'type' => 'text',
@@ -482,6 +486,10 @@ class Part extends Model
             'label' => 'COC',
             'type' => 'text',
         ],
+        'machine_number' => [
+            'label' => 'Machine #',
+            'type' => 'text',
+        ],
         'lifecycle_stamps' => [
             'label' => 'Part Lifecycle Stamps',
             'type' => 'text',
@@ -590,6 +598,10 @@ class Part extends Model
     public function getCocAttribute()
     {
         return $this->submission->project->coc ?? 'N/A';
+    }
+    public function getMachineNumberAttribute()
+    {
+        return $this->submission->machine_number ?? 'N/A';
     }
 
     /*
