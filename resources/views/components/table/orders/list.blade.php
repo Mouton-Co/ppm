@@ -1,6 +1,9 @@
 {{-- generate orders --}}
 @can('create', App\Models\Order::class)
-    <a href="{{ route('orders.generate') }}" class="btn-sky max-w-fit mb-2">
+    <a
+        class="btn-sky mb-2 max-w-fit"
+        href="{{ route('orders.generate') }}"
+    >
         {{ __('Generate orders') }}
     </a>
 @endcan
@@ -60,27 +63,27 @@
                     <span>PO {{ $order->po_number ?? 'N/A' }}</span>
                     <div class="flex gap-3">
                         <x-order.status :status="$order->status ?? 'N/A'" />
-                        @if (request()->has('archived') && request()->archived == "true")
+                        @if (request()->has('archived') && request()->archived == 'true')
                             @can('restore', App\Models\Order::class)
                                 <x-icon.refresh
+                                    class="delete-po restore-button aspect-square w-5 text-sky-500 hover:text-sky-700"
                                     route="{{ route('orders.restore', $order->id) }}"
                                     item-id="{{ $order->id }}"
-                                    class="w-5 aspect-square text-sky-500 hover:text-sky-700 delete-po restore-button"
                                 />
                             @endcan
                             @can('forceDelete', App\Models\Order::class)
                                 <x-icon.trash
+                                    class="delete-po trash-button aspect-square w-5 text-red-400 hover:text-red-600"
                                     route="{{ route('orders.trash', $order->id) }}"
                                     item-id="{{ $order->id }}"
-                                    class="w-5 aspect-square text-red-400 hover:text-red-600 delete-po trash-button"
                                 />
                             @endcan
                         @else
                             @can('delete', App\Models\Order::class)
                                 <x-icon.trash
+                                    class="delete-po aspect-square w-5 text-red-400 hover:text-red-600"
                                     route="{{ route('orders.delete', $order->id) }}"
                                     item-id="{{ $order->id }}"
-                                    class="w-5 aspect-square text-red-400 hover:text-red-600 delete-po"
                                 />
                             @endcan
                         @endif
@@ -103,8 +106,8 @@
                     </div>
                 @else
                     <div class="order-card-footer flex items-center justify-between">
-                        @if (request()->has('archived') && request()->archived == "true")
-                            <span class="text-gray-500 text-sm py-2 w-full text-center">
+                        @if (request()->has('archived') && request()->archived == 'true')
+                            <span class="w-full py-2 text-center text-sm text-gray-500">
                                 {{ __('Purchase order is archived') }}
                             </span>
                         @else
@@ -116,6 +119,22 @@
                                     <span>{{ __('Prepare email') }}</span>
                                     <span aria-hidden="true">&rarr;</span>
                                 </a>
+                                <form
+                                    action="{{ route('parts.mark-as', [
+                                        'po_number' => $order->po_number,
+                                        'mark_as' => 'qc_passed',
+                                    ]) }}"
+                                    method="post"
+                                >
+                                    @csrf
+                                    <button
+                                        class="hover:text-sky-600 flex"
+                                        type="submit"
+                                    >
+                                        <span class="text-nowrap">{{ __('Mark as QC passed') }}</span>
+                                        <span aria-hidden="true">&rarr;</span>
+                                    </button>
+                                </form>
                                 <a
                                     class="text-right hover:text-sky-600"
                                     href="{{ route('orders.complete', $order->id) }}"
