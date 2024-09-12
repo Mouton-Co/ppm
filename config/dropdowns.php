@@ -3,7 +3,7 @@
 return [
     'submission_types' => [
         'additional_project' => 'Additional Project',
-        'correction' => 'Correction',
+        'addition' => 'Addition',
         'new_bom' => 'New BOM',
         'replacement' => 'Replacement',
     ],

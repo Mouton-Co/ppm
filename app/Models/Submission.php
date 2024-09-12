@@ -67,7 +67,7 @@ class Submission extends Model
             'filterable' => true,
             'filterable_options' => [
                 'Additional Project',
-                'Correction',
+                'Addition',
                 'New BOM',
                 'Replacement',
                 'Modification',
@@ -75,7 +75,7 @@ class Submission extends Model
             ],
             'casts' => [
                 0 => 'Additional Project',
-                1 => 'Correction',
+                1 => 'Addition',
                 2 => 'New BOM',
                 3 => 'Replacement',
                 4 => 'Modification',
