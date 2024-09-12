@@ -35,8 +35,12 @@ class Part extends Model
         'raw_part_received_at',
         'treatment_1_part_received',
         'treatment_1_part_received_at',
+        'treatment_1_part_dispatched',
+        'treatment_1_part_dispatched_at',
         'treatment_2_part_received',
         'treatment_2_part_received_at',
+        'treatment_2_part_dispatched',
+        'treatment_2_part_dispatched_at',
         'completed_part_received',
         'completed_part_received_at',
         'submission_id',
@@ -73,7 +77,9 @@ class Part extends Model
     public static $markedAs = [
         'untick_all' => 'Untick All',
         'raw_part_received' => 'Raw Part Received',
+        'treatment_1_part_dispatched' => 'Treatment 1 Part Dispatched',
         'treatment_1_part_received' => 'Treatment 1 Part Received',
+        'treatment_2_part_dispatched' => 'Treatment 2 Part Dispatched',
         'treatment_2_part_received' => 'Treatment 2 Part Received',
         'completed_part_received' => 'Completed Part Received',
         'qc_passed' => 'QC Passed',
@@ -625,11 +631,23 @@ class Part extends Model
             case 'raw_part_received':
                 $enabled = $this->part_ordered && ! $this->treatment_1_part_received;
                 break;
-            case 'treatment_1_part_received':
+            case 'treatment_1_part_dispatched':
                 $enabled = $this->raw_part_received &&
-                    ! $this->treatment_2_part_received &&
+                    ! $this->treatment_1_part_received &&
                     ! empty($this->treatment_1) &&
                     $this->treatment_1 != '-';
+                break;
+            case 'treatment_1_part_received':
+                $enabled = $this->treatment_1_part_dispatched &&
+                    ! $this->treatment_2_part_dispatched &&
+                    ! empty($this->treatment_1) &&
+                    $this->treatment_1 != '-';
+                break;
+            case 'treatment_2_part_dispatched':
+                $enabled = $this->treatment_1_part_received &&
+                    ! $this->treatment_2_part_received &&
+                    ! empty($this->treatment_2) &&
+                    $this->treatment_2 != '-';
                 break;
             case 'treatment_2_part_received':
                 $enabled = $this->treatment_1_part_received &&
