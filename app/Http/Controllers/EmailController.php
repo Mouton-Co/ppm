@@ -37,7 +37,7 @@ class EmailController extends Controller
             $part->save();
         }
 
-        return redirect()->route('orders.index')->with('success', 'Email sent successfully!');
+        return redirect()->back()->with('success', 'Email sent successfully!');
     }
 
     /**

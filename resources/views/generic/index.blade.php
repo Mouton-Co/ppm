@@ -305,7 +305,7 @@
                 @foreach ($data as $datum)
                     <tr class="border-b border-gray-700 bg-gray-800 @if (! empty($datum->replaced_by_submission)) text-red-500 @endif">
                         @foreach (auth()->user()->table_configs['tables'][$table]['show'] as $key)
-                            <td class="text-nowrap max-w-xs truncate px-6 py-2" item-id="{{ $datum->id }}" item-key="{{ $key }}">
+                            <td class="text-nowrap max-w-xs truncate px-6 py-2 {{ $key == 'lifecycle_stamps' ? 'min-w-[420px]' : '' }}" item-id="{{ $datum->id }}" item-key="{{ $key }}">
                                 @if (!empty($structure[$key]['component']))
                                     @include('components.table.' . $structure[$key]['component'], [
                                         'datum' => $datum,

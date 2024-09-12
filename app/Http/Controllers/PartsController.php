@@ -198,10 +198,14 @@ class PartsController extends Controller
             case 'completed_part_received':
                 $part->status = $part->$field ? 'qc' : 'treatment';
                 if ($part->$field) {
+                    $part->treatment_1_part_dispatched = 1;
                     $part->treatment_1_part_received = 1;
+                    $part->treatment_2_part_dispatched = 1;
                     $part->treatment_2_part_received = 1;
                 } else {
+                    $part->treatment_1_part_dispatched = $part->treatment_1_part_received_at ? 1 : 0;
                     $part->treatment_1_part_received = $part->treatment_1_part_received_at ? 1 : 0;
+                    $part->treatment_2_part_dispatched = $part->treatment_2_part_received_at ? 1 : 0;
                     $part->treatment_2_part_received = $part->treatment_2_part_received_at ? 1 : 0;
                 }
                 break;
@@ -230,11 +234,25 @@ class PartsController extends Controller
                         Carbon::parse($part->raw_part_received_at)->format('Y-m-d H:i:s') :
                         '',
                 ],
+                'treatment_1_part_dispatched' => [
+                    'checked' => $part->treatment_1_part_dispatched,
+                    'enabled' => $part->checkboxEnabled('treatment_1_part_dispatched'),
+                    'at' => ! empty($part->treatment_1_part_dispatched_at) ?
+                        Carbon::parse($part->treatment_1_part_dispatched_at)->format('Y-m-d H:i:s') :
+                        '',
+                ],
                 'treatment_1_part_received' => [
                     'checked' => $part->treatment_1_part_received,
                     'enabled' => $part->checkboxEnabled('treatment_1_part_received'),
                     'at' => ! empty($part->treatment_1_part_received_at) ?
                         Carbon::parse($part->treatment_1_part_received_at)->format('Y-m-d H:i:s') :
+                        '',
+                ],
+                'treatment_2_part_dispatched' => [
+                    'checked' => $part->treatment_2_part_dispatched,
+                    'enabled' => $part->checkboxEnabled('treatment_2_part_dispatched'),
+                    'at' => ! empty($part->treatment_2_part_dispatched_at) ?
+                        Carbon::parse($part->treatment_2_part_dispatched_at)->format('Y-m-d H:i:s') :
                         '',
                 ],
                 'treatment_2_part_received' => [
@@ -442,13 +460,17 @@ class PartsController extends Controller
         foreach ($parts as $part) {
             if ($request->get('mark_as') == 'untick_all') {
                 $part->raw_part_received = false;
+                $part->treatment_1_part_dispatched = false;
                 $part->treatment_1_part_received = false;
+                $part->treatment_2_part_dispatched = false;
                 $part->treatment_2_part_received = false;
                 $part->completed_part_received = false;
                 $part->qc_passed = false;
 
                 $part->raw_part_received_at = null;
+                $part->treatment_1_part_dispatched_at = null;
                 $part->treatment_1_part_received_at = null;
+                $part->treatment_2_part_dispatched_at = null;
                 $part->treatment_2_part_received_at = null;
                 $part->completed_part_received_at = null;
                 $part->qc_passed_at = null;
@@ -459,24 +481,83 @@ class PartsController extends Controller
                 $part->raw_part_received_at = now();
                 $part->status = 'treatment';
 
+                $part->treatment_1_part_dispatched = false;
                 $part->treatment_1_part_received = false;
+                $part->treatment_2_part_dispatched = false;
+                $part->treatment_2_part_received = false;
+                $part->completed_part_received = false;
+                $part->qc_passed = false;
+
+                $part->treatment_1_part_dispatched_at = null;
+                $part->treatment_1_part_received_at = null;
+                $part->treatment_2_part_dispatched_at = null;
+                $part->treatment_2_part_received_at = null;
+                $part->completed_part_received_at = null;
+                $part->qc_passed_at = null;
+                $part->qty_received = $part->quantity_ordered;
+            } elseif ($request->get('mark_as') == 'treatment_1_part_dispatched') {
+                if (! $part->raw_part_received) {
+                    $part->raw_part_received = true;
+                    $part->raw_part_received_at = now();
+                }
+
+                $part->treatment_1_part_dispatched = true;
+                $part->treatment_1_part_dispatched_at = now();
+                $part->status = 'treatment';
+
+                $part->treatment_1_part_received = false;
+                $part->treatment_2_part_dispatched = false;
                 $part->treatment_2_part_received = false;
                 $part->completed_part_received = false;
                 $part->qc_passed = false;
 
                 $part->treatment_1_part_received_at = null;
+                $part->treatment_2_part_dispatched_at = null;
                 $part->treatment_2_part_received_at = null;
                 $part->completed_part_received_at = null;
                 $part->qc_passed_at = null;
-                $part->qty_received = $part->quantity_ordered;
             } elseif ($request->get('mark_as') == 'treatment_1_part_received') {
                 if (! $part->raw_part_received) {
                     $part->raw_part_received = true;
                     $part->raw_part_received_at = now();
                 }
 
+                if (! $part->treatment_1_part_dispatched) {
+                    $part->treatment_1_part_dispatched = true;
+                    $part->treatment_1_part_dispatched_at = now();
+                }
+
                 $part->treatment_1_part_received = true;
                 $part->treatment_1_part_received_at = now();
+                $part->status = 'treatment';
+
+                $part->treatment_2_part_dispatched = false;
+                $part->treatment_2_part_received = false;
+                $part->completed_part_received = false;
+                $part->qc_passed = false;
+
+                $part->treatment_2_part_dispatched_at = null;
+                $part->treatment_2_part_received_at = null;
+                $part->completed_part_received_at = null;
+                $part->qc_passed_at = null;
+            } elseif ($request->get('mark_as') == 'treatment_2_part_dispatched') {
+                if (! $part->raw_part_received) {
+                    $part->raw_part_received = true;
+                    $part->raw_part_received_at = now();
+                }
+
+                if (! $part->treatment_1_part_dispatched) {
+                    $part->treatment_1_part_dispatched = true;
+                    $part->treatment_1_part_dispatched_at = now();
+                }
+
+                if (! $part->treatment_1_part_received) {
+                    $part->treatment_1_part_received = true;
+                    $part->treatment_1_part_received_at = now();
+                }
+
+                $part->treatment_2_part_dispatched = true;
+                $part->treatment_2_part_dispatched_at = now();
                 $part->status = 'treatment';
 
                 $part->treatment_2_part_received = false;
@@ -492,9 +573,19 @@ class PartsController extends Controller
                     $part->raw_part_received_at = now();
                 }
 
+                if (! $part->treatment_1_part_dispatched) {
+                    $part->treatment_1_part_dispatched = true;
+                    $part->treatment_1_part_dispatched_at = now();
+                }
+
                 if (! $part->treatment_1_part_received) {
                     $part->treatment_1_part_received = true;
                     $part->treatment_1_part_received_at = now();
+                }
+
+                if (! $part->treatment_2_part_dispatched) {
+                    $part->treatment_2_part_dispatched = true;
+                    $part->treatment_2_part_dispatched_at = now();
                 }
 
                 $part->treatment_2_part_received = true;
@@ -512,8 +603,16 @@ class PartsController extends Controller
                     $part->raw_part_received_at = now();
                 }
 
+                if (! $part->treatment_1_part_dispatched) {
+                    $part->treatment_1_part_dispatched = true;
+                }
+
                 if (! $part->treatment_1_part_received) {
                     $part->treatment_1_part_received = true;
+                }
+
+                if (! $part->treatment_2_part_dispatched) {
+                    $part->treatment_2_part_dispatched = true;
                 }
 
                 if (! $part->treatment_2_part_received) {
@@ -532,8 +631,16 @@ class PartsController extends Controller
                     $part->raw_part_received_at = now();
                 }
 
+                if (! $part->treatment_1_part_dispatched) {
+                    $part->treatment_1_part_dispatched = true;
+                }
+
                 if (! $part->treatment_1_part_received) {
                     $part->treatment_1_part_received = true;
+                }
+
+                if (! $part->treatment_2_part_dispatched) {
+                    $part->treatment_2_part_dispatched = true;
                 }
 
                 if (! $part->treatment_2_part_received) {
