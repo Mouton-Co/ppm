@@ -28,7 +28,13 @@ class OrderController extends Controller
             abort(403);
         }
 
-        $orders = $this->filter(Order::class, Order::query(), $request)->paginate(15);
+        if ($request->has('status') && $request->status === 'All except ordered') {
+            $orders = $this->filter(Order::class, Order::query(), $request)
+                ->where('status', '!=', 'ordered')
+                ->paginate(15);
+        } else {
+            $orders = $this->filter(Order::class, Order::query(), $request)->paginate(15);
+        }
 
         if ($orders->currentPage() > 1 && $orders->lastPage() < $orders->currentPage()) {
             return redirect()->route('orders.index', array_merge(['page' => $orders->lastPage()], $request->except(['page'])));

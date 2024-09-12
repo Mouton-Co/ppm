@@ -54,7 +54,9 @@
                     @can('read', App\Models\Order::class)
                         <li>
                             <a class="nav-item-{{ request()->segment(1) == 'orders' ? 'active' : 'default' }}"
-                            href="{{ route('orders.index') }}">
+                            href="{{ route('orders.index', [
+                                'status' => 'All except ordered',
+                            ]) }}">
                                 <x-icon.order class="h-6 w-6 shrink-0" />
                                 {{ __('Purchase Orders') }}
                             </a>

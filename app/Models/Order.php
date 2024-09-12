@@ -55,11 +55,7 @@ class Order extends Model
             'label' => 'Status',
             'type' => 'dropdown',
             'filterable' => true,
-            'filterable_options' => [
-                'processing' => 'Processing',
-                'emailed' => 'Email Sent',
-                'ordered' => 'Ordered',
-            ],
+            'filterable_options' => 'custom',
         ],
         'supplier_name' => [
             'label' => 'Supplier',
@@ -99,5 +95,21 @@ class Order extends Model
     public function parts()
     {
         return Part::where('po_number', $this->po_number);
+    }
+
+    /**
+     * Get the status of the order
+     */
+    public static function getCustomStatusAttribute()
+    {
+        $statuses = self::STATUSES;
+        array_unshift($statuses, 'All except ordered');
+
+        $options = [];
+        foreach ($statuses as $status) {
+            $options[$status] = $status;
+        }
+
+        return $options;
     }
 }

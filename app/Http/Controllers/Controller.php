@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
 use App\Models\Project;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -166,6 +167,14 @@ class Controller extends BaseController
                  * continue and do manually in the controller
                  */
                 if ($this->model == Project::class && $key == 'status' && $this->request->get('status') == 'All except closed') {
+                    continue;
+                }
+
+                /**
+                 * if model is PurchaseOrder and field is status and value is 'all except ordered'
+                 * continue and do manually in the controller
+                 */
+                if ($this->model == Order::class && $key == 'status' && $this->request->get('status') == 'All except ordered') {
                     continue;
                 }
 
