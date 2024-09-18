@@ -86,6 +86,7 @@ class EmailController extends Controller
     {
         $body = '<p>Good Day,</p>';
         $body .= '<p>We would like to order the below items, using PO Number: '.$order->po_number.'</p>';
+        $body .= '<p>Please note the stages on the right.</p>';
         $body .= "<table style='border-collapse: collapse; width: 99.9915%;' border='1'>";
         $body .= '<tbody><tr>';
         $body .= '<td><strong>Part Name</strong></td>';
@@ -103,7 +104,7 @@ class EmailController extends Controller
             $body .= '</tr>';
         }
         $body .= '</tbody></table>';
-        $body .= '<p>For any queries, please email hanna@proproject.co.za</p>';
+        $body .= '<p>For any queries, please email jone@proproject.co.za</p>';
         $body .= '<p>Kind regards,</p>';
         $body .= '<p><strong>PPM ERP System</strong></p>';
         $body .= '<pre>Pro Project Machinery (Pty) Ltd.</pre>';
@@ -121,6 +122,7 @@ class EmailController extends Controller
     {
         $body = '<p>Good Day,</p>';
         $body .= '<p>We would like to order the below items, using PO Number: '.$order->po_number.'</p>';
+        $body .= '<p>Please note the stages on the right.</p>';
         $body .= "<table style='border-collapse: collapse; width: 99.9915%;' border='1'><colgroup><col style='width: 25.0153%;'><col style='width: 25.0153%;'><col style='width: 25.0153%;'></colgroup>";
         $body .= '<tbody><tr>';
         $body .= '<td><strong>Part Name</strong></td>';
@@ -134,7 +136,7 @@ class EmailController extends Controller
             $body .= '</tr>';
         }
         $body .= '</tbody></table>';
-        $body .= '<p>For any queries, please email hanna@proproject.co.za</p>';
+        $body .= '<p>For any queries, please email jone@proproject.co.za</p>';
         $body .= '<p>Kind regards,</p>';
         $body .= '<p><strong>PPM ERP System</strong></p>';
         $body .= '<pre>Pro Project Machinery (Pty) Ltd.</pre>';
