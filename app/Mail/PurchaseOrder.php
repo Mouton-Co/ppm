@@ -61,6 +61,8 @@ class PurchaseOrder extends Mailable
     public function attachments(): array
     {
         $attachments = [];
+
+        $zipHasFiles = false;
         $zipFile = new \PhpZip\ZipFile();
 
         /**
@@ -80,23 +82,26 @@ class PurchaseOrder extends Mailable
                  * Add file to zip
                  */
                 $zipFile->addFile(storage_path("app/files/temp/{$file->name}.{$file->file_type}"), "{$file->name}.{$file->file_type}");
+                $zipHasFiles = true;
             }
         }
 
-        /**
-         * Store zip locally as a temp file
-         */
-        $zipFile
-            ->saveAsFile(storage_path("app/files/temp/{$this->order->po_number}.zip"))
-            ->close();
-
-        
-        /**
-         * Add the zip file as an attachment
-         */
-        $attachments[] = Attachment::fromPath(storage_path("app/files/temp/{$this->order->po_number}.zip"))
-            ->as($this->order->po_number.'.zip')
-            ->withMime('application/zip');
+        if ($zipHasFiles) {
+            /**
+             * Store zip locally as a temp file
+             */
+            $zipFile
+                ->saveAsFile(storage_path("app/files/temp/{$this->order->po_number}.zip"))
+                ->close();
+    
+            
+            /**
+             * Add the zip file as an attachment
+             */
+            $attachments[] = Attachment::fromPath(storage_path("app/files/temp/{$this->order->po_number}.zip"))
+                ->as($this->order->po_number.'.zip')
+                ->withMime('application/zip');
+        }
 
         return $attachments;
     }
