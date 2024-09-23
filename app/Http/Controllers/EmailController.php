@@ -37,7 +37,7 @@ class EmailController extends Controller
             $part->save();
         }
 
-        return redirect()->back()->with('success', 'Email sent successfully!');
+        return redirect()->route('orders.index')->with('success', 'Email sent successfully!');
     }
 
     /**
@@ -84,6 +84,8 @@ class EmailController extends Controller
      */
     protected function template1(Order $order): string
     {
+        $route = route('orders.complete', $order->id).'?token='.hash('sha256', $order->id);
+
         $body = '<p>Good Day,</p>';
         $body .= '<p>We would like to order the below items, using PO Number: '.$order->po_number.'</p>';
         $body .= '<p>Please note the stages on the right.</p>';
@@ -104,6 +106,7 @@ class EmailController extends Controller
             $body .= '</tr>';
         }
         $body .= '</tbody></table>';
+        $body .= "<p>Please click here to confirm that you have received the order $route</p>";
         $body .= '<p>For any queries, please email jone@proproject.co.za</p>';
         $body .= '<p>Kind regards,</p>';
         $body .= '<p><strong>PPM ERP System</strong></p>';
@@ -120,6 +123,8 @@ class EmailController extends Controller
      */
     protected function template2(Order $order): string
     {
+        $route = route('orders.complete', $order->id).'?token='.hash('sha256', $order->id);
+
         $body = '<p>Good Day,</p>';
         $body .= '<p>We would like to order the below items, using PO Number: '.$order->po_number.'</p>';
         $body .= '<p>Please note the stages on the right.</p>';
@@ -136,6 +141,7 @@ class EmailController extends Controller
             $body .= '</tr>';
         }
         $body .= '</tbody></table>';
+        $body .= "<p>Please click here to confirm that you have received the order $route</p>";
         $body .= '<p>For any queries, please email jone@proproject.co.za</p>';
         $body .= '<p>Kind regards,</p>';
         $body .= '<p><strong>PPM ERP System</strong></p>';

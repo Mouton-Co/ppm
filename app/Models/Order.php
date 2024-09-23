@@ -22,6 +22,7 @@ class Order extends Model
         'total_parts',
         'supplier_id',
         'submission_id',
+        'token',
     ];
 
     /**

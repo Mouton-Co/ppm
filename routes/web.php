@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -37,4 +38,9 @@ Route::middleware('auth')->group(function () {
     include 'roles.php';
 });
 
-include __DIR__.'/auth.php';
+include __DIR__ . '/auth.php';
+
+Route::get('/orders/complete/{id}', [OrderController::class, 'markOrdered'])->name('orders.complete');
+Route::get('/confirmation', function () {
+    return view('order.confirmation');
+});
