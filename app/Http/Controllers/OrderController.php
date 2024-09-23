@@ -146,11 +146,16 @@ class OrderController extends Controller
             }
 
             // create order
-            Order::create([
+            $order = Order::create([
                 'po_number' => $poNumber,
                 'supplier_id' => $parts[0]->supplier_id,
                 'submission_id' => $parts[0]->submission_id,
                 'total_parts' => $totalParts,
+            ]);
+
+            // set token
+            $order->update([
+                'token' => hash('sha256', $order->id),
             ]);
         }
 
@@ -164,7 +169,11 @@ class OrderController extends Controller
      */
     public function markOrdered(Request $request, $id)
     {
-        if ($request->user()->cannot('update', Order::class)) {
+        if (
+            $request->user()?->cannot('update', Order::class) &&
+            ! $request->has('token') &&
+            $request->get('token') !== hash('sha256', $id)
+        ) {
             abort(403);
         }
 
@@ -197,6 +206,10 @@ class OrderController extends Controller
                     ? $order->submission->project->related_pos . ', ' . $order->po_number
                     : $order->po_number,
             ]);
+        }
+
+        if ($request->has('token')) {
+            return view('order.confirmation');
         }
 
         return redirect()->route('orders.index')->withSuccess(
