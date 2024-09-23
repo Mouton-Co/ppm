@@ -238,6 +238,10 @@ class Part extends Model
             'label' => 'Machine #',
             'type' => 'text',
         ],
+        'unit_number' => [
+            'label' => 'Unit #',
+            'type' => 'text',
+        ],
         'part_ordered_at' => [
             'label' => 'Part Ordered At',
             'type' => 'text',
@@ -616,6 +620,10 @@ class Part extends Model
     public function getMachineNumberAttribute()
     {
         return $this->submission->machine_number ?? 'N/A';
+    }
+    public function getUnitNumberAttribute()
+    {
+        return $this->submission->current_unit_number ?? 'N/A';
     }
 
     /*

@@ -30,10 +30,6 @@
                     <span>{{ $order->supplier?->representatives()->first()->email ?? 'N/A' }}</span>
                 </div>
                 <div class="order-card-body-item">
-                    <x-icon.submission class="w-5 min-w-[1.25rem]" />
-                    <span>{{ $order->submission->assembly_name ?? '## submission deleted' }}</span>
-                </div>
-                <div class="order-card-body-item">
                     <x-icon.spanner class="w-5 min-w-[1.25rem]" />
                     <span>Total parts: {{ $order->total_parts ?? 'N/A' }}</span>
                 </div>
