@@ -251,7 +251,7 @@ class SubmissionController extends Controller
      */
     public function trash(Request $request, string $id)
     {
-        if ($request->user()->cannot('trash', Submission::class)) {
+        if ($request->user()->cannot('forceDelete', Submission::class)) {
             abort(403);
         }
         
