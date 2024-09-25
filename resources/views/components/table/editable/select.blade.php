@@ -39,7 +39,6 @@
 >
     <option
         value=""
-        disabled
         selected
     >
         {{ __("--Please select--") }}
