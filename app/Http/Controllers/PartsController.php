@@ -205,6 +205,11 @@ class PartsController extends Controller
                 break;
             case 'qc_passed':
                 $part->status = $part->$field ? 'assembly' : 'qc';
+                $part->qc_by = $part->$field ? "QC passed by " . $request->user()->name : null;
+                break;
+            case 'qc_issue':
+                $part->qc_by = $part->$field ?
+                    "QC failed by " . $request->user()->name : null;
                 break;
             default:
                 break;
@@ -462,6 +467,7 @@ class PartsController extends Controller
                 $part->treatment_2_part_received = false;
                 $part->completed_part_received = false;
                 $part->qc_passed = false;
+                $part->qc_by = null;
 
                 $part->raw_part_received_at = null;
                 $part->treatment_1_part_dispatched_at = null;
@@ -483,6 +489,7 @@ class PartsController extends Controller
                 $part->treatment_2_part_received = false;
                 $part->completed_part_received = false;
                 $part->qc_passed = false;
+                $part->qc_by = null;
 
                 $part->treatment_1_part_dispatched_at = null;
                 $part->treatment_1_part_received_at = null;
@@ -506,6 +513,7 @@ class PartsController extends Controller
                 $part->treatment_2_part_received = false;
                 $part->completed_part_received = false;
                 $part->qc_passed = false;
+                $part->qc_by = null;
 
                 $part->treatment_1_part_received_at = null;
                 $part->treatment_2_part_dispatched_at = null;
@@ -531,6 +539,7 @@ class PartsController extends Controller
                 $part->treatment_2_part_received = false;
                 $part->completed_part_received = false;
                 $part->qc_passed = false;
+                $part->qc_by = null;
 
                 $part->treatment_2_part_dispatched_at = null;
                 $part->treatment_2_part_received_at = null;
@@ -559,6 +568,7 @@ class PartsController extends Controller
                 $part->treatment_2_part_received = false;
                 $part->completed_part_received = false;
                 $part->qc_passed = false;
+                $part->qc_by = null;
 
                 $part->treatment_2_part_received_at = null;
                 $part->completed_part_received_at = null;
@@ -590,6 +600,7 @@ class PartsController extends Controller
 
                 $part->completed_part_received = false;
                 $part->qc_passed = false;
+                $part->qc_by = null;
 
                 $part->completed_part_received_at = null;
                 $part->qc_passed_at = null;
@@ -620,6 +631,7 @@ class PartsController extends Controller
                 $part->status = 'qc';
 
                 $part->qc_passed = false;
+                $part->qc_by = null;
                 $part->qc_passed_at = null;
             } elseif ($request->get('mark_as') == 'qc_passed') {
                 if (!$part->raw_part_received) {
@@ -650,6 +662,7 @@ class PartsController extends Controller
 
                 $part->qc_passed = true;
                 $part->qc_passed_at = now();
+                $part->qc_by = "QC passed by " . $request->user()->name;
                 $part->status = 'assembly';
             }
             $part->save();

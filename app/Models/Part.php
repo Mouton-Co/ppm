@@ -62,6 +62,7 @@ class Part extends Model
         'qty_received',
         'stage',
         'job_card',
+        'qc_by',
     ];
 
     public static $statuses = [
@@ -532,6 +533,12 @@ class Part extends Model
             'sortable' => true,
             'filterable' => true,
             'component' => 'editable.text',
+        ],
+        'qc_by' => [
+            'label' => 'QC By',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
         ],
         'job_card' => [
             'label' => 'Job Card #',
