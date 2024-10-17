@@ -161,6 +161,10 @@ class SubmissionController extends Controller
             return redirect()->route('submissions.index', array_merge(['page' => $submissions->lastPage()], $request->except(['page'])));
         }
 
+        if (!empty($request->session()->get('submission')) && !empty($request->session()->get('replacement'))) {
+            $replacementOptions = $this->replacementService->getReplacementOptions($request->session()->get('replacement'), $request->session()->get('submission'))[0] ?? [];
+        }
+
         return view('generic.index')->with([
             'heading' => 'Submission',
             'table' => 'submissions',
@@ -170,6 +174,7 @@ class SubmissionController extends Controller
             'model' => Submission::class,
             'submission' => $request->session()->get('submission') ?? null,
             'replacement' => $request->session()->get('replacement') ?? null,
+            'replacementOptions' => $replacementOptions ?? [],
         ]);
     }
 
@@ -304,16 +309,26 @@ class SubmissionController extends Controller
             ]);
     }
 
+    /**
+     * Replace parts
+     *
+     * @return Redirect
+     */
     public function replace(Request $request)
     {
         if ($request->user()->cannot('create', Submission::class)) {
             abort(403);
         }
 
-        $this->replacementService->replaceParts(
-            array_keys($request->except(['_token', 'replacement_id', 'submission_id'])),
-            $request->get('submission_code')
-        );
+        [$replacementOptions, $newParts] = $this->replacementService->getReplacementOptions(Submission::find($request->get('original_id')), Submission::find($request->get('new_id')));
+
+        foreach ($request->except(['_token', 'original_id', 'new_id']) as $partId => $value) {
+            if ($value == 'on') {
+                $this->replacementService->replacePart($replacementOptions[$partId]);
+            }
+        }
+
+        $this->replacementService->markAsRedundant(Submission::find($request->get('new_id')), $replacementOptions, $newParts);
 
         return redirect()
             ->back()

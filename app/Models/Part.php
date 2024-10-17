@@ -220,6 +220,7 @@ class Part extends Model
                 'treatment' => 'Treatment',
                 'qc' => 'QC',
                 'assembly' => 'Assembly',
+                'redundant' => 'Redundant',
             ],
             'casts' => [
                 'design' => 'Design',
@@ -228,7 +229,7 @@ class Part extends Model
                 'supplier' => 'Supplier',
                 'treatment' => 'Treatment',
                 'qc' => 'QC',
-                'assembly' => 'Assembly',
+                'redundant' => 'Redundant',
             ],
         ],
         'coc' => [
@@ -481,6 +482,7 @@ class Part extends Model
                 'treatment' => 'Treatment',
                 'qc' => 'QC',
                 'assembly' => 'Assembly',
+                'redundant' => 'Redundant',
             ],
             'casts' => [
                 'design' => 'Design',
@@ -490,6 +492,7 @@ class Part extends Model
                 'treatment' => 'Treatment',
                 'qc' => 'QC',
                 'assembly' => 'Assembly',
+                'redundant' => 'Redundant',
             ],
             'component' => 'warehouse.status',
         ],
