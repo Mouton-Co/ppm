@@ -386,6 +386,7 @@
     </div>
 
     @include('components.generic-delete-modal')
+    @include('components.replacement-modal')
 
     {{-- pagination --}}
     {{ $data->appends(request()->query())->links() }}

@@ -36,7 +36,7 @@
                     @if (auth()->user()->role->hasPermission('read_procurement'))
                         <li>
                             <a class="nav-item-{{ request()->segment(2) == 'procurement' ? 'active' : 'default' }}"
-                            href="{{ route('parts.procurement.index', ['status' => 'processing']) }}">
+                            href="{{ route('parts.procurement.index', ['status' => 'processing', 'redundant' => '0']) }}">
                                 <x-icon.procurement class="h-6 w-6 shrink-0" />
                                 {{ __('Procurement') }}
                             </a>
@@ -45,7 +45,7 @@
                     @if (auth()->user()->role->hasPermission('read_warehouse'))
                         <li>
                             <a class="nav-item-{{ request()->segment(2) == 'warehouse' ? 'active' : 'default' }}"
-                            href="{{ route('parts.warehouse.index', ['status' => 'supplier']) }}">
+                            href="{{ route('parts.warehouse.index', ['status' => 'supplier', 'redundant' => '0']) }}">
                                 <x-icon.warehouse class="h-6 w-6 shrink-0" />
                                 {{ __('Warehouse') }}
                             </a>

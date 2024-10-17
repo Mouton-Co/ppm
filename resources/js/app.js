@@ -31,3 +31,5 @@ import { filters } from "./general/filters.js";
 filters();
 import { roleTable } from "./roles/role-table.js";
 roleTable();
+import { replacement } from "./submissions/replacement.js";
+replacement();
