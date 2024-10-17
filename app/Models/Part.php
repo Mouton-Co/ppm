@@ -63,6 +63,7 @@ class Part extends Model
         'stage',
         'job_card',
         'qc_by',
+        'redundant',
     ];
 
     public static $statuses = [
@@ -220,7 +221,6 @@ class Part extends Model
                 'treatment' => 'Treatment',
                 'qc' => 'QC',
                 'assembly' => 'Assembly',
-                'redundant' => 'Redundant',
             ],
             'casts' => [
                 'design' => 'Design',
@@ -229,7 +229,6 @@ class Part extends Model
                 'supplier' => 'Supplier',
                 'treatment' => 'Treatment',
                 'qc' => 'QC',
-                'redundant' => 'Redundant',
             ],
         ],
         'coc' => [
@@ -257,8 +256,15 @@ class Part extends Model
             'filterable' => true,
             'component' => 'editable.text',
         ],
+        'redundant' => [
+            'label' => 'Redundant',
+            'type' => 'boolean',
+            'sortable' => true,
+            'filterable' => true,
+            'component' => 'editable.checkbox',
+        ],
         'replaced_by_submission' => [
-            'label' => 'Replaced by',
+            'label' => 'Redundant Reason',
             'type' => 'text',
             'sortable' => true,
             'filterable' => true,
@@ -482,7 +488,6 @@ class Part extends Model
                 'treatment' => 'Treatment',
                 'qc' => 'QC',
                 'assembly' => 'Assembly',
-                'redundant' => 'Redundant',
             ],
             'casts' => [
                 'design' => 'Design',
@@ -492,7 +497,6 @@ class Part extends Model
                 'treatment' => 'Treatment',
                 'qc' => 'QC',
                 'assembly' => 'Assembly',
-                'redundant' => 'Redundant',
             ],
             'component' => 'warehouse.status',
         ],
@@ -550,8 +554,15 @@ class Part extends Model
             'filterable' => true,
             'component' => 'editable.text',
         ],
+        'redundant' => [
+            'label' => 'Redundant',
+            'type' => 'boolean',
+            'sortable' => true,
+            'filterable' => true,
+            'component' => 'editable.checkbox',
+        ],
         'replaced_by_submission' => [
-            'label' => 'Replaced by',
+            'label' => 'Redundant reason',
             'type' => 'text',
             'sortable' => true,
             'filterable' => true,
@@ -687,6 +698,9 @@ class Part extends Model
             case 'part_ordered':
             case 'qc_issue':
                 $enabled = ! $this->qc_passed;
+                break;
+            case 'redundant':
+                $enabled = true;
                 break;
             default:
                 $enabled = false;

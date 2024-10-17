@@ -34,7 +34,15 @@ class ReplacementService
     {
         $originalPart = Part::find($replacementOption['original']);
         $originalPart->replaced_by_submission = $replacementOption['reason'];
-        $originalPart->status = 'redundant';
+        $originalPart->redundant = 1;
+
+        if ($replacementOption['reason'] == 'QTY changed') {
+            $newPart = Part::find($replacementOption['new']);
+            $newPart->quantity_in_stock = $originalPart->quantity_in_stock;
+            $newPart->quantity_ordered = $originalPart->quantity_ordered;
+            $newPart->save();
+        }
+
         $originalPart->save();
     }
 
@@ -170,7 +178,8 @@ class ReplacementService
     {
         foreach ($newSubmission->parts as $part) {
             if (!in_array($part->id, array_column($replacementOptions, 'new')) && !in_array($part->id, array_keys($newParts))) {
-                $part->status = 'redundant';
+                $part->redundant = 1;
+                $part->replaced_by_submission = 'Duplicate';
                 $part->save();
             }
         }

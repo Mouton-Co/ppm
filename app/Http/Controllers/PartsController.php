@@ -178,8 +178,11 @@ class PartsController extends Controller
 
         $field = $request->get('field');
         $part->$field = $request->get('value');
-        $fieldAt = $field . '_at';
-        $part->$fieldAt = $part->$field ? now() : null;
+
+        if ($field != 'redundant') {
+            $fieldAt = $field . '_at';
+            $part->$fieldAt = $part->$field ? now() : null;
+        }
 
         switch ($field) {
             case 'part_ordered':
