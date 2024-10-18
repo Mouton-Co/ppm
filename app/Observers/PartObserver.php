@@ -6,6 +6,7 @@ use App\Mail\PartReplaced;
 use App\Models\Part;
 use App\Models\RecipientGroup;
 use Illuminate\Support\Facades\Mail;
+use App\Models\User;
 
 class PartObserver
 {
