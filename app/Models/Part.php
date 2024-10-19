@@ -64,6 +64,7 @@ class Part extends Model
         'job_card',
         'qc_by',
         'redundant',
+        'selected',
     ];
 
     public static $statuses = [
@@ -93,6 +94,13 @@ class Part extends Model
      * @var array
      */
     public static $procurementStructure = [
+        'selected' => [
+            'label' => 'Selected',
+            'type' => 'boolean',
+            'sortable' => true,
+            'filterable' => true,
+            'component' => 'editable.checkbox',
+        ],
         'id' => [
             'label' => 'ID',
             'type' => 'text',
@@ -299,6 +307,13 @@ class Part extends Model
      * @var array
      */
     public static $warehouseStructure = [
+        'selected' => [
+            'label' => 'Selected',
+            'type' => 'boolean',
+            'sortable' => true,
+            'filterable' => true,
+            'component' => 'editable.checkbox',
+        ],
         'id' => [
             'label' => 'ID',
             'type' => 'text',
@@ -700,6 +715,7 @@ class Part extends Model
                 $enabled = ! $this->qc_passed;
                 break;
             case 'redundant':
+            case 'selected':
                 $enabled = true;
                 break;
             default:

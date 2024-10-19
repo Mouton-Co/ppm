@@ -179,7 +179,7 @@ class PartsController extends Controller
         $field = $request->get('field');
         $part->$field = $request->get('value');
 
-        if ($field != 'redundant') {
+        if ($field != 'redundant' && $field != 'selected') {
             $fieldAt = $field . '_at';
             $part->$fieldAt = $part->$field ? now() : null;
         }
@@ -674,5 +674,17 @@ class PartsController extends Controller
         return redirect()
             ->back()
             ->withSuccess('Parts marked as ' . Part::$markedAs[$request->get('mark_as')]);
+    }
+
+    /**
+     * Unselect all parts
+     */
+    public function unselect()
+    {
+        Part::withTrashed()->update(['selected' => false]);
+
+        return redirect()->back()->with([
+            'success' => 'All parts unselected',
+        ]);
     }
 }
