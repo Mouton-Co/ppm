@@ -1,6 +1,11 @@
 @if (auth()->user()->role->hasPermission('update_procurement'))
     <hr>
     <div class="my-2 flex gap-3 overflow-x-scroll">
+
+        <a href="{{ route('parts.unselect') }}" class="btn-sky text-nowrap max-w-fit">
+            {{ __('Clear selected') }}
+        </a>
+
         <form
             action="{{ route('parts.generate-po-numbers', request()->query()) }}"
             method="post"

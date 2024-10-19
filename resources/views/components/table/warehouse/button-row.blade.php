@@ -8,6 +8,10 @@
         >
             @csrf
 
+            <a href="{{ route('parts.unselect') }}" class="btn-sky text-nowrap max-w-fit">
+                {{ __('Clear selected') }}
+            </a>
+
             {{-- po number --}}
             <div class="flex items-center justify-start gap-2">
                 <label
