@@ -46,7 +46,7 @@ class Supplier extends Model
             ],
         ],
         'average_lead_time' => [
-            'label' => 'Average Lead Time',
+            'label' => 'Average Lead Time (Days)',
             'type' => 'text',
             'sortable' => true,
             'filterable' => true,

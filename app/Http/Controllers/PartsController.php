@@ -103,6 +103,20 @@ class PartsController extends Controller
 
         $this->checkTableConfigurations('warehouse', Part::class, Part::$warehouseStructure);
         $parts = $this->filter(Part::class, Part::query(), $request, Part::$warehouseStructure)->paginate(15);
+        
+        if ($request->has('due_days')) {
+            /**
+             * loop trough all the parts and check if the part and remove all that doesn't match filter
+             */
+            $parts = $this->filter(Part::class, Part::query(), $request, Part::$warehouseStructure)->get();
+            $idsToIgnore = [];
+            foreach ($parts as $part) {
+                if ($part->due_days != $request->get('due_days')) {
+                    $idsToIgnore[] = $part->id;
+                }
+            }
+            $parts = $this->filter(Part::class, Part::query(), $request, Part::$warehouseStructure)->whereNotIn('id', $idsToIgnore)->paginate(15);
+        }
 
         if ($parts->currentPage() > 1 && $parts->lastPage() < $parts->currentPage()) {
             return redirect()->route('parts.warehouse.index', array_merge(['page' => $parts->lastPage()], $request->except(['page'])));

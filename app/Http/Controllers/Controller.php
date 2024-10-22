@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\Project;
+use App\Models\Part;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
@@ -161,7 +162,7 @@ class Controller extends BaseController
         // filter params
         foreach ($this->structure as $key => $value) {
             if ($this->request->has($key)) {
-                
+            
                 /**
                  * if model is Project and field is status and value is 'all except closed'
                  * continue and do manually in the controller
@@ -175,6 +176,14 @@ class Controller extends BaseController
                  * continue and do manually in the controller
                  */
                 if ($this->model == Order::class && $key == 'status' && $this->request->get('status') == 'All except ordered') {
+                    continue;
+                }
+
+                /**
+                 * if model is Part and field is due_days and
+                 * continue and do manually in the controller
+                 */
+                if ($this->model == Part::class && $key == 'due_days') {
                     continue;
                 }
 
@@ -195,7 +204,7 @@ class Controller extends BaseController
         if ($this->request->has('query')) {
             $query = $query->where(function ($subquery) {
                 foreach ($this->structure as $key => $value) {
-                    if (!empty($value['filterable']) && $value['filterable']) {
+                    if (!empty($value['filterable']) && $value['filterable'] && array_key_exists($key, $this->model::first()->getAttributes())) {
                         if (! empty($this->structure[$key]['relationship'])) {
                             $subquery->orWhereRelation(
                                 explode('.', $this->structure[$key]['relationship'])[0],
@@ -216,7 +225,8 @@ class Controller extends BaseController
             $this->request->has('order') &&
             $this->request->has('order_by') &&
             array_key_exists($this->request->get('order_by'), $this->structure) &&
-            $this->structure[$this->request->get('order_by')]['sortable']
+            $this->structure[$this->request->get('order_by')]['sortable'] &&
+            array_key_exists($this->request->get('order_by'), $this->model::first()->getAttributes())
         ) {
             $order = $this->request->get('order') == 'asc' ? 'asc' : 'desc';
             $orderBy = $this->request->get('order_by');
