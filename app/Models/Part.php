@@ -744,4 +744,40 @@ class Part extends Model
     {
         return Supplier::orderBy('name')->pluck('name')->toArray();
     }
+
+    /**
+     * Get the due days attribute.
+     */
+    public function getDueDaysAttribute()
+    {
+        $days = 'N/A';
+
+        if ($this->status == 'supplier' && !empty($this->part_ordered_at) && !empty($this->supplier->average_lead_time)) {
+            $partOrderedAt = new \DateTime($this->part_ordered_at);
+            $today = new \DateTime();
+            $interval = $today->diff($partOrderedAt);
+            $days = $this->supplier->average_lead_time - $interval->days;
+        } elseif ($this->status == 'treatment') {
+            if (!empty($this->treatment_2_part_dispatched_at) && empty($this->treatment_2_part_received_at)) {
+                $treatmentSupplier = Supplier::where('name', $this->treatment_2_supplier)->first();
+                if (!empty($treatmentSupplier->average_lead_time)) {
+                    $partOrderedAt = new \DateTime($this->treatment_2_part_dispatched_at);
+                    $today = new \DateTime();
+                    $interval = $today->diff($partOrderedAt);
+                    $days = $interval->days + $treatmentSupplier->average_lead_time;
+                }
+            }
+            if (!empty($this->treatment_1_part_dispatched_at) && empty($this->treatment_1_part_received_at)) {
+                $treatmentSupplier = Supplier::where('name', $this->treatment_1_supplier)->first();
+                if (!empty($treatmentSupplier->average_lead_time)) {
+                    $partOrderedAt = new \DateTime($this->treatment_1_part_dispatched_at);
+                    $today = new \DateTime();
+                    $interval = $today->diff($partOrderedAt);
+                    $days = $interval->days + $treatmentSupplier->average_lead_time;
+                }
+            }
+        }
+
+        return $days;
+    }
 }

@@ -23,7 +23,7 @@
     @endforeach
 @endif
 
-<label class="label-dark" for="average_lead_time">{{ __('Average lead time') }}</label>
+<label class="label-dark" for="average_lead_time">{{ __('Average lead time (days)') }}</label>
 <input type="text" id="average_lead_time" name="average_lead_time"
     class="{{ !empty($errors->get('average_lead_time')) ? 'field-error' : 'field-dark' }} mb-5"
     value="{{ $supplier->average_lead_time ?? old('average_lead_time') }}">
