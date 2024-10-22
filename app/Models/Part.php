@@ -416,6 +416,12 @@ class Part extends Model
             'filterable_options' => 'custom',
             'component' => 'editable.select',
         ],
+        'due_days' => [
+            'label' => 'Due in (days)',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
         'po_number' => [
             'label' => 'PO #',
             'type' => 'text',
