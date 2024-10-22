@@ -49,19 +49,21 @@ class PartObserver
                 /**
                  * send to users with procurement role instead
                  */
-                $emails = User::whereHas('roles', function ($query) {
-                    $query->where('name', 'procurement');
+                $emails = User::whereHas('role', function ($query) {
+                    $query->where('role', 'procurement');
                 })
                     ->pluck('email')
                     ->toArray();
+                
+                if (! empty($emails)) {
+                    $mail = Mail::to($emails[0]);
 
-                $mail = Mail::to($emails[0]);
-
-                if (count($emails) > 1) {
-                    $mail->cc(array_slice($emails, 1));
+                    if (count($emails) > 1) {
+                        $mail->cc(array_slice($emails, 1));
+                    }
+    
+                    $mail->send(new PartReplaced($part));
                 }
-
-                $mail->send(new PartReplaced($part));
             }
         }
     }
