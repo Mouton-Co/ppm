@@ -15,10 +15,14 @@
     <p>
         Submission Name: {{ $datum->assembly_name ?? 'N/A' }}<br>
         Submission Code: {{ $datum->submission_code ?? 'N/A' }}<br>
+        Submission Type: {{ \App\Models\Submission::$structure['submission_type']['casts'][$datum->submission_type] ?? 'N/A' }}<br>
         Link to Submission: <a href="{{ route('submissions.show', $datum->id) }}">
             {{ route('submissions.show', $datum->id) }}
         </a><br>
     </p>
+
+    <p><strong>{{ __("PPM ERP System") }}</strong></p>
+    <pre>{{ __("Pro Project Machinery (Pty) Ltd.") }}</pre>
 </body>
 
 </html>
