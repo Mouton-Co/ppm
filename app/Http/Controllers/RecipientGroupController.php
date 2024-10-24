@@ -85,7 +85,11 @@ class RecipientGroupController extends Controller
             return redirect()->back()->with('error', 'Email trigger already exists');
         }
 
-        RecipientGroup::create($request->validated());
+        $recipientGroup = RecipientGroup::create($request->validated());
+
+        if ($request->get('field') == "Order confirmed by supplier") {
+            $recipientGroup->update(['value' => null]);
+        }
 
         return redirect()->route('recipient-groups.index')->with('success', 'Email trigger created');
     }
@@ -130,6 +134,10 @@ class RecipientGroupController extends Controller
         }
 
         $recipientGroup->update($request->validated());
+
+        if ($request->get('field') == "Order confirmed by supplier") {
+            $recipientGroup->update(['value' => null]);
+        }
 
         return redirect()->route('recipient-groups.index')->with('success', 'Email trigger updated');
     }
