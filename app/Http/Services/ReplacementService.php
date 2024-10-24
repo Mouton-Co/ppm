@@ -167,7 +167,7 @@ class ReplacementService
     }
 
     /**
-     * Mark as redundant
+     * Mark as redundant by deleting parts
      *
      * @param Submission $newSubmission
      * @param array $replacementOptions
@@ -181,6 +181,7 @@ class ReplacementService
                 $part->redundant = 1;
                 $part->replaced_by_submission = 'Duplicate';
                 $part->save();
+                $part->delete();
             }
         }
     }
