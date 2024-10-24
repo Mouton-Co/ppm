@@ -12,24 +12,35 @@ export function emailTriggerForm() {
             $('.created-item').addClass('hidden');
             $('.machine-item').addClass('hidden');
             $('#select-changed-to-label').text('Changed to...');
+            $('#select-changed-to-label').css('display', 'block');
+            $('#select-changed-to').css('display', 'block').attr('required', true);
         } else if ($(this).val() == 'Status') {
             $('.status-item').removeClass('hidden');
             $('.department-item').addClass('hidden');
             $('.created-item').addClass('hidden');
             $('.machine-item').addClass('hidden');
             $('#select-changed-to-label').text('Changed to...');
+            $('#select-changed-to-label').css('display', 'block');
+            $('#select-changed-to').css('display', 'block').attr('required', true);
         } else if ($(this).val() == 'Item created') {
             $('.created-item').removeClass('hidden');
             $('.department-item').addClass('hidden');
             $('.status-item').addClass('hidden');
             $('.machine-item').addClass('hidden');
             $('#select-changed-to-label').text('Item...');
+            $('#select-changed-to-label').css('display', 'block');
+            $('#select-changed-to').css('display', 'block').attr('required', true);
         } else if ($(this).val() == 'Status updated for') {
             $('.created-item').addClass('hidden');
             $('.department-item').addClass('hidden');
             $('.status-item').addClass('hidden');
             $('.machine-item').removeClass('hidden');
             $('#select-changed-to-label').text('Machine #...');
+            $('#select-changed-to-label').css('display', 'block');
+            $('#select-changed-to').css('display', 'block').attr('required', true);
+        } else if ($(this).val() == 'Order confirmed by supplier') {
+            $('#select-changed-to-label').css('display', 'none');
+            $('#select-changed-to').css('display', 'none').attr('required', false);
         }
     });
     

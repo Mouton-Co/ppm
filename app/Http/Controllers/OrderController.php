@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Order\StoreRequest;
 use App\Http\Requests\Order\UpdateRequest;
+use App\Http\Services\EmailService;
 use App\Models\Order;
 use App\Models\Part;
 use Illuminate\Http\Request;
@@ -209,6 +210,12 @@ class OrderController extends Controller
         }
 
         if ($request->has('token')) {
+
+            /**
+             * send confirmation email to PPM that client confirmed the order if token was present
+             */
+            EmailService::sendClientConfirmedEmail($order);
+
             return view('order.confirmation');
         }
 

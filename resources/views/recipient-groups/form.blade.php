@@ -28,6 +28,11 @@
         }}>
             {{ __('Status updated for') }}
         </option>
+        <option value="Order confirmed by supplier" {{
+            ! empty($recipientGroup) && $recipientGroup->field == 'Order confirmed by supplier' ? 'selected' : old('field')
+        }}>
+            {{ __('Order confirmed by supplier') }}
+        </option>
     </select>
     @if (!empty($errors->get('field')))
         @foreach ($errors->get('field') as $error)
