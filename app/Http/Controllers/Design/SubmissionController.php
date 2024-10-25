@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Design;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\PartsController;
 use App\Http\Helpers\FileManagementHelper;
+use App\Http\Services\EmailService;
 use App\Http\Services\ReplacementService;
 use App\Models\Project;
 use App\Models\RecipientGroup;
@@ -329,6 +330,12 @@ class SubmissionController extends Controller
         }
 
         $this->replacementService->markAsRedundant(Submission::find($request->get('new_id')), $replacementOptions, $newParts);
+        EmailService::sendBomReplacedEmail(
+            $request->except(['_token', 'original_id', 'new_id']),
+            $replacementOptions,
+            $request->get('original_id'),
+            $request->get('new_id')
+        );
 
         return redirect()
             ->back()
