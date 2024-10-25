@@ -27,7 +27,13 @@ class PartObserver
          * check if replaced_by_submission was updated
          * don't send email if in local environment
          */
-        if ($part->isDirty('replaced_by_submission') && env('APP_ENV') != 'local') {
+        if (
+            $part->isDirty('replaced_by_submission') &&
+            env('APP_ENV') != 'local' &&
+            // if it has these two, a whole BOM was replaced so don't send the emails
+            ! request()->has('original_id') &&
+            ! request()->has('new_id')
+        ) {
             /**
              * see if there is a procurement recipient group to receive this
              */
