@@ -8,6 +8,7 @@ use App\Models\Order;
 use App\Models\Submission;
 use App\Models\RecipientGroup;
 use Illuminate\Support\Facades\Mail;
+use App\Models\User;
 
 class EmailService
 {
