@@ -67,11 +67,14 @@ class SubmissionController extends Controller
 
         $projects = Project::whereNull('submission_id')->orderBy('coc')->get();
 
+        $replacementOptions = Submission::where('submitted', 1)->get();
+
         return view('designer.new-submission')->with([
             'submission' => $submission,
             'submission_types' => Submission::$structure['submission_type']['filterable_options'],
             'unit_numbers' => Submission::$structure['current_unit_number']['filterable_options'],
             'projects' => $projects,
+            'replacementOptions' => $replacementOptions,
         ]);
     }
 
@@ -130,7 +133,11 @@ class SubmissionController extends Controller
 
         $replacement = null;
         if ($submission->submission_type == 3) {
-            $replacement = $this->replacementService->getPreviousSubmission($submission);
+            if ($request->has('replacement') && ! empty($request->get('replacement'))) {
+                $replacement = Submission::find($request->get('replacement'));
+            } else {
+                $replacement = $this->replacementService->getPreviousSubmission($submission);
+            }
         }
 
         return redirect()
@@ -342,5 +349,26 @@ class SubmissionController extends Controller
             ->with([
                 'success' => 'Selected parts have been replaced',
             ]);
+    }
+
+    /**
+     * Get replacement options
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getReplacementOptions(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $replacementOptions = Submission::where('submitted', 1);
+
+        if ($request->has('machine_number') && ! empty($request->get('machine_number'))) {
+            $replacementOptions = $replacementOptions->where('machine_number', $request->get('machine_number'));
+        }
+
+        if ($request->has('current_unit_number') && ! empty($request->get('current_unit_number'))) {
+            $replacementOptions = $replacementOptions->where('current_unit_number', $request->get('current_unit_number'));
+        }
+
+        return response()->json($replacementOptions->pluck('submission_code', 'id'));
     }
 }
