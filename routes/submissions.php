@@ -21,3 +21,4 @@ Route::delete('/submission/{id}', [SubmissionController::class, 'destroy'])->nam
 Route::post('/submissions/restore/{id}', [SubmissionController::class, 'restore'])->name('submissions.restore');
 Route::post('/submissions/trash/{id}', [SubmissionController::class, 'trash'])->name('submissions.trash');
 Route::post('/submissions/replace', [SubmissionController::class, 'replace'])->name('submissions.replace');
+Route::post('/submission/replacement-options', [SubmissionController::class, 'getReplacementOptions'])->name('submissions.replacement-options');
