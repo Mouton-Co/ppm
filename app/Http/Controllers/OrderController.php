@@ -219,7 +219,7 @@ class OrderController extends Controller
             return view('order.confirmation');
         }
 
-        return redirect()->route('orders.index')->withSuccess(
+        return redirect()->back()->withSuccess(
             'Parts marked as ordered.'
         );
     }
