@@ -1,6 +1,6 @@
 export function replacement() {
     // replacement modal
-    $('#replace-modal-cancel-button, #curtain-replacement').on("click", function () {
+    $('#replace-modal-cancel-button').on("click", function () {
         $("#replacement-popup").removeClass('modal-opened').addClass('modal-closed');
         $("#replacement-modal").removeClass('flex').addClass('hidden');
         $("#curtain-replacement").removeClass('curtain-expanded').addClass('curtain-closed');
