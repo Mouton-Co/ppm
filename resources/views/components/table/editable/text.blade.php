@@ -1,11 +1,6 @@
 @php
     $disabled = false;
 
-    // if we are on procurement page and supplier is empty, disable po_number
-    if ($model == 'App\Models\Part' && $key == 'po_number' && empty($datum->supplier_id)) {
-        $disabled = true;
-    }
-
     if (! auth()->user()->can_access) {
         $disabled = true;
     }
