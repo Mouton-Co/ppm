@@ -78,10 +78,14 @@ dropzone.on('removedfile', file => {
 
 /*
 |--------------------------------------------------------------------------
-| REFRESH BUTTON
+| REFRESH BUTTON || SUBMISSIONT TYPE CHANGED
 |--------------------------------------------------------------------------
 */
 $('#refresh-feedback').on('click', function() {
+    clearSubmissionFeedback();
+    writeSubmissionFeedback();
+});
+$('#submission_type').on('input', function() {
     clearSubmissionFeedback();
     writeSubmissionFeedback();
 });
@@ -157,6 +161,8 @@ function clearSubmissionFeedback() {
     );
 }
 function writeSubmissionFeedback() {
+    let submissionType = $('#submission_type').val();
+
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -167,6 +173,7 @@ function writeSubmissionFeedback() {
         url: "feedback",
         data: {
             submission_code: submission_code,
+            submission_type: submissionType,
         },
     }).done(function (response) {
         $('#submission-feedback').empty();

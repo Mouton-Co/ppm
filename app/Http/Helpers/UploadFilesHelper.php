@@ -147,7 +147,11 @@ class UploadFilesHelper
     {
         $headings = config('excel-template');
 
-        for ($i = 0; $i < count($matrix['Item Number']) - 1; $i++) {
+        for ($i = 0; $i < count($matrix['Item Number']); $i++) {
+            // if last item number isn't null do all the below
+            if (empty($matrix['Item Number'][$i])) {
+                break;
+            }
 
             foreach ($headings as $heading => $headingData) {
 
@@ -200,17 +204,38 @@ class UploadFilesHelper
                         ];
                     }
 
-                    // check that file names contains .par or .psm
-                    if (
-                        $heading == 'File Name'
-                        && ! (str_contains($matrix[$heading][$i], '.par')
-                        || str_contains($matrix[$heading][$i], '.psm'))
-                    ) {
-                        return [
-                            false,
-                            'Data integrity violation:',
-                            ['Row '.($i + 3)." , file name '".$matrix[$heading][$i]."' must contain '.psm' or '.par'."],
-                        ];
+                    if ($heading == 'File Name') {
+                        // check that file names contains .par or .psm
+                        if (
+                            ! (str_contains($matrix[$heading][$i], '.par')
+                            || str_contains($matrix[$heading][$i], '.psm'))
+                        ) {
+                            return [
+                                false,
+                                'Data integrity violation:',
+                                ['Row '.($i + 3)." , file name '".$matrix[$heading][$i]."' must contain '.psm' or '.par'."],
+                            ];
+                        }
+
+                        // if new BOM and file name starts with PPM, make sure that the last part isn't a digit
+                        if (
+                            // if new BOM
+                            request()->get('submission_type') == 2 &&
+                            // and part name starts with "PPM"
+                            strtolower(substr($matrix[$heading][$i], 0, 3)) == 'ppm'
+                        ) {
+                            // and the last part is a digit
+                            $partName = explode('-', $matrix[$heading][$i]);
+                            $partName = end($partName);
+                            $partName = explode('.', $partName)[0];
+                            if (is_numeric($partName)) {
+                                return [
+                                    false,
+                                    'Data integrity violation:',
+                                    ['Row '.($i + 3)." , part name '".$matrix[$heading][$i]."' shouldn't not end with a digit."],
+                                ];
+                            }
+                        }
                     }
 
                     // check numeric values
