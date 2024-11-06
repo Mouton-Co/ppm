@@ -149,17 +149,27 @@ class ReplacementService
      */
     public function findReplacement(string $originalPartName, array $replacementParts): int
     {
-        $originalPartName = preg_replace('/\s+/', '', strtolower($originalPartName));
-        $originalPartNameSyllables = explode('-', $originalPartName);
-        $originalPartName = end($originalPartNameSyllables);
-
-        foreach ($replacementParts as $replacementPartId => $replacementPartName) {
-            $replacementPartName = preg_replace('/\s+/', '', strtolower($replacementPartName));
-            $replacementPartNameSyllables = explode('-', $replacementPartName);
-            $replacementPartName = end($replacementPartNameSyllables);
-
-            if ($originalPartName == $replacementPartName) {
-                return $replacementPartId;
+        // if original part name starts with "PPM"
+        if (strtolower(substr($originalPartName, 0, 3)) == 'ppm') {
+            $originalPartName = preg_replace('/\s+/', '', strtolower($originalPartName));
+            $originalPartNameSyllables = explode('-', $originalPartName);
+            $originalPartName = end($originalPartNameSyllables);
+    
+            foreach ($replacementParts as $replacementPartId => $replacementPartName) {
+                $replacementPartName = preg_replace('/\s+/', '', strtolower($replacementPartName));
+                $replacementPartNameSyllables = explode('-', $replacementPartName);
+                $replacementPartName = end($replacementPartNameSyllables);
+    
+                if ($originalPartName == $replacementPartName) {
+                    return $replacementPartId;
+                }
+            }
+        } else {
+            // don't do any fancy stuff, just look for exact match
+            foreach ($replacementParts as $replacementPartId => $replacementPartName) {
+                if ($originalPartName == $replacementPartName) {
+                    return $replacementPartId;
+                }
             }
         }
 
