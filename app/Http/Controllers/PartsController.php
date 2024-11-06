@@ -432,13 +432,21 @@ class PartsController extends Controller
                 case 'LCM':
                 case 'LCBM':
                 case 'LCBW':
-                    if (!empty(($lcSupplier = Supplier::where('name', 'LC')->first()))) {
+                    if (
+                        $request->has('lc_supplier') &&
+                        ! empty($request->get('lc_supplier')) &&
+                        ! empty(($lcSupplier = Supplier::find($request->get('lc_supplier'))))
+                    ) {
                         $part->supplier_id = $lcSupplier->id;
                         $part->save();
                     }
                     break;
                 case 'MCH':
-                    if (!empty(($partSupplier = Supplier::where('name', 'MCH')->first()))) {
+                    if (
+                        $request->has('part_supplier') &&
+                        ! empty($request->get('part_supplier')) &&
+                        ! empty(($partSupplier = Supplier::find($request->get('part_supplier'))))
+                    ) {
                         $part->supplier_id = $partSupplier->id;
                         $part->save();
                     }
