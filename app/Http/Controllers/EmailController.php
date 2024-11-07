@@ -37,7 +37,7 @@ class EmailController extends Controller
             $part->save();
         }
 
-        return redirect()->route('orders.index')->with('success', 'Email sent successfully!');
+        return redirect()->route('orders.index', $request->except(['_token', 'to', 'cc', 'subject', 'body']))->with('success', 'Email sent successfully!');
     }
 
     /**
@@ -46,7 +46,7 @@ class EmailController extends Controller
      * @param  int  $id
      * @return \Illuminate\View\View
      */
-    public function renderOrder($id)
+    public function renderOrder(Request $request, $id)
     {
         $order = Order::find($id);
 
@@ -73,6 +73,7 @@ class EmailController extends Controller
             'body' => $body,
             'to' => $to,
             'cc' => $cc,
+            'request' => $request,
         ]);
     }
 
