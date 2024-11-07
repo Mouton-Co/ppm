@@ -110,7 +110,7 @@
                             @can('update', App\Models\Order::class)
                                 <a
                                     class="hover:text-sky-600"
-                                    href="{{ route('email.purchase-order.render', $order->id) }}"
+                                    href="{{ route('email.purchase-order.render', array_merge(request()->all(), ['id' => $order->id])) }}"
                                 >
                                     <span>{{ __('Prepare email') }}</span>
                                     <span aria-hidden="true">&rarr;</span>
@@ -124,7 +124,7 @@
                                 >
                                     @csrf
                                     <button
-                                        class="hover:text-sky-600 flex"
+                                        class="flex hover:text-sky-600"
                                         type="submit"
                                     >
                                         <span class="text-nowrap">{{ __('Mark as QC passed') }}</span>

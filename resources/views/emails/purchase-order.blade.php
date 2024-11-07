@@ -8,7 +8,7 @@
 
     {{-- title --}}
     <div class="flex mb-3 items-center gap-3 flex-wrap">
-        <a href="{{ route('orders.index') }}" class="btn-sky max-w-fit">
+        <a href="{{ route('orders.index', $request->all()) }}" class="btn-sky max-w-fit">
             <span aria-hidden="true">&larr;</span>
             <span>{{ __('Back to orders') }}</span>
         </a>
@@ -17,7 +17,7 @@
     </div>
 
     {{-- index table --}}
-    <form action="{{ route('email.purchase-order.send', $order->id) }}"
+    <form action="{{ route('email.purchase-order.send', array_merge($request->all(), ['id' => $order->id])) }}"
         method="post" class="flex flex-col gap-3">
         @csrf
 
