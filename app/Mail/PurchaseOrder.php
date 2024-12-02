@@ -73,16 +73,19 @@ class PurchaseOrder extends Mailable
                 /**
                  * temporarily store file on local from s3
                  */
-                Storage::put(
-                    "files/temp/{$file->name}.{$file->file_type}",
-                    Storage::disk('s3')->get($file->location)
-                );
-                
-                /**
-                 * Add file to zip
-                 */
-                $zipFile->addFile(storage_path("app/files/temp/{$file->name}.{$file->file_type}"), "{$file->name}.{$file->file_type}");
-                $zipHasFiles = true;
+
+                if (Storage::disk('s3')->get($file->location)) {
+                    Storage::put(
+                        "files/temp/{$file->name}.{$file->file_type}",
+                        Storage::disk('s3')->get($file->location)
+                    );
+                    
+                    /**
+                     * Add file to zip
+                     */
+                    $zipFile->addFile(storage_path("app/files/temp/{$file->name}.{$file->file_type}"), "{$file->name}.{$file->file_type}");
+                    $zipHasFiles = true;
+                }
             }
         }
 
