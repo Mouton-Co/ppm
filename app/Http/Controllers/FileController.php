@@ -103,6 +103,21 @@ class FileController extends Controller
     }
 
     /**
+     * Downloads the excel file for a submission
+     */
+    public function downloadExcel($id)
+    {
+        // search for the only xlsx file in the directory
+        $files = Storage::disk('s3')->files(env('APP_ENV') . "/files/$id");
+        $file = collect($files)->filter(function ($file) {
+            return str_contains($file, '.xls');
+        })->first();
+
+        // download file
+        return Storage::disk('s3')->download($file);
+    }
+
+    /**
      * Opens the file in the browser
      */
     public function open($id)
