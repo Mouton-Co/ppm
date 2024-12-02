@@ -226,7 +226,7 @@ class Controller extends BaseController
             $this->request->has('order_by') &&
             array_key_exists($this->request->get('order_by'), $this->structure) &&
             $this->structure[$this->request->get('order_by')]['sortable'] &&
-            array_key_exists($this->request->get('order_by'), $this->model::first()->getAttributes())
+            array_key_exists($this->request->get('order_by'), $this->model::first()?->getAttributes() ?? [])
         ) {
             $order = $this->request->get('order') == 'asc' ? 'asc' : 'desc';
             $orderBy = $this->request->get('order_by');
