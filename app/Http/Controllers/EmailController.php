@@ -54,10 +54,11 @@ class EmailController extends Controller
             return redirect()->back()->with('error', 'Order not found');
         }
         
+        $parts = $this->createPartsArray($order);
         if (empty($order->supplier->template) || $order->supplier->template == 1) {
-            $body = $this->template1($order);
+            $body = $this->template1($order, $parts);
         } else {
-            $body = $this->template2($order);
+            $body = $this->template2($order, $parts);
         }
 
         $emails = array_merge(
@@ -78,12 +79,38 @@ class EmailController extends Controller
     }
 
     /**
+     * Create an array of parts for the purchase order email.
+     *
+     * @param  Order $order
+     * @return array
+     */
+    protected function createPartsArray(Order $order): array
+    {
+        $parts = [];
+
+        foreach ($order->parts()->orderBy('stage')->orderBy('name')->get() as $part) {
+            if (array_key_exists($part->name, $parts)) {
+                $parts[$part->name]['quantity_ordered'] += $part->quantity_ordered;
+            } else {
+                $parts[$part->name] = [
+                    'quantity_ordered' => $part->quantity_ordered,
+                    'material' => $part->material,
+                    'material_thickness' => $part->material_thickness,
+                    'stage' => $part->stage,
+                ];
+            }
+        }
+
+        return $parts;
+    }
+
+    /**
      * Template one for purchase order email.
      *
      * @param  Order $order
      * @return string
      */
-    protected function template1(Order $order): string
+    protected function template1(Order $order, array $parts): string
     {
         $route = route('orders.complete', $order->id).'?token='.hash('sha256', $order->id);
 
@@ -97,13 +124,13 @@ class EmailController extends Controller
         $body .= '<td><strong>Material</strong></td>';
         $body .= '<td><strong>Material Thickness</strong></td>';
         $body .= '<td><strong>Stage</strong></td></tr>';
-        foreach ($order->parts()->orderBy('stage')->orderBy('name')->get() as $part) {
+        foreach ($parts as $name => $part) {
             $body .= '<tr>';
-            $body .= "<td>{$part->name}</td>";
-            $body .= "<td>{$part->quantity_ordered}</td>";
-            $body .= "<td>{$part->material}</td>";
-            $body .= "<td>{$part->material_thickness}</td>";
-            $body .= "<td>{$part->stage}</td>";
+            $body .= "<td>$name</td>";
+            $body .= "<td>{$part['quantity_ordered']}</td>";
+            $body .= "<td>{$part['material']}</td>";
+            $body .= "<td>{$part['material_thickness']}</td>";
+            $body .= "<td>{$part['stage']}</td>";
             $body .= '</tr>';
         }
         $body .= '</tbody></table>';
@@ -122,7 +149,7 @@ class EmailController extends Controller
      * @param  Order $order
      * @return string $body
      */
-    protected function template2(Order $order): string
+    protected function template2(Order $order, array $parts): string
     {
         $route = route('orders.complete', $order->id).'?token='.hash('sha256', $order->id);
 
@@ -134,11 +161,11 @@ class EmailController extends Controller
         $body .= '<td><strong>Part Name</strong></td>';
         $body .= '<td><strong>Qty</strong></td>';
         $body .= '<td><strong>Stage</strong></td></tr>';
-        foreach ($order->parts()->orderBy('stage')->orderBy('name')->get() as $part) {
+        foreach ($parts as $name => $part) {
             $body .= '<tr>';
-            $body .= "<td>{$part->name}</td>";
-            $body .= "<td>{$part->quantity_ordered}</td>";
-            $body .= "<td>{$part->stage}</td>";
+            $body .= "<td>$name</td>";
+            $body .= "<td>{$part['quantity_ordered']}</td>";
+            $body .= "<td>{$part['stage']}</td>";
             $body .= '</tr>';
         }
         $body .= '</tbody></table>';
