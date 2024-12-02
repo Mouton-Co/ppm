@@ -232,7 +232,7 @@ class UploadFilesHelper
                                 return [
                                     false,
                                     'Data integrity violation:',
-                                    ['Row '.($i + 3)." , part name '".$matrix[$heading][$i]."' shouldn't not end with a digit."],
+                                    ['Row '.($i + 3)." , part name '".$matrix[$heading][$i]."' should not end with a digit."],
                                 ];
                             }
                         }
