@@ -183,7 +183,11 @@ class Controller extends BaseController
                  * if model is Part and field is due_days and
                  * continue and do manually in the controller
                  */
-                if ($this->model == Part::class && $key == 'due_days') {
+                if (
+                    $this->model == Part::class && $key == 'due_days' ||
+                    $this->model == Part::class && $key == 'machine_number' ||
+                    $this->model == Part::class && $key == 'unit_number'
+                ) {
                     continue;
                 }
 
