@@ -75,7 +75,12 @@ class PartsController extends Controller
         }
 
         $this->checkTableConfigurations('procurement', Part::class, Part::$procurementStructure);
-        $parts = $this->filter(Part::class, Part::query(), $request, Part::$procurementStructure)->paginate(15);
+        $parts = $this->filter(Part::class, Part::query(), $request, Part::$procurementStructure)
+            ->whereHas('submission', function ($query) {
+                $query->where('machine_number', 'like', '%' . request()->get('machine_number') . '%')
+                    ->where('current_unit_number', 'like', '%' . request()->get('unit_number') . '%');
+            })
+            ->paginate(15);
 
         if ($parts->currentPage() > 1 && $parts->lastPage() < $parts->currentPage()) {
             return redirect()->route('parts.procurement.index', array_merge(['page' => $parts->lastPage()], $request->except(['page'])));
@@ -102,7 +107,12 @@ class PartsController extends Controller
         }
 
         $this->checkTableConfigurations('warehouse', Part::class, Part::$warehouseStructure);
-        $parts = $this->filter(Part::class, Part::query(), $request, Part::$warehouseStructure)->paginate(15);
+        $parts = $this->filter(Part::class, Part::query(), $request, Part::$warehouseStructure)
+            ->whereHas('submission', function ($query) {
+                $query->where('machine_number', 'like', '%' . request()->get('machine_number') . '%')
+                    ->where('current_unit_number', 'like', '%' . request()->get('unit_number') . '%');
+            })
+            ->paginate(15);
         
         if ($request->has('due_days')) {
             /**
@@ -115,7 +125,13 @@ class PartsController extends Controller
                     $idsToIgnore[] = $part->id;
                 }
             }
-            $parts = $this->filter(Part::class, Part::query(), $request, Part::$warehouseStructure)->whereNotIn('id', $idsToIgnore)->paginate(15);
+            $parts = $this->filter(Part::class, Part::query(), $request, Part::$warehouseStructure)
+                ->whereHas('submission', function ($query) {
+                    $query->where('machine_number', 'like', '%' . request()->get('machine_number') . '%')
+                        ->where('current_unit_number', 'like', '%' . request()->get('unit_number') . '%');
+                })
+                ->whereNotIn('id', $idsToIgnore)
+                ->paginate(15);
         }
 
         if ($parts->currentPage() > 1 && $parts->lastPage() < $parts->currentPage()) {

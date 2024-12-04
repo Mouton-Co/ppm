@@ -246,10 +246,14 @@ class Part extends Model
         'machine_number' => [
             'label' => 'Machine #',
             'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
         ],
         'unit_number' => [
             'label' => 'Unit #',
             'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
         ],
         'part_ordered_at' => [
             'label' => 'Part Ordered At',
@@ -536,6 +540,14 @@ class Part extends Model
         'machine_number' => [
             'label' => 'Machine #',
             'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
+        'unit_number' => [
+            'label' => 'Unit #',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
         ],
         'lifecycle_stamps' => [
             'label' => 'Part Lifecycle Stamps',
