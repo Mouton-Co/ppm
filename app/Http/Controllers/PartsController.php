@@ -309,6 +309,8 @@ class PartsController extends Controller
         if (!$request->user()->role->hasPermission('update_procurement')) {
             abort(403);
         }
+        
+        $this->generatePoNumbersForDnoSuppliers();
 
         /**
          * Get all the possible combinations of machine number and current unit number
@@ -361,6 +363,19 @@ class PartsController extends Controller
         }
 
         return redirect()->back();
+    }
+
+    /**
+     * Generate PO numbers for all parts with DNO suppliers
+     */
+    protected function generatePoNumbersForDnoSuppliers(): void
+    {
+        foreach (Part::all() as $part) {
+            if ($part->supplier->dno && empty($part->po_number)) {
+                $part->po_number = "M{$part->submission->machine_number} - DNO";
+                $part->save();
+            }
+        }
     }
 
     /**

@@ -15,6 +15,7 @@ class Supplier extends Model
         'name',
         'average_lead_time',
         'template',
+        'dno',
     ];
 
     /*
@@ -44,6 +45,13 @@ class Supplier extends Model
                 '1' => '1',
                 '2' => '2',
             ],
+        ],
+        'dno' => [
+            'label' => 'DNO',
+            'type' => 'boolean',
+            'sortable' => true,
+            'filterable' => true,
+            'component' => 'editable.checkbox',
         ],
         'average_lead_time' => [
             'label' => 'Average Lead Time (Days)',
@@ -81,5 +89,15 @@ class Supplier extends Model
     public function representatives(): HasMany
     {
         return $this->hasMany(Representative::class);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Helpers
+    |--------------------------------------------------------------------------
+    */
+    public function checkboxEnabled($key)
+    {
+        return true;
     }
 }
