@@ -34,6 +34,32 @@ export function cellEdit() {
         let field = $(this).attr('name');
         let id    = $(this).attr('item-id');
 
+        if ($(this).attr('model') == 'App\\Models\\Supplier') {
+            updateSupplierCheckbox(id, field, value);
+        } else {
+            updatePartCheckbox(id, field, value);
+        }
+        
+    });
+
+    function updateSupplierCheckbox(id, field, value)
+    {
+        setTimeout(function () {
+            $.ajax({ // route('suppliers.update-checkbox', $part->id)
+                type: 'POST',
+                url: '/suppliers/update-checkbox/' + id,
+                data: {
+                    _token: $('meta[name="csrf-token"]').attr('content'),
+                    id: id,
+                    field: field,
+                    value: value
+                }
+            });
+        }, 200);
+    }
+
+    function updatePartCheckbox(id, field, value)
+    {
         setTimeout(function () {
             $.ajax({ // route('parts.update-checkbox', $part->id)
                 type: 'POST',
@@ -78,7 +104,7 @@ export function cellEdit() {
                 }
             });
         }, 200);
-    });
+    }
 
     // Editable dropdown cell
     $(".cell-dropdown").on("change", function () {

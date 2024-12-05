@@ -1,4 +1,5 @@
 <input
+    model="{{ $datum::class }}"
     class="editable-cell-boolean"
     name="{{ $key }}"
     type="checkbox"

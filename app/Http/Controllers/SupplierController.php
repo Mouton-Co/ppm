@@ -160,4 +160,31 @@ class SupplierController extends Controller
                 'success' => "$name deleted successfully",
             ]);
     }
+
+    /**
+     * Update checkbox with ajax
+     */
+    public function updateCheckbox(Request $request)
+    {
+        if (! $request->user()->role->hasPermission('update_suppliers')) {
+            abort(403);
+        }
+
+        $supplier = Supplier::find($request->id);
+
+        if (empty($supplier)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Supplier not found',
+            ], 404);
+        }
+        
+        $supplier->{$request->get('field')} = $request->get('value');
+        $supplier->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Supplier updated successfully',
+        ]);
+    }
 }
