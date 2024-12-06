@@ -54,6 +54,8 @@ class Controller extends BaseController
                 $component = $this->renderDropdownPill($request, $field);
             } elseif ($field['type'] == 'boolean') {
                 $component = $this->renderBooleanPill($request, $field);
+            } elseif ($field['type'] == 'date') {
+                $component = $this->renderDatePill($request, $field);
             }
 
             return response()->json($component);
@@ -142,6 +144,23 @@ class Controller extends BaseController
     }
 
     /**
+     * Get the pill html for the filter
+     * @param Request $request
+     * @param array $field
+     * @return array
+     */
+    public function renderDatePill($request, $field): array
+    {
+        return [
+            'field' => $request->field,
+            'html' => view('components.filters.date-pill', [
+                'label' => $field['label'],
+                'key' => $request->field,
+            ])->render(),
+        ];
+    }
+
+    /**
      * Filter the query
      * @param $model
      * @param $query
@@ -208,7 +227,7 @@ class Controller extends BaseController
         if ($this->request->has('query')) {
             $query = $query->where(function ($subquery) {
                 foreach ($this->structure as $key => $value) {
-                    if (!empty($value['filterable']) && $value['filterable'] && array_key_exists($key, $this->model::first()->getAttributes())) {
+                    if (!empty($value['filterable']) && $value['filterable'] && array_key_exists($key, $this->model::first()?->getAttributes() ?? [])) {
                         if (! empty($this->structure[$key]['relationship'])) {
                             $subquery->orWhereRelation(
                                 explode('.', $this->structure[$key]['relationship'])[0],

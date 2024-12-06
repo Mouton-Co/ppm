@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth')->group(function () {
     Route::get('/', [DashboardController::class, 'dashboard'])->name('dashboard');
-    Route::get('/pill-html', [Controller::class, 'getPillHtml'])->name('pill-html');
+    Route::post('/pill-html', [Controller::class, 'getPillHtml'])->name('pill-html');
     Route::post('/update-configs', [Controller::class, 'updateConfigs'])->name('update-configs');
 
     include 'submissions.php';

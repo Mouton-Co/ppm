@@ -35,7 +35,21 @@
                 </div>
                 <div class="order-card-body-item">
                     <x-icon.datetime class="w-5 min-w-[1.25rem]" />
-                    <span>{{ $order->created_at ?? 'N/A' }}</span>
+                    <span id="{{ $order->id . '-due_date' }}">
+                        @empty($order->due_date)
+                            {{ __("Due date: N/A") }}
+                        @else
+                            {{ __("Due date: ") . $order->due_date }}
+                        @endempty
+                    </span>
+                </div>
+                <div class="order-card-body-item">
+                    <x-icon.datetime class="w-5 min-w-[1.25rem]" />
+                    <span id="{{ $order->id . "-due_days" }}">{{ "Due in (days): " . $order->due_days ?? 'N/A' }}</span>
+                </div>
+                <div class="order-card-body-item">
+                    <x-icon.datetime class="w-5 min-w-[1.25rem]" />
+                    <span>{{ "Created at: " . $order->created_at ?? 'N/A' }}</span>
                 </div>
             </div>
             <div class="order-card-footer">
@@ -56,33 +70,45 @@
             <div
                 class="order-card-{{ $order->status }} smaller-than-572:min-w-full max-h-[700px] min-w-[34rem] overflow-y-scroll">
                 <div class="order-card-header">
-                    <span>PO {{ $order->po_number ?? 'N/A' }}</span>
-                    <div class="flex gap-3">
-                        <x-order.status :status="$order->status ?? 'N/A'" />
-                        @if (request()->has('archived') && request()->archived == 'true')
-                            @can('restore', App\Models\Order::class)
-                                <x-icon.refresh
-                                    class="delete-po restore-button aspect-square w-5 text-sky-500 hover:text-sky-700"
-                                    route="{{ route('orders.restore', $order->id) }}"
-                                    item-id="{{ $order->id }}"
-                                />
-                            @endcan
-                            @can('forceDelete', App\Models\Order::class)
-                                <x-icon.trash
-                                    class="delete-po trash-button aspect-square w-5 text-red-400 hover:text-red-600"
-                                    route="{{ route('orders.trash', $order->id) }}"
-                                    item-id="{{ $order->id }}"
-                                />
-                            @endcan
-                        @else
-                            @can('delete', App\Models\Order::class)
-                                <x-icon.trash
-                                    class="delete-po aspect-square w-5 text-red-400 hover:text-red-600"
-                                    route="{{ route('orders.delete', $order->id) }}"
-                                    item-id="{{ $order->id }}"
-                                />
-                            @endcan
-                        @endif
+                    <div class="w-full flex flex-col">
+                        <div class="flex justify-between items-center w-full">
+                            <span>PO {{ $order->po_number ?? 'N/A' }}</span>
+                            <div class="flex gap-3">
+                                <x-order.status :status="$order->status ?? 'N/A'" />
+                                @if (request()->has('archived') && request()->archived == 'true')
+                                    @can('restore', App\Models\Order::class)
+                                        <x-icon.refresh
+                                            class="delete-po restore-button aspect-square w-5 text-sky-500 hover:text-sky-700"
+                                            route="{{ route('orders.restore', $order->id) }}"
+                                            item-id="{{ $order->id }}"
+                                        />
+                                    @endcan
+                                    @can('forceDelete', App\Models\Order::class)
+                                        <x-icon.trash
+                                            class="delete-po trash-button aspect-square w-5 text-red-400 hover:text-red-600"
+                                            route="{{ route('orders.trash', $order->id) }}"
+                                            item-id="{{ $order->id }}"
+                                        />
+                                    @endcan
+                                @else
+                                    @can('delete', App\Models\Order::class)
+                                        <x-icon.trash
+                                            class="delete-po aspect-square w-5 text-red-400 hover:text-red-600"
+                                            route="{{ route('orders.delete', $order->id) }}"
+                                            item-id="{{ $order->id }}"
+                                        />
+                                    @endcan
+                                @endif
+                            </div>
+                        </div>
+                        <div class="w-full flex gap-3 items-center">
+                            <span>{{ __("Due date:") }}</span>
+                            <x-table.editable.date
+                                :datum="$order"
+                                key="due_date"
+                                model="{{ App\Models\Order::class }}"
+                            />
+                        </div>
                     </div>
                 </div>
                 <div class="order-card-body">

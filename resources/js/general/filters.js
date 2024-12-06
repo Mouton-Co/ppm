@@ -51,8 +51,9 @@ export function filters() {
 
     // add filter pill
     $('.add-filter-pill').on('click', function () {
+        console.log('hits');
         $.ajax({ // route('pill-html')
-            type: 'GET',
+            type: 'POST',
             url: '/pill-html',
             data: {
                 _token: $('meta[name="csrf-token"]').attr('content'),

@@ -76,6 +76,12 @@
                         label="{{ $structure[$key]['label'] }}"
                         key="{{ $key }}"
                     />
+                @elseif ($structure[$key]['type'] == 'date')
+                    <x-filters.date-pill
+                        value="{{ $value }}"
+                        label="{{ $structure[$key]['label'] }}"
+                        key="{{ $key }}"
+                    />
                 @elseif ($structure[$key]['type'] == 'dropdown')
                     @if (!empty($structure[$key]['relationship']))
                         @php

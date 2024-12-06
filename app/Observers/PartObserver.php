@@ -5,6 +5,7 @@ namespace App\Observers;
 use App\Mail\PartReplaced;
 use App\Models\Part;
 use App\Models\RecipientGroup;
+use App\Models\Supplier;
 use Illuminate\Support\Facades\Mail;
 use App\Models\User;
 
@@ -71,6 +72,45 @@ class PartObserver
                     $mail->send(new PartReplaced($part));
                 }
             }
+        }
+
+        /**
+         * when part is ordered
+         */
+        if (
+            $part->isDirty('part_ordered_at') &&
+            ! empty($part->part_ordered_at) &&
+            ! empty($part?->supplier?->average_lead_time)
+        ) {
+            $part->update([
+                'due_date' => now()->addDays($part->supplier->average_lead_time),
+            ]);
+        }
+
+        /**
+         * when part is dispatched for treatment 1
+         */
+        if (
+            $part->isDirty('treatment_1_part_dispatched_at') &&
+            ! empty($part->treatment_1_part_dispatched_at) &&
+            ! empty($days = Supplier::where('name', $part->treatment_1_supplier)->first()?->average_lead_time)
+        ) {
+            $part->update([
+                'due_date' => now()->addDays($days),
+            ]);
+        }
+
+        /**
+         * when part is dispatched for treatment 2
+         */
+        if (
+            $part->isDirty('treatment_2_part_dispatched_at') &&
+            ! empty($part->treatment_2_part_dispatched_at) &&
+            ! empty($days = Supplier::where('name', $part->treatment_2_supplier)->first()?->average_lead_time)
+        ) {
+            $part->update([
+                'due_date' => now()->addDays($days),
+            ]);
         }
     }
 

@@ -147,12 +147,18 @@ class OrderController extends Controller
                 continue;
             }
 
+            $dueDate = null;
+            if (! empty($parts[0]->supplier->average_lead_time)) {
+                $dueDate = now()->addDays($parts[0]->supplier->average_lead_time);
+            }
+
             // create order
             $order = Order::create([
                 'po_number' => $poNumber,
                 'supplier_id' => $parts[0]->supplier_id,
                 'submission_id' => $parts[0]->submission_id,
                 'total_parts' => $totalParts,
+                'due_date' => $dueDate,
             ]);
 
             // set token
@@ -223,5 +229,34 @@ class OrderController extends Controller
         return redirect()->back()->withSuccess(
             'Parts marked as ordered.'
         );
+    }
+
+    /**
+     * Update the date of the order with ajax.
+     */
+    public function updateDate(Request $request): \Illuminate\Http\JsonResponse
+    {
+        if ($request->user()->cannot('update', Order::class)) {
+            abort(403);
+        }
+
+        $order = Order::find($request->id);
+
+        if (! empty($order)) {
+            $order->update([
+                $request->get('field') => $request->get('value'),
+            ]);
+
+            return response()->json([
+                'message' => 'Order updated.',
+                'id' => $order->id,
+                'days' => $order->due_days,
+                'date' => $order->due_date,
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Order not found.',
+        ]);
     }
 }

@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Order;
 use App\Models\Part;
 use App\Models\Project;
+use App\Observers\OrderObserver;
 use App\Observers\PartObserver;
 use App\Observers\ProjectObserver;
 use Illuminate\Auth\Events\Registered;
@@ -32,6 +34,7 @@ class EventServiceProvider extends ServiceProvider
 
         Project::observe(ProjectObserver::class);
         Part::observe((PartObserver::class));
+        Order::observe(OrderObserver::class);
     }
 
     /**
