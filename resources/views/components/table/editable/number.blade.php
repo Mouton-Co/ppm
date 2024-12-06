@@ -8,5 +8,5 @@
     @if (! auth()->user()->can_access)
         disabled
     @endif
-    @if (!empty($structure[$key]['min']) || $structure[$key]['min'] == 0) min="{{ $structure[$key]['min'] }}" @endif
+    @if (array_key_exists('min', $structure[$key])) min="{{ $structure[$key]['min'] }}" @endif
 >

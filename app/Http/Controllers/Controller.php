@@ -54,6 +54,8 @@ class Controller extends BaseController
                 $component = $this->renderDropdownPill($request, $field);
             } elseif ($field['type'] == 'boolean') {
                 $component = $this->renderBooleanPill($request, $field);
+            } elseif ($field['type'] == 'date') {
+                $component = $this->renderDatePill($request, $field);
             }
 
             return response()->json($component);
@@ -135,6 +137,23 @@ class Controller extends BaseController
         return [
             'field' => $request->field,
             'html' => view('components.filters.text-pill', [
+                'label' => $field['label'],
+                'key' => $request->field,
+            ])->render(),
+        ];
+    }
+
+    /**
+     * Get the pill html for the filter
+     * @param Request $request
+     * @param array $field
+     * @return array
+     */
+    public function renderDatePill($request, $field): array
+    {
+        return [
+            'field' => $request->field,
+            'html' => view('components.filters.date-pill', [
                 'label' => $field['label'],
                 'key' => $request->field,
             ])->render(),

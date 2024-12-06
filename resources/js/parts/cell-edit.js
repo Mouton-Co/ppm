@@ -28,6 +28,32 @@ export function cellEdit() {
         }
     });
 
+    $('.cell-date').on("change", function () {
+        if ($(this).attr('model') == 'App\\Models\\Part') {
+            let value = $(this).val();
+            let field = $(this).attr('name');
+            let id    = $(this).attr('item-id');
+    
+            setTimeout(function () {
+                $.ajax({ // route('parts.update', $part->id)
+                    type: 'POST',
+                    url: '/parts/update/' + id,
+                    data: {
+                        _token: $('meta[name="csrf-token"]').attr('content'),
+                        id: id,
+                        field: field,
+                        value: value
+                    },
+                    success: function (data) {
+                        if (field == 'due_date') {
+                            $("td[item-id='"+id+"'][item-key='due_days']").html(data.due_days);
+                        }
+                    }
+                });
+            }, 200);
+        }
+    });
+
     // Editable checkbox cell
     $(".editable-cell-boolean").on("click", function () {
         let value = $(this).is(':checked') ? 1 : 0;

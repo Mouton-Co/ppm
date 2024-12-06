@@ -179,6 +179,7 @@ class PartsController extends Controller
                 'quantity' => $part->quantity,
                 'quantity_in_stock' => $part->quantity_in_stock,
                 'quantity_ordered' => $part->quantity_ordered,
+                'due_days' => $part->due_days,
             ]);
         }
 
