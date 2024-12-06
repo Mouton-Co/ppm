@@ -160,7 +160,7 @@ class User extends Authenticatable
             $access = true;
         }
 
-        if (request()->segment(1) == 'orders' && auth()->user()->role->hasPermission('update_orders')) {
+        if (request()->segment(1) == 'orders' && auth()->user()->role->hasPermission('update_purchase_orders')) {
             $access = true;
         }
 

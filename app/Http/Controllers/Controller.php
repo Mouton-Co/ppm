@@ -227,7 +227,7 @@ class Controller extends BaseController
         if ($this->request->has('query')) {
             $query = $query->where(function ($subquery) {
                 foreach ($this->structure as $key => $value) {
-                    if (!empty($value['filterable']) && $value['filterable'] && array_key_exists($key, $this->model::first()->getAttributes())) {
+                    if (!empty($value['filterable']) && $value['filterable'] && array_key_exists($key, $this->model::first()?->getAttributes() ?? [])) {
                         if (! empty($this->structure[$key]['relationship'])) {
                             $subquery->orWhereRelation(
                                 explode('.', $this->structure[$key]['relationship'])[0],

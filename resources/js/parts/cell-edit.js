@@ -52,6 +52,30 @@ export function cellEdit() {
                 });
             }, 200);
         }
+
+        if ($(this).attr('model') == 'App\\Models\\Order') {
+            let value = $(this).val();
+            let field = $(this).attr('name');
+            let id    = $(this).attr('item-id');
+    
+            setTimeout(function () {
+                $.ajax({ // route('orders.update-date', $order->id)
+                    type: 'POST',
+                    url: '/orders/update-date/' + id,
+                    data: {
+                        _token: $('meta[name="csrf-token"]').attr('content'),
+                        id: id,
+                        field: field,
+                        value: value
+                    },
+                    success: function (data) {
+                        console.log(data);
+                        $('#' + data.id + '-due_days').html('Due in (days): ' + data.days);
+                        $('#' + data.id + '-due_date').html('Due date: ' + data.date);
+                    }
+                });
+            }, 200);
+        }
     });
 
     // Editable checkbox cell

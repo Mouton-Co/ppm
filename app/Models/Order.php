@@ -23,6 +23,7 @@ class Order extends Model
         'supplier_id',
         'submission_id',
         'token',
+        'due_date',
     ];
 
     /**
@@ -112,5 +113,27 @@ class Order extends Model
         }
 
         return $options;
+    }
+
+    /**
+     * Get the due days attribute.
+     */
+    public function getDueDaysAttribute()
+    {
+        $days = 'N/A';
+
+        if (! empty($this->due_date)) {
+            $dueDate = new \DateTime($this->due_date);
+            $today = new \DateTime();
+            $interval = $today->diff($dueDate);
+
+            if ($interval->invert) {
+                $days = $interval->days * -1;
+            } else {
+                $days = $interval->days + 1;
+            }
+        }
+
+        return $days;
     }
 }
