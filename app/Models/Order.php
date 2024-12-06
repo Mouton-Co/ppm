@@ -98,6 +98,14 @@ class Order extends Model
     {
         return Part::where('po_number', $this->po_number);
     }
+    
+    /**
+     * Scope for all the orders that are due in five days
+     */
+    public function scopeDueInFiveDays($query)
+    {
+        return $query->whereDate('due_date', now()->addDays(5)->toDateString());
+    }
 
     /**
      * Get the status of the order
@@ -135,5 +143,30 @@ class Order extends Model
         }
 
         return $days;
+    }
+
+    /**
+     * Create an array of combined parts for supplier emails.
+     *
+     * @return array
+     */
+    public function getCombinedPartsAttribute(): array
+    {
+        $parts = [];
+
+        foreach ($this->parts()->orderBy('stage')->orderBy('name')->get() as $part) {
+            if (array_key_exists($part->name, $parts)) {
+                $parts[$part->name]['quantity_ordered'] += $part->quantity_ordered;
+            } else {
+                $parts[$part->name] = [
+                    'quantity_ordered' => $part->quantity_ordered,
+                    'material' => $part->material,
+                    'material_thickness' => $part->material_thickness,
+                    'stage' => $part->stage,
+                ];
+            }
+        }
+
+        return $parts;
     }
 }

@@ -54,7 +54,7 @@ class EmailController extends Controller
             return redirect()->back()->with('error', 'Order not found');
         }
         
-        $parts = $this->createPartsArray($order);
+        $parts = $order->combined_parts;
         if (empty($order->supplier->template) || $order->supplier->template == 1) {
             $body = $this->template1($order, $parts);
         } else {
@@ -76,32 +76,6 @@ class EmailController extends Controller
             'cc' => $cc,
             'request' => $request,
         ]);
-    }
-
-    /**
-     * Create an array of parts for the purchase order email.
-     *
-     * @param  Order $order
-     * @return array
-     */
-    protected function createPartsArray(Order $order): array
-    {
-        $parts = [];
-
-        foreach ($order->parts()->orderBy('stage')->orderBy('name')->get() as $part) {
-            if (array_key_exists($part->name, $parts)) {
-                $parts[$part->name]['quantity_ordered'] += $part->quantity_ordered;
-            } else {
-                $parts[$part->name] = [
-                    'quantity_ordered' => $part->quantity_ordered,
-                    'material' => $part->material,
-                    'material_thickness' => $part->material_thickness,
-                    'stage' => $part->stage,
-                ];
-            }
-        }
-
-        return $parts;
     }
 
     /**

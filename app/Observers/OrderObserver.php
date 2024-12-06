@@ -16,7 +16,6 @@ class OrderObserver
          */
         if (! empty($order->due_date)) {
             foreach ($order->parts()->get() as $part) {
-                info('updating part' . $part->id);
                 $part->update([
                     'due_date' => $order->due_date,
                 ]);
@@ -34,7 +33,6 @@ class OrderObserver
          */
         if ($order->isDirty('due_date')) {
             foreach ($order->parts()->get() as $part) {
-                info('updating part' . $part->id);
                 $part->update([
                     'due_date' => $order->due_date,
                 ]);
