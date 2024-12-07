@@ -108,6 +108,14 @@ class Order extends Model
     }
 
     /**
+     * Scope for all the orders that are due today
+     */
+    public function scopeDueToday($query)
+    {
+        return $query->whereDate('due_date', now()->toDateString());
+    }
+
+    /**
      * Get the status of the order
      */
     public static function getCustomStatusAttribute()

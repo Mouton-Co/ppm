@@ -12,8 +12,15 @@
 
     <p>{{ __('Good day,') }}</p>
     <p>
-        {{ __("Kindly note that PO number {$order->po_number} is due in 5 days.") }}
+        {{ __("Kindly note that PO number {$order->po_number} is due today.") }}
     </p>
+
+    <p>{{ __('Kindly select the appropriate option below:') }}</p>
+    <ol>
+        <li><a href="#">{{ __('The order is complete, please send a driver/courier from PPM to pick it up.') }}</a></li>
+        <li><a href="#">{{ __('The order is complete, we will deliver to PPM.') }}</a></li>
+        <li><a href="#">{{ __('The order is not yet complete.') }}</a></li>
+    </ol>
 
     <table
         style="border-collapse: collapse; margin-top: 25px; font-size: 1rem; font-family: courier; min-width: 400px; box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);">
