@@ -36,7 +36,7 @@ class ZeroDaysLeft extends Command
 
         foreach (Order::query()->dueToday()->get() as $order) {
             Mail::to('arouxmouton@gmail.com')
-            // Mail::to($order->supplier?->representatives()?->first()?->email ?? '')
+                // Mail::to($order->supplier?->representatives()?->first()?->email ?? '')
                 ->send(new \App\Mail\ZeroDaysLeft($order));
         }
     }
