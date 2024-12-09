@@ -32,7 +32,15 @@
                 {{ __('The order is complete, please send a driver/courier from PPM to pick it up.') }}
             </a>
         </li>
-        <li><a href="#">{{ __('The order is complete, we will deliver to PPM.') }}</a></li>
+        <li>
+            <a
+                href="{{ route('order.shipped', [
+                    'id' => $order->id,
+                    'token' => hash('sha256', $order->id),
+                ]) }}">
+                {{ __('The order is complete, we will deliver to PPM.') }}
+            </a>
+        </li>
         <li><a href="#">{{ __('The order is not yet complete.') }}</a></li>
     </ol>
 

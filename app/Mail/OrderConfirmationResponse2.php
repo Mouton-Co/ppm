@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class OrderConfirmationResponse1 extends Mailable
+class OrderConfirmationResponse2 extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -31,7 +31,7 @@ class OrderConfirmationResponse1 extends Mailable
      */
     public function envelope(): Envelope
     {
-        return new Envelope(subject: "PO {$this->order->po_number} - ready for pick up");
+        return new Envelope(subject: "PO {$this->order->po_number} - is on the way");
     }
 
     /**
@@ -40,7 +40,7 @@ class OrderConfirmationResponse1 extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.order-confirmation-response1',
+            view: 'emails.order-confirmation-response2',
             with: [
                 'order' => $this->order,
             ],
