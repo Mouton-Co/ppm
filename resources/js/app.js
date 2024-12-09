@@ -1,9 +1,9 @@
 import jQuery from "jquery";
 window.$ = jQuery;
 
-import './bootstrap';
+import "./bootstrap";
 
-import Alpine from 'alpinejs';
+import Alpine from "alpinejs";
 
 window.Alpine = Alpine;
 
@@ -33,3 +33,5 @@ import { roleTable } from "./roles/role-table.js";
 roleTable();
 import { replacement } from "./submissions/replacement.js";
 replacement();
+import { settings } from "./general/settings.js";
+settings();

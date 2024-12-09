@@ -7,7 +7,21 @@
 
     {{-- heading --}}
     <div class="mb-2 flex items-center justify-between">
-        <h2 class="text-lg text-white">{{ $heading ?? 'Items' }}</h2>
+        <div class="flex items-center gap-10">
+            <h2 class="text-lg text-white">{{ $heading ?? 'Items' }}</h2>
+            @if ($model == \App\Models\Supplier::class)
+                <div class="flex items-center gap-2">
+                    <input
+                        class="rounded"
+                        id="supplier-emails-checkbox"
+                        type="checkbox"
+                        @if (!empty($supplierEmails) && $supplierEmails == 'true') checked @endif
+                    >
+                    <span class="text-sm text-gray-400">{{ __('Send emails') }}</span>
+                </div>
+            @endif
+        </div>
+
         <div class="flex cursor-pointer gap-2">
             <div class="flex items-center gap-2">
                 <input
@@ -24,7 +38,7 @@
             >
                 {{ __('Filter') }}
             </button>
-            @if (! empty($model::$actions['create']) && auth()->user()->can('create', $model))
+            @if (!empty($model::$actions['create']) && auth()->user()->can('create', $model))
                 <a
                     class="block h-7 rounded border border-sky-700 bg-sky-700 px-2 py-1 text-sm text-white shadow hover:border-sky-600 hover:bg-sky-600"
                     href="{{ route("$route.create") }}"
@@ -65,7 +79,11 @@
         @endif
 
         {{-- show archived --}}
-        <input type="hidden" name="archived" value="{{ request()->has('archived') && request()->get('archived') == 'true' }}">
+        <input
+            name="archived"
+            type="hidden"
+            value="{{ request()->has('archived') && request()->get('archived') == 'true' }}"
+        >
 
         {{-- display query filters inside search bar --}}
         @foreach (request()->query() as $key => $value)
@@ -309,9 +327,14 @@
                     </tr>
                 @endif
                 @foreach ($data as $datum)
-                    <tr class="border-b border-gray-700 bg-gray-800 @if (! empty($datum->replaced_by_submission)) text-red-500 @endif">
+                    <tr
+                        class="@if (!empty($datum->replaced_by_submission)) text-red-500 @endif border-b border-gray-700 bg-gray-800">
                         @foreach (auth()->user()->table_configs['tables'][$table]['show'] as $key)
-                            <td class="text-nowrap truncate px-6 py-2 min-w-fit" item-id="{{ $datum->id }}" item-key="{{ $key }}">
+                            <td
+                                class="text-nowrap min-w-fit truncate px-6 py-2"
+                                item-id="{{ $datum->id }}"
+                                item-key="{{ $key }}"
+                            >
                                 @if (!empty($structure[$key]['component']))
                                     @include('components.table.' . $structure[$key]['component'], [
                                         'datum' => $datum,
@@ -332,18 +355,18 @@
                             <div class="flex items-center justify-end gap-3">
                                 @if (request()->has('archived') && request()->get('archived') == 'true')
                                     {{-- archived records --}}
-                                    @if (! empty($model::$actions['restore']) && auth()->user()->can('restore', $model))
+                                    @if (!empty($model::$actions['restore']) && auth()->user()->can('restore', $model))
                                         <span
-                                            class="cursor-pointer text-sky-600 hover:text-sky-700 restore-button"
+                                            class="restore-button cursor-pointer text-sky-600 hover:text-sky-700"
                                             item-id="{{ $datum->id }}"
                                             route="{{ route("$route.restore", $datum->id) }}"
                                         >
                                             {{ $model::$actions['restore'] }}
                                         </span>
                                     @endif
-                                    @if (! empty($model::$actions['trash']) && auth()->user()->can('forceDelete', $model))
+                                    @if (!empty($model::$actions['trash']) && auth()->user()->can('forceDelete', $model))
                                         <span
-                                            class="cursor-pointer text-red-500 hover:text-red-700 trash-button"
+                                            class="trash-button cursor-pointer text-red-500 hover:text-red-700"
                                             item-id="{{ $datum->id }}"
                                             route="{{ route("$route.trash", $datum->id) }}"
                                         >
@@ -352,7 +375,7 @@
                                     @endif
                                 @else
                                     {{-- current records --}}
-                                    @if (! empty($model::$actions['show']) && auth()->user()->can('read', $model))
+                                    @if (!empty($model::$actions['show']) && auth()->user()->can('read', $model))
                                         <a
                                             class="cursor-pointer text-sky-600 hover:text-sky-700"
                                             href="{{ route("$route.show", $datum->id) }}"
@@ -360,7 +383,7 @@
                                             {{ $model::$actions['show'] }}
                                         </a>
                                     @endif
-                                    @if (! empty($model::$actions['edit']) && auth()->user()->can('update', $model))
+                                    @if (!empty($model::$actions['edit']) && auth()->user()->can('update', $model))
                                         <a
                                             class="cursor-pointer text-sky-600 hover:text-sky-700"
                                             href="{{ route("$route.edit", $datum->id) }}"
@@ -368,7 +391,7 @@
                                             {{ $model::$actions['edit'] }}
                                         </a>
                                     @endif
-                                    @if (! empty($model::$actions['delete']) && auth()->user()->can('delete', $model))
+                                    @if (!empty($model::$actions['delete']) && auth()->user()->can('delete', $model))
                                         <span
                                             class="cursor-pointer text-red-500 hover:text-red-700"
                                             id="delete-button-{{ $datum->id }}"
