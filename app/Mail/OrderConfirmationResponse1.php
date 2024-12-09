@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class FiveDaysLeft extends Mailable
+class OrderConfirmationResponse1 extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -31,10 +31,7 @@ class FiveDaysLeft extends Mailable
      */
     public function envelope(): Envelope
     {
-        return new Envelope(
-            subject: "Due in 5 days - PPM Order",
-            replyTo: 'orders@proproject.co.za',
-        );
+        return new Envelope(subject: "PO {$this->order->po_number} - ready for pick up");
     }
 
     /**
@@ -43,8 +40,10 @@ class FiveDaysLeft extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.five-days-left',
-            with: ['order' => $this->order],
+            view: 'emails.order-confirmation-response1',
+            with: [
+                'order' => $this->order,
+            ],
         );
     }
 }

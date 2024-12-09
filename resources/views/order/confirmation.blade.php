@@ -20,9 +20,9 @@
             </div>
 
             <div class="sm:mx-auto sm:w-full sm:max-w-md">
-                <h1 class="text-7xl text-gray-400 text-center">{{ __('Thank you!') }}</h1>
+                <h1 class="text-7xl text-gray-400 text-center">{{ $title ?? '' }}</h1>
                 <p class="text-lg text-gray-500 text-center mt-16">
-                    {{ __('Thank you for confirming that the order has been placed! Our staff has been notified and we look forward to hearing from you.') }}
+                    {{ $message ?? '' }}
                 </p>
             </div>
         </div>

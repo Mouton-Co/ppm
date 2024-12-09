@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('clear:temp')->dailyAt('02:00');
         $schedule->command('app:five-days-left')->dailyAt('02:00');
+        $schedule->command('app:zero-days-left')->dailyAt('02:00');
     }
 
     /**

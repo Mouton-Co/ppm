@@ -77,8 +77,7 @@ class PartsController extends Controller
         $this->checkTableConfigurations('procurement', Part::class, Part::$procurementStructure);
         $parts = $this->filter(Part::class, Part::query(), $request, Part::$procurementStructure)
             ->whereHas('submission', function ($query) {
-                $query->where('machine_number', 'like', '%' . request()->get('machine_number') . '%')
-                    ->where('current_unit_number', 'like', '%' . request()->get('unit_number') . '%');
+                $query->where('machine_number', 'like', '%' . request()->get('machine_number') . '%')->where('current_unit_number', 'like', '%' . request()->get('unit_number') . '%');
             })
             ->paginate(15);
 
@@ -109,11 +108,10 @@ class PartsController extends Controller
         $this->checkTableConfigurations('warehouse', Part::class, Part::$warehouseStructure);
         $parts = $this->filter(Part::class, Part::query(), $request, Part::$warehouseStructure)
             ->whereHas('submission', function ($query) {
-                $query->where('machine_number', 'like', '%' . request()->get('machine_number') . '%')
-                    ->where('current_unit_number', 'like', '%' . request()->get('unit_number') . '%');
+                $query->where('machine_number', 'like', '%' . request()->get('machine_number') . '%')->where('current_unit_number', 'like', '%' . request()->get('unit_number') . '%');
             })
             ->paginate(15);
-        
+
         if ($request->has('due_days')) {
             /**
              * loop trough all the parts and check if the part and remove all that doesn't match filter
@@ -127,8 +125,7 @@ class PartsController extends Controller
             }
             $parts = $this->filter(Part::class, Part::query(), $request, Part::$warehouseStructure)
                 ->whereHas('submission', function ($query) {
-                    $query->where('machine_number', 'like', '%' . request()->get('machine_number') . '%')
-                        ->where('current_unit_number', 'like', '%' . request()->get('unit_number') . '%');
+                    $query->where('machine_number', 'like', '%' . request()->get('machine_number') . '%')->where('current_unit_number', 'like', '%' . request()->get('unit_number') . '%');
                 })
                 ->whereNotIn('id', $idsToIgnore)
                 ->paginate(15);
@@ -239,11 +236,10 @@ class PartsController extends Controller
                 break;
             case 'qc_passed':
                 $part->status = $part->$field ? 'assembly' : 'qc';
-                $part->qc_by = $part->$field ? "QC passed by " . $request->user()->name : null;
+                $part->qc_by = $part->$field ? 'QC passed by ' . $request->user()->name : null;
                 break;
             case 'qc_issue':
-                $part->qc_by = $part->$field ?
-                    "QC failed by " . $request->user()->name : null;
+                $part->qc_by = $part->$field ? 'QC failed by ' . $request->user()->name : null;
                 break;
             default:
                 break;
@@ -310,7 +306,7 @@ class PartsController extends Controller
         if (!$request->user()->role->hasPermission('update_procurement')) {
             abort(403);
         }
-        
+
         $this->generatePoNumbersForDnoSuppliers();
 
         /**
@@ -341,9 +337,12 @@ class PartsController extends Controller
              * Get all the parts for this grouping, group them by supplier and assign the PO number
              */
             $suppliers = $this->filter(Part::class, Part::query(), $request, Part::$procurementStructure)
-                ->whereIn('submission_id', Submission::where('machine_number', $group[0])
-                    ->where('current_unit_number', $group[1])
-                    ->pluck('id'))
+                ->whereIn(
+                    'submission_id',
+                    Submission::where('machine_number', $group[0])
+                        ->where('current_unit_number', $group[1])
+                        ->pluck('id'),
+                )
                 ->where('po_number', null)
                 ->where('supplier_id', '!=', null)
                 ->get()
@@ -464,21 +463,13 @@ class PartsController extends Controller
                 case 'LCM':
                 case 'LCBM':
                 case 'LCBW':
-                    if (
-                        $request->has('lc_supplier') &&
-                        ! empty($request->get('lc_supplier')) &&
-                        ! empty(($lcSupplier = Supplier::find($request->get('lc_supplier'))))
-                    ) {
+                    if ($request->has('lc_supplier') && !empty($request->get('lc_supplier')) && !empty(($lcSupplier = Supplier::find($request->get('lc_supplier'))))) {
                         $part->supplier_id = $lcSupplier->id;
                         $part->save();
                     }
                     break;
                 case 'MCH':
-                    if (
-                        $request->has('part_supplier') &&
-                        ! empty($request->get('part_supplier')) &&
-                        ! empty(($partSupplier = Supplier::find($request->get('part_supplier'))))
-                    ) {
+                    if ($request->has('part_supplier') && !empty($request->get('part_supplier')) && !empty(($partSupplier = Supplier::find($request->get('part_supplier'))))) {
                         $part->supplier_id = $partSupplier->id;
                         $part->save();
                     }
@@ -719,7 +710,7 @@ class PartsController extends Controller
 
                 $part->qc_passed = true;
                 $part->qc_passed_at = now();
-                $part->qc_by = "QC passed by " . $request->user()->name;
+                $part->qc_by = 'QC passed by ' . $request->user()->name;
                 $part->status = 'assembly';
             }
             $part->save();
@@ -737,8 +728,10 @@ class PartsController extends Controller
     {
         Part::withTrashed()->update(['selected' => false]);
 
-        return redirect()->back()->with([
-            'success' => 'All parts unselected',
-        ]);
+        return redirect()
+            ->back()
+            ->with([
+                'success' => 'All parts unselected',
+            ]);
     }
 }

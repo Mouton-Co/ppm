@@ -6,21 +6,21 @@ use App\Models\Order;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 
-class FiveDaysLeft extends Command
+class ZeroDaysLeft extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'app:five-days-left';
+    protected $signature = 'app:zero-days-left';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Go through all the POs and send a reminder to the suppliers that the PO is due in 5 days.';
+    protected $description = 'Go through all the POs and send a reminder to the suppliers that the PO is due today.';
 
     /**
      * Execute the console command.
@@ -34,9 +34,8 @@ class FiveDaysLeft extends Command
             return 0;
         }
 
-        foreach (Order::query()->dueInFiveDays()->get() as $order) {
-            Mail::to($order->supplier?->representatives()?->first()?->email ?? '')
-                ->send(new \App\Mail\FiveDaysLeft($order));
+        foreach (Order::query()->dueToday()->get() as $order) {
+            Mail::to($order->supplier?->representatives()?->first()?->email ?? '')->send(new \App\Mail\ZeroDaysLeft($order));
         }
     }
 }
