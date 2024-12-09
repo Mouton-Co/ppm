@@ -41,7 +41,15 @@
                 {{ __('The order is complete, we will deliver to PPM.') }}
             </a>
         </li>
-        <li><a href="#">{{ __('The order is not yet complete.') }}</a></li>
+        <li>
+            <a
+                href="{{ route('order.not-ready', [
+                    'id' => $order->id,
+                    'token' => hash('sha256', $order->id),
+                ]) }}">
+                {{ __('The order is not yet complete.') }}
+            </a>
+        </li>
     </ol>
 
     <table

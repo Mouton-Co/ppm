@@ -45,3 +45,5 @@ Route::get('/orders/complete/{id}', [OrderController::class, 'markOrdered'])->na
 Route::get('/confirmation', [ResponseController::class, 'confirmation'])->name('confirmation');
 Route::get('/order/ready/{id}', [ResponseController::class, 'orderReady'])->name('order.ready');
 Route::get('/order/shipped/{id}', [ResponseController::class, 'orderShipped'])->name('order.shipped');
+Route::get('/order/not-ready/{id}', [ResponseController::class, 'orderNotReady'])->name('order.not-ready');
+Route::post('/order/not-ready/{id}', [ResponseController::class, 'orderNotReadySubmit'])->name('order.not-ready.submit');

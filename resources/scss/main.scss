@@ -1,16 +1,16 @@
-@import "tailwindcss/base";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities";
+@use "tailwindcss/base";
+@use "tailwindcss/components";
+@use "tailwindcss/utilities";
 
-@import "components/dropzone";
-@import "components/buttons";
-@import "components/fields";
-@import "components/modals";
-@import "components/navbar";
-@import "components/cards";
-@import "components/tables";
+@use "components/dropzone";
+@use "components/buttons";
+@use "components/fields";
+@use "components/modals";
+@use "components/navbar";
+@use "components/cards";
+@use "components/tables";
 
-@import "typography/headings";
+@use "typography/headings";
 
-@import "abstract/animation";
-@import "abstract/general";
+@use "abstract/animation";
+@use "abstract/general";

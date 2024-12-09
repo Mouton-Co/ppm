@@ -31,13 +31,11 @@ class ZeroDaysLeft extends Command
          * if env is local don't send emails
          */
         if (app()->environment('local')) {
-            // return 0;
+            return 0;
         }
 
         foreach (Order::query()->dueToday()->get() as $order) {
-            Mail::to('arouxmouton@gmail.com')
-                // Mail::to($order->supplier?->representatives()?->first()?->email ?? '')
-                ->send(new \App\Mail\ZeroDaysLeft($order));
+            Mail::to($order->supplier?->representatives()?->first()?->email ?? '')->send(new \App\Mail\ZeroDaysLeft($order));
         }
     }
 }
