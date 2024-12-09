@@ -37,6 +37,7 @@ Route::middleware('auth')->group(function () {
     include 'project-responsibles.php';
     include 'recipient-groups.php';
     include 'roles.php';
+    include 'settings.php';
 });
 
 include __DIR__ . '/auth.php';

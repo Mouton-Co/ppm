@@ -6,6 +6,7 @@ use App\Http\Requests\Supplier\StoreRequest;
 use App\Http\Requests\Supplier\UpdateRequest;
 use App\Models\Order;
 use App\Models\Part;
+use App\Models\Setting;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
 
@@ -19,7 +20,7 @@ class SupplierController extends Controller
         $this->model = Supplier::class;
         $this->route = 'suppliers';
     }
-    
+
     /**
      * Display a listing of the resource.
      */
@@ -43,6 +44,7 @@ class SupplierController extends Controller
             'indexRoute' => 'suppliers.index',
             'data' => $suppliers,
             'model' => Supplier::class,
+            'supplierEmails' => Setting::where('key', 'supplier_emails')?->first()?->value ?? 'false',
         ]);
     }
 
@@ -178,7 +180,7 @@ class SupplierController extends Controller
                 'message' => 'Supplier not found',
             ], 404);
         }
-        
+
         $supplier->{$request->get('field')} = $request->get('value');
         $supplier->save();
 
