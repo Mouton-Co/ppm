@@ -31,6 +31,8 @@ import { filters } from "./general/filters.js";
 filters();
 import { roleTable } from "./roles/role-table.js";
 roleTable();
+import { roleForm } from "./roles/role-form.js";
+roleForm();
 import { replacement } from "./submissions/replacement.js";
 replacement();
 import { settings } from "./general/settings.js";

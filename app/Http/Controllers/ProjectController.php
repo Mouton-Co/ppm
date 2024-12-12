@@ -29,13 +29,17 @@ class ProjectController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->user()->cannot('read', Project::class)) {
+        if ($request->user()->cannot('read', Project::class) && !$request->user()->role->customer) {
             abort(403);
         }
 
         $this->checkTableConfigurations('projects', Project::class);
-        
-        if ($request->has('status') && $request->status === 'All except closed') {
+
+        if (auth()->user()->role->customer) {
+            $projects = $this->filter(Project::class, Project::query(), $request)
+                ->whereIn('machine_nr', json_decode(auth()->user()->role->permissions))
+                ->paginate(15);
+        } elseif ($request->has('status') && $request->status === 'All except closed') {
             $projects = $this->filter(Project::class, Project::query(), $request)
                 ->where('status', '!=', 'Closed')
                 ->paginate(15);
@@ -310,18 +314,18 @@ class ProjectController extends Controller
     {
         $project = Project::findOrFail($id);
 
-        if (! empty($project)) {
-            $group = RecipientGroup::where('field', "Currently responsible")
+        if (!empty($project)) {
+            $group = RecipientGroup::where('field', 'Currently responsible')
                 ->where('value', $project->currently_responsible)
                 ->first();
-    
-            if (! empty($group)) {
+
+            if (!empty($group)) {
                 $group->mail('New CoC Ticket', 'emails.project.assigned-department', $project);
             }
-    
+
             $individual = User::where('name', $project->currently_responsible)->first();
-    
-            if (! empty($individual)) {
+
+            if (!empty($individual)) {
                 Mail::to($individual->email)->send(new ProjectUpdate('New CoC Ticket', 'emails.project.assigned-individual', $project));
             }
         }

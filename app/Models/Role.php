@@ -19,6 +19,7 @@ class Role extends Model
         'role',
         'landing_page',
         'permissions',
+        'customer',
     ];
 
     /**
@@ -58,7 +59,7 @@ class Role extends Model
             'filterable' => true,
         ],
     ];
-    
+
     /**
      * Table actions.
      *
