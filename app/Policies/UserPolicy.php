@@ -9,6 +9,6 @@ class UserPolicy extends Policy
      */
     public function __construct()
     {
-        $this->permission = "users";
+        $this->permission = 'users';
     }
 }

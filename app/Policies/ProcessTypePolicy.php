@@ -9,6 +9,6 @@ class ProcessTypePolicy extends Policy
      */
     public function __construct()
     {
-        $this->permission = "process_types";
+        $this->permission = 'process_types';
     }
 }

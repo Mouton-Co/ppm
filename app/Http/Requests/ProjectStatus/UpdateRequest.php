@@ -14,7 +14,7 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|unique:project_statuses,name,' . $this->get('project_status_id') . ',id',
+            'name' => 'required|unique:project_statuses,name,'.$this->get('project_status_id').',id',
         ];
     }
 }

@@ -9,6 +9,6 @@ class RolePolicy extends Policy
      */
     public function __construct()
     {
-        $this->permission = "roles";
+        $this->permission = 'roles';
     }
 }

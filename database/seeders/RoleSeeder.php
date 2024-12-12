@@ -23,7 +23,7 @@ class RoleSeeder extends Seeder
                 'role' => $role,
             ]);
         }
-        
+
         Artisan::call('app:initialise-role-permissions');
     }
 }

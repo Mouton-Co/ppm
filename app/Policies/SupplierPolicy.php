@@ -9,6 +9,6 @@ class SupplierPolicy extends Policy
      */
     public function __construct()
     {
-        $this->permission = "suppliers";
+        $this->permission = 'suppliers';
     }
 }

@@ -13,9 +13,6 @@ class FiveDaysLeft extends Mailable
 {
     use Queueable, SerializesModels;
 
-    /**
-     * @var Order
-     */
     protected Order $order;
 
     /**
@@ -32,7 +29,7 @@ class FiveDaysLeft extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: "Due in 5 days - PPM Order",
+            subject: 'Due in 5 days - PPM Order',
             replyTo: 'orders@proproject.co.za',
         );
     }

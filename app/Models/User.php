@@ -121,12 +121,11 @@ class User extends Authenticatable
 
     /**
      * Get user's table configurations
-     * @return array|null
      */
     public function getTableConfigsAttribute(): ?array
     {
         try {
-            return (array)json_decode($this->configurations, true);
+            return (array) json_decode($this->configurations, true);
         } catch (\Exception $e) {
             return null;
         }
@@ -134,7 +133,6 @@ class User extends Authenticatable
 
     /**
      * Returns true if editable component is accessible to user
-     * @return bool
      */
     public function getCanAccessAttribute(): bool
     {
@@ -171,7 +169,7 @@ class User extends Authenticatable
         if (request()->segment(1) == 'roles' && auth()->user()->role->hasPermission('update_roles')) {
             $access = true;
         }
-        
+
         if (request()->segment(1) == 'suppliers' && auth()->user()->role->hasPermission('update_suppliers')) {
             $access = true;
         }

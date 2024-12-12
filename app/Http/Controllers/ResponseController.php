@@ -14,9 +14,6 @@ class ResponseController extends Controller
 {
     /**
      * Display the confirmation page.
-     *
-     * @param Request $request
-     * @return \Illuminate\View\View
      */
     public function confirmation(Request $request): \Illuminate\View\View
     {
@@ -28,23 +25,19 @@ class ResponseController extends Controller
 
     /**
      * Mark the order as ready for pick up.
-     *
-     * @param Request $request
-     * @param $id
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function orderReady(Request $request, $id): \Illuminate\Http\RedirectResponse
     {
         /**
          * make sure that the token is valid and matches the order id
          */
-        if (!$request->has('token') && $request->get('token') !== hash('sha256', $id)) {
+        if (! $request->has('token') && $request->get('token') !== hash('sha256', $id)) {
             abort(403);
         }
 
         $order = Order::find($id);
 
-        if (!$order) {
+        if (! $order) {
             abort(404);
         }
 
@@ -61,23 +54,19 @@ class ResponseController extends Controller
 
     /**
      * Mark the order as shipped.
-     *
-     * @param Request $request
-     * @param $id
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function orderShipped(Request $request, $id): \Illuminate\Http\RedirectResponse
     {
         /**
          * make sure that the token is valid and matches the order id
          */
-        if (!$request->has('token') && $request->get('token') !== hash('sha256', $id)) {
+        if (! $request->has('token') && $request->get('token') !== hash('sha256', $id)) {
             abort(403);
         }
 
         $order = Order::find($id);
 
-        if (!$order) {
+        if (! $order) {
             abort(404);
         }
 
@@ -94,23 +83,19 @@ class ResponseController extends Controller
 
     /**
      * Mark the order as shipped.
-     *
-     * @param Request $request
-     * @param $id
-     * @return \Illuminate\View\View
      */
     public function orderNotReady(Request $request, $id): \Illuminate\View\View
     {
         /**
          * make sure that the token is valid and matches the order id
          */
-        if (!$request->has('token') && $request->get('token') !== hash('sha256', $id)) {
+        if (! $request->has('token') && $request->get('token') !== hash('sha256', $id)) {
             abort(403);
         }
 
         $order = Order::find($id);
 
-        if (!$order) {
+        if (! $order) {
             abort(404);
         }
 
@@ -121,23 +106,19 @@ class ResponseController extends Controller
 
     /**
      * Mark the order as not ready for pick up.
-     *
-     * @param NotReadyRequest $request
-     * @param $id
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function orderNotReadySubmit(NotReadyRequest $request, $id): \Illuminate\Http\RedirectResponse
     {
         /**
          * make sure that the token is valid and matches the order id
          */
-        if (!$request->has('token') && $request->get('token') !== hash('sha256', $id)) {
+        if (! $request->has('token') && $request->get('token') !== hash('sha256', $id)) {
             abort(403);
         }
 
         $order = Order::find($id);
 
-        if (!$order) {
+        if (! $order) {
             abort(404);
         }
 

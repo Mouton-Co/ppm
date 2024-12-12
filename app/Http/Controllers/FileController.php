@@ -51,7 +51,7 @@ class FileController extends Controller
 
                 $file->name = $fileName;
                 $file->file_type = $fileType;
-                $file->location = env('APP_ENV') . '/' .  str_replace('/temp', '', $fileLocation);
+                $file->location = env('APP_ENV').'/'.str_replace('/temp', '', $fileLocation);
                 $file->part_id = $part->id;
                 $file->save();
             }
@@ -99,7 +99,7 @@ class FileController extends Controller
      */
     public function downloadZip($id)
     {
-        return Storage::disk('s3')->download(env('APP_ENV') . "/files/$id/$id.zip");
+        return Storage::disk('s3')->download(env('APP_ENV')."/files/$id/$id.zip");
     }
 
     /**
@@ -108,7 +108,7 @@ class FileController extends Controller
     public function downloadExcel($id)
     {
         // search for the only xlsx file in the directory
-        $files = Storage::disk('s3')->files(env('APP_ENV') . "/files/$id");
+        $files = Storage::disk('s3')->files(env('APP_ENV')."/files/$id");
         $file = collect($files)->filter(function ($file) {
             return str_contains($file, '.xls');
         })->first();
@@ -123,7 +123,7 @@ class FileController extends Controller
     public function open($id)
     {
         $file = File::find($id);
-        
+
         if (empty($file)) {
             return redirect()->back()->with('error', 'File not found');
         }

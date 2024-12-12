@@ -6,9 +6,6 @@ use Illuminate\Http\Request;
 
 class RoleService
 {
-    /**
-     * @var array
-     */
     protected array $permissions = [
         'projects',
         'design',
@@ -26,9 +23,6 @@ class RoleService
         'email_triggers',
     ];
 
-    /**
-     * @var array
-     */
     protected array $excludes = [
         'create_procurement',
         'delete_procurement',
@@ -36,9 +30,6 @@ class RoleService
         'delete_warehouse',
     ];
 
-    /**
-     * @var array
-     */
     protected array $crud = [
         'create',
         'read',
@@ -50,9 +41,6 @@ class RoleService
 
     /**
      * Format permissions from request
-     *
-     * @param Request $request
-     * @return array
      */
     public function formatPermissionsFromRequest(Request $request): array
     {
@@ -65,7 +53,7 @@ class RoleService
                     $request->get("{$action}_{$permission}") == 'on' &&
                     ! in_array("{$action}_{$permission}", $this->excludes)
                 ) {
-                    $permissions[] =  "{$action}_{$permission}";
+                    $permissions[] = "{$action}_{$permission}";
                 }
             }
         }

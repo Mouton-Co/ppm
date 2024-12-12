@@ -17,7 +17,7 @@ class ProjectResponsibleController extends Controller
         $this->model = ProjectResponsible::class;
         $this->route = 'project-responsibles';
     }
-    
+
     /**
      * Display a listing of the resource.
      */

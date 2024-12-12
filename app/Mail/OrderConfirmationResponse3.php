@@ -13,14 +13,8 @@ class OrderConfirmationResponse3 extends Mailable
 {
     use Queueable, SerializesModels;
 
-    /**
-     * @var Order
-     */
     protected Order $order;
 
-    /**
-     * @var string
-     */
     protected string $reason;
 
     /**

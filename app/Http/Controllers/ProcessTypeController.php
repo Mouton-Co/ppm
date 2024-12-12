@@ -17,7 +17,7 @@ class ProcessTypeController extends Controller
         $this->model = ProcessType::class;
         $this->route = 'process-types';
     }
-    
+
     /**
      * Display a listing of the resource.
      */

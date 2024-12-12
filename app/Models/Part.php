@@ -679,10 +679,12 @@ class Part extends Model
     {
         return $this->submission->project->coc ?? 'N/A';
     }
+
     public function getMachineNumberAttribute()
     {
         return $this->submission->machine_number ?? 'N/A';
     }
+
     public function getUnitNumberAttribute()
     {
         return $this->submission->current_unit_number ?? 'N/A';
@@ -753,8 +755,6 @@ class Part extends Model
 
     /**
      * Get the treatment_1_supplier attribute.
-     *
-     * @return array
      */
     public static function getCustomTreatment1SupplierAttribute(): array
     {
@@ -763,8 +763,6 @@ class Part extends Model
 
     /**
      * Get the treatment_2_supplier attribute.
-     *
-     * @return array
      */
     public static function getCustomTreatment2SupplierAttribute(): array
     {

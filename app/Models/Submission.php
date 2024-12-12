@@ -80,7 +80,7 @@ class Submission extends Model
                 3 => 'Replacement',
                 4 => 'Modification',
                 5 => 'Workshop',
-            ]
+            ],
         ],
         'current_unit_number' => [
             'label' => 'Unit Number',

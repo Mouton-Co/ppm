@@ -17,7 +17,7 @@ class ProjectStatusController extends Controller
         $this->model = ProjectStatus::class;
         $this->route = 'project-statuses';
     }
-    
+
     /**
      * Display a listing of the resource.
      */
@@ -106,7 +106,7 @@ class ProjectStatusController extends Controller
         if ($request->user()->cannot('delete', $projectStatus)) {
             abort(403);
         }
-        
+
         $projectStatus->delete();
 
         return redirect()->back()->with('success', 'Status deleted successfully');

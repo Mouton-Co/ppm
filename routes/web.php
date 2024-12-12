@@ -40,7 +40,7 @@ Route::middleware('auth')->group(function () {
     include 'settings.php';
 });
 
-include __DIR__ . '/auth.php';
+include __DIR__.'/auth.php';
 
 Route::get('/orders/complete/{id}', [OrderController::class, 'markOrdered'])->name('orders.complete');
 Route::get('/confirmation', [ResponseController::class, 'confirmation'])->name('confirmation');

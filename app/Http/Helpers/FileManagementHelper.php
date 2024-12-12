@@ -37,7 +37,7 @@ class FileManagementHelper
             }
 
             // store the file on s3
-            Storage::disk('s3')->put(env('APP_ENV') . '/' . str_replace('/temp', '', $newName), Storage::disk('local')->get($fileName));
+            Storage::disk('s3')->put(env('APP_ENV').'/'.str_replace('/temp', '', $newName), Storage::disk('local')->get($fileName));
         }
 
         $this->createZipFor($submissionCode);
@@ -53,7 +53,7 @@ class FileManagementHelper
             ->addDir(storage_path('app/files/temp/'.$submissionCode))
             ->saveAsFile(storage_path("app/files/temp/$submissionCode/$submissionCode.zip"))
             ->close(); // close archive
-        
+
         // store the zip file on s3
         Storage::disk('s3')->put(env('APP_ENV').'/files/'.$submissionCode.'/'.$submissionCode.'.zip', Storage::disk('local')->get("files/temp/$submissionCode/$submissionCode.zip"));
     }

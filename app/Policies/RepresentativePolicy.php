@@ -9,6 +9,6 @@ class RepresentativePolicy extends Policy
      */
     public function __construct()
     {
-        $this->permission = "representatives";
+        $this->permission = 'representatives';
     }
 }

@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Role\StoreRequest;
-use App\Http\Requests\Role\UpdateRequest;
 use App\Http\Services\RoleService;
 use App\Models\Project;
 use App\Models\Role;
@@ -11,14 +9,8 @@ use Illuminate\Http\Request;
 
 class RoleController extends Controller
 {
-    /**
-     * @var array
-     */
     protected array $landingPages = ['Projects', 'Design', 'Procurement', 'Warehouse', 'Purchase Orders'];
 
-    /**
-     * @var array
-     */
     protected array $permissionTable = [
         'projects' => 'Projects',
         'design' => 'Design',
@@ -36,14 +28,8 @@ class RoleController extends Controller
         'email_triggers' => 'Email Triggers',
     ];
 
-    /**
-     * @var array
-     */
     protected array $permissionTableExcludes = ['create_procurement', 'delete_procurement', 'restore_procurement', 'force_delete_procurement', 'create_warehouse', 'delete_warehouse', 'restore_warehouse', 'force_delete_warehouse'];
 
-    /**
-     * @var RoleService
-     */
     protected RoleService $service;
 
     /**

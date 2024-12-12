@@ -9,6 +9,6 @@ class RecipientGroupPolicy extends Policy
      */
     public function __construct()
     {
-        $this->permission = "email_triggers";
+        $this->permission = 'email_triggers';
     }
 }

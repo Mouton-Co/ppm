@@ -101,7 +101,7 @@ class InitialiseRolePermissions extends Command
 
         foreach ($roles as $role) {
             $role = Role::where('role', $role)->first();
-            if (!empty($role)) {
+            if (! empty($role)) {
                 $role->permissions = json_encode($permissions);
                 $role->landing_page = 'Projects';
                 $role->save();

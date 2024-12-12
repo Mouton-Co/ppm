@@ -18,7 +18,7 @@ class RepresentativeController extends Controller
         $this->model = Representative::class;
         $this->route = 'representatives';
     }
-    
+
     /**
      * Display a listing of the resource.
      */

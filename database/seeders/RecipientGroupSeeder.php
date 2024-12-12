@@ -100,8 +100,8 @@ class RecipientGroupSeeder extends Seeder
                 ],
             ],
             [
-                'field' => "Item created",
-                'value' => "Submission",
+                'field' => 'Item created',
+                'value' => 'Submission',
                 'recipients' => [
                     'nelmari.b@proproject.co.za',
                     'jone@proproject.co.za',

@@ -73,13 +73,12 @@ class PurchaseOrder extends Mailable
                 /**
                  * temporarily store file on local from s3
                  */
-
                 if (Storage::disk('s3')->get($file->location)) {
                     Storage::put(
                         "files/temp/{$file->name}.{$file->file_type}",
                         Storage::disk('s3')->get($file->location)
                     );
-                    
+
                     /**
                      * Add file to zip
                      */
@@ -96,8 +95,7 @@ class PurchaseOrder extends Mailable
             $zipFile
                 ->saveAsFile(storage_path("app/files/temp/{$this->order->po_number}.zip"))
                 ->close();
-    
-            
+
             /**
              * Add the zip file as an attachment
              */

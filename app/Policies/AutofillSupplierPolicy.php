@@ -9,6 +9,6 @@ class AutofillSupplierPolicy extends Policy
      */
     public function __construct()
     {
-        $this->permission = "autofill_suppliers";
+        $this->permission = 'autofill_suppliers';
     }
 }
