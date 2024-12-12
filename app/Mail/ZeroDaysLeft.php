@@ -13,9 +13,6 @@ class ZeroDaysLeft extends Mailable
 {
     use Queueable, SerializesModels;
 
-    /**
-     * @var Order
-     */
     protected Order $order;
 
     /**
@@ -32,7 +29,7 @@ class ZeroDaysLeft extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: "Due today - PPM Order",
+            subject: 'Due today - PPM Order',
             replyTo: 'orders@proproject.co.za',
         );
     }

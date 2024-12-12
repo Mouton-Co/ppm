@@ -13,24 +13,12 @@ class BomReplaced extends Mailable
 {
     use Queueable, SerializesModels;
 
-    /**
-     * @var array
-     */
     protected array $replacements;
 
-    /**
-     * @var array
-     */
     protected array $replacementOptions;
 
-    /**
-     * @var Submission
-     */
     protected Submission $original;
 
-    /**
-     * @var Submission
-     */
     protected Submission $replacement;
 
     /**

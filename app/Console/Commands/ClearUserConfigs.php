@@ -25,6 +25,7 @@ class ClearUserConfigs extends Command
             $user->configurations = null;
             $user->save();
             $this->info('User configurations cleared.');
+
             return;
         }
 

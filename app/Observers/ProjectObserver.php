@@ -2,11 +2,8 @@
 
 namespace App\Observers;
 
-use App\Mail\ProjectUpdate;
 use App\Models\Project;
 use App\Models\RecipientGroup;
-use App\Models\User;
-use Illuminate\Support\Facades\Mail;
 
 class ProjectObserver
 {
@@ -15,7 +12,7 @@ class ProjectObserver
      */
     public function created(Project $project): void
     {
-        $group = RecipientGroup::where('field', "Item created")
+        $group = RecipientGroup::where('field', 'Item created')
             ->where('value', 'CoC')
             ->first();
 
@@ -30,7 +27,7 @@ class ProjectObserver
     public function updated(Project $project): void
     {
         if ($project->isDirty('status')) {
-            $group = RecipientGroup::where('field', "Status")
+            $group = RecipientGroup::where('field', 'Status')
                 ->where('value', $project->status)
                 ->first();
 
@@ -38,7 +35,7 @@ class ProjectObserver
                 $group->mail('Status Change on CoC Ticket', 'emails.project.status', $project);
             }
 
-            $group = RecipientGroup::where('field', "Status updated for")
+            $group = RecipientGroup::where('field', 'Status updated for')
                 ->where('value', 'LIKE', "%{$project->machine_nr}%")
                 ->first();
 

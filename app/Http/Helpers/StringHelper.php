@@ -7,8 +7,7 @@ class StringHelper
     /**
      * Strip whitespace and linebreaks from a string.
      *
-     * @param string $string
-     * @return string
+     * @param  string  $string
      */
     public static function stripWhitespaceAndLinebreaks($string): string
     {

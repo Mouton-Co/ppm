@@ -13,9 +13,6 @@ class ClientConfirmed extends Mailable
 {
     use Queueable, SerializesModels;
 
-    /**
-     * @var Order
-     */
     protected Order $order;
 
     /**

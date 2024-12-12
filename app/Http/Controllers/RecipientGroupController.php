@@ -20,7 +20,7 @@ class RecipientGroupController extends Controller
         $this->model = RecipientGroup::class;
         $this->route = 'recipient-groups';
     }
-    
+
     /**
      * Display a listing of the resource.
      */
@@ -87,7 +87,7 @@ class RecipientGroupController extends Controller
 
         $recipientGroup = RecipientGroup::create($request->validated());
 
-        if ($request->get('field') == "Order confirmed by supplier") {
+        if ($request->get('field') == 'Order confirmed by supplier') {
             $recipientGroup->update(['value' => null]);
         }
 
@@ -135,7 +135,7 @@ class RecipientGroupController extends Controller
 
         $recipientGroup->update($request->validated());
 
-        if ($request->get('field') == "Order confirmed by supplier") {
+        if ($request->get('field') == 'Order confirmed by supplier') {
             $recipientGroup->update(['value' => null]);
         }
 

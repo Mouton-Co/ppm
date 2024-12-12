@@ -5,27 +5,24 @@ namespace App\Http\Services;
 use App\Mail\BomReplaced;
 use App\Mail\ClientConfirmed;
 use App\Models\Order;
-use App\Models\Submission;
 use App\Models\RecipientGroup;
-use Illuminate\Support\Facades\Mail;
+use App\Models\Submission;
 use App\Models\User;
+use Illuminate\Support\Facades\Mail;
 
 class EmailService
 {
     /**
      * Send an email to the client when the order is confirmed by the supplier
-     *
-     * @param Order $order
-     * @return void
      */
     public static function sendClientConfirmedEmail(Order $order): void
     {
         $recipientGroup = RecipientGroup::where('field', 'Order confirmed by supplier')->first();
 
-        if (!empty($recipientGroup)) {
+        if (! empty($recipientGroup)) {
             $emails = $recipientGroup->recipient_emails;
 
-            if (!empty($emails)) {
+            if (! empty($emails)) {
                 $mailBuilder = Mail::to($emails[0]);
 
                 if (count($emails) > 1) {
@@ -39,12 +36,6 @@ class EmailService
 
     /**
      * Send an email to the procurement team when a BOM is replaced
-     *
-     * @param array $replacements
-     * @param array $replacementOptions
-     * @param string $originalId
-     * @param string $replacementId
-     * @return void
      */
     public static function sendBomReplacedEmail(array $replacements, array $replacementOptions, string $originalId, string $replacementId): void
     {
@@ -55,7 +46,7 @@ class EmailService
         $original = Submission::find($originalId);
         $replacement = Submission::find($replacementId);
 
-        if (!empty($group) && !empty($group->recipient_emails)) {
+        if (! empty($group) && ! empty($group->recipient_emails)) {
             /**
              * send to group
              */
@@ -77,7 +68,7 @@ class EmailService
                 ->pluck('email')
                 ->toArray();
 
-            if (!empty($emails)) {
+            if (! empty($emails)) {
                 $mail = Mail::to($emails[0]);
 
                 if (count($emails) > 1) {

@@ -19,6 +19,7 @@ class Role extends Model
         'role',
         'landing_page',
         'permissions',
+        'customer',
     ];
 
     /**
@@ -58,7 +59,7 @@ class Role extends Model
             'filterable' => true,
         ],
     ];
-    
+
     /**
      * Table actions.
      *
@@ -74,9 +75,6 @@ class Role extends Model
 
     /**
      * Check if the role has a permission.
-     *
-     * @param string $permission
-     * @return bool
      */
     public function hasPermission(string $permission): bool
     {

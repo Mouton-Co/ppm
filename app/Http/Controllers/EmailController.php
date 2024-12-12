@@ -12,9 +12,7 @@ class EmailController extends Controller
     /**
      * Send the purchase order email.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function sendOrder(Request $request, $id): \Illuminate\Http\RedirectResponse
     {
@@ -53,7 +51,7 @@ class EmailController extends Controller
         if (! $order) {
             return redirect()->back()->with('error', 'Order not found');
         }
-        
+
         $parts = $order->combined_parts;
         if (empty($order->supplier->template) || $order->supplier->template == 1) {
             $body = $this->template1($order, $parts);
@@ -80,9 +78,6 @@ class EmailController extends Controller
 
     /**
      * Template one for purchase order email.
-     *
-     * @param  Order $order
-     * @return string
      */
     protected function template1(Order $order, array $parts): string
     {
@@ -120,7 +115,6 @@ class EmailController extends Controller
     /**
      * Template two for purchase order email.
      *
-     * @param  Order $order
      * @return string $body
      */
     protected function template2(Order $order, array $parts): string

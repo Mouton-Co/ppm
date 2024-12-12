@@ -33,9 +33,9 @@ class PartsController extends Controller
         $matrix = Excel::toArray(new BomExcel(), $excel)[0];
         $matrix = $uploadFilesHelper->cleanMatrix($matrix);
 
-        if (!empty($matrix) && !empty($matrix['Item Number'])) {
+        if (! empty($matrix) && ! empty($matrix['Item Number'])) {
             for ($i = 0; $i < count($matrix['Item Number']); $i++) {
-                if (!empty($matrix['File Name'][$i])) {
+                if (! empty($matrix['File Name'][$i])) {
                     $part = new Part();
                     $part->name = $matrix['File Name'][$i];
                     $part->quantity = $matrix['Quantity'][$i] * $quantity;
@@ -48,7 +48,7 @@ class PartsController extends Controller
                     $part->notes = $matrix['Notes'][$i];
                     $part->submission_id = $submission->id;
 
-                    if (!is_numeric($part->quantity)) {
+                    if (! is_numeric($part->quantity)) {
                         $part->quantity = 0;
                     }
                     $part->quantity_in_stock = 0;
@@ -70,14 +70,14 @@ class PartsController extends Controller
      */
     public function index(Request $request)
     {
-        if (!$request->user()->role->hasPermission('read_procurement')) {
+        if (! $request->user()->role->hasPermission('read_procurement')) {
             abort(403);
         }
 
         $this->checkTableConfigurations('procurement', Part::class, Part::$procurementStructure);
         $parts = $this->filter(Part::class, Part::query(), $request, Part::$procurementStructure)
             ->whereHas('submission', function ($query) {
-                $query->where('machine_number', 'like', '%' . request()->get('machine_number') . '%')->where('current_unit_number', 'like', '%' . request()->get('unit_number') . '%');
+                $query->where('machine_number', 'like', '%'.request()->get('machine_number').'%')->where('current_unit_number', 'like', '%'.request()->get('unit_number').'%');
             })
             ->paginate(15);
 
@@ -101,14 +101,14 @@ class PartsController extends Controller
      */
     public function warehouseIndex(Request $request)
     {
-        if (!$request->user()->role->hasPermission('read_warehouse')) {
+        if (! $request->user()->role->hasPermission('read_warehouse')) {
             abort(403);
         }
 
         $this->checkTableConfigurations('warehouse', Part::class, Part::$warehouseStructure);
         $parts = $this->filter(Part::class, Part::query(), $request, Part::$warehouseStructure)
             ->whereHas('submission', function ($query) {
-                $query->where('machine_number', 'like', '%' . request()->get('machine_number') . '%')->where('current_unit_number', 'like', '%' . request()->get('unit_number') . '%');
+                $query->where('machine_number', 'like', '%'.request()->get('machine_number').'%')->where('current_unit_number', 'like', '%'.request()->get('unit_number').'%');
             })
             ->paginate(15);
 
@@ -125,7 +125,7 @@ class PartsController extends Controller
             }
             $parts = $this->filter(Part::class, Part::query(), $request, Part::$warehouseStructure)
                 ->whereHas('submission', function ($query) {
-                    $query->where('machine_number', 'like', '%' . request()->get('machine_number') . '%')->where('current_unit_number', 'like', '%' . request()->get('unit_number') . '%');
+                    $query->where('machine_number', 'like', '%'.request()->get('machine_number').'%')->where('current_unit_number', 'like', '%'.request()->get('unit_number').'%');
                 })
                 ->whereNotIn('id', $idsToIgnore)
                 ->paginate(15);
@@ -151,18 +151,18 @@ class PartsController extends Controller
      */
     public function update(UpdateRequest $request)
     {
-        if (!$request->user()->role->hasPermission('update_procurement') || !$request->user()->role->hasPermission('update_warehouse')) {
+        if (! $request->user()->role->hasPermission('update_procurement') || ! $request->user()->role->hasPermission('update_warehouse')) {
             abort(403);
         }
 
         $part = Part::find($request->get('id'));
 
-        if (!empty($request->get('field'))) {
+        if (! empty($request->get('field'))) {
             $partService = new PartService($part);
             $field = $request->get('field');
 
             if (str_contains($field, '->')) {
-                $field = explode('->', $field)['0'] . '_id';
+                $field = explode('->', $field)['0'].'_id';
             }
 
             $part->$field = $request->get('value');
@@ -191,7 +191,7 @@ class PartsController extends Controller
      */
     public function updateCheckbox(UpdateCheckboxRequest $request)
     {
-        if (!$request->user()->role->hasPermission('update_procurement') || !$request->user()->role->hasPermission('update_warehouse')) {
+        if (! $request->user()->role->hasPermission('update_procurement') || ! $request->user()->role->hasPermission('update_warehouse')) {
             abort(403);
         }
 
@@ -208,7 +208,7 @@ class PartsController extends Controller
         $part->$field = $request->get('value');
 
         if ($field != 'redundant' && $field != 'selected') {
-            $fieldAt = $field . '_at';
+            $fieldAt = $field.'_at';
             $part->$fieldAt = $part->$field ? now() : null;
         }
 
@@ -236,10 +236,10 @@ class PartsController extends Controller
                 break;
             case 'qc_passed':
                 $part->status = $part->$field ? 'assembly' : 'qc';
-                $part->qc_by = $part->$field ? 'QC passed by ' . $request->user()->name : null;
+                $part->qc_by = $part->$field ? 'QC passed by '.$request->user()->name : null;
                 break;
             case 'qc_issue':
-                $part->qc_by = $part->$field ? 'QC failed by ' . $request->user()->name : null;
+                $part->qc_by = $part->$field ? 'QC failed by '.$request->user()->name : null;
                 break;
             default:
                 break;
@@ -257,42 +257,42 @@ class PartsController extends Controller
                 'raw_part_received' => [
                     'checked' => $part->raw_part_received,
                     'enabled' => $part->checkboxEnabled('raw_part_received'),
-                    'at' => !empty($part->raw_part_received_at) ? Carbon::parse($part->raw_part_received_at)->format('Y-m-d H:i:s') : '',
+                    'at' => ! empty($part->raw_part_received_at) ? Carbon::parse($part->raw_part_received_at)->format('Y-m-d H:i:s') : '',
                 ],
                 'treatment_1_part_dispatched' => [
                     'checked' => $part->treatment_1_part_dispatched,
                     'enabled' => $part->checkboxEnabled('treatment_1_part_dispatched'),
-                    'at' => !empty($part->treatment_1_part_dispatched_at) ? Carbon::parse($part->treatment_1_part_dispatched_at)->format('Y-m-d H:i:s') : '',
+                    'at' => ! empty($part->treatment_1_part_dispatched_at) ? Carbon::parse($part->treatment_1_part_dispatched_at)->format('Y-m-d H:i:s') : '',
                 ],
                 'treatment_1_part_received' => [
                     'checked' => $part->treatment_1_part_received,
                     'enabled' => $part->checkboxEnabled('treatment_1_part_received'),
-                    'at' => !empty($part->treatment_1_part_received_at) ? Carbon::parse($part->treatment_1_part_received_at)->format('Y-m-d H:i:s') : '',
+                    'at' => ! empty($part->treatment_1_part_received_at) ? Carbon::parse($part->treatment_1_part_received_at)->format('Y-m-d H:i:s') : '',
                 ],
                 'treatment_2_part_dispatched' => [
                     'checked' => $part->treatment_2_part_dispatched,
                     'enabled' => $part->checkboxEnabled('treatment_2_part_dispatched'),
-                    'at' => !empty($part->treatment_2_part_dispatched_at) ? Carbon::parse($part->treatment_2_part_dispatched_at)->format('Y-m-d H:i:s') : '',
+                    'at' => ! empty($part->treatment_2_part_dispatched_at) ? Carbon::parse($part->treatment_2_part_dispatched_at)->format('Y-m-d H:i:s') : '',
                 ],
                 'treatment_2_part_received' => [
                     'checked' => $part->treatment_2_part_received,
                     'enabled' => $part->checkboxEnabled('treatment_2_part_received'),
-                    'at' => !empty($part->treatment_2_part_received_at) ? Carbon::parse($part->treatment_2_part_received_at)->format('Y-m-d H:i:s') : '',
+                    'at' => ! empty($part->treatment_2_part_received_at) ? Carbon::parse($part->treatment_2_part_received_at)->format('Y-m-d H:i:s') : '',
                 ],
                 'completed_part_received' => [
                     'checked' => $part->completed_part_received,
                     'enabled' => $part->checkboxEnabled('completed_part_received'),
-                    'at' => !empty($part->completed_part_received_at) ? Carbon::parse($part->completed_part_received_at)->format('Y-m-d H:i:s') : '',
+                    'at' => ! empty($part->completed_part_received_at) ? Carbon::parse($part->completed_part_received_at)->format('Y-m-d H:i:s') : '',
                 ],
                 'qc_passed' => [
                     'checked' => $part->qc_passed,
                     'enabled' => $part->checkboxEnabled('qc_passed'),
-                    'at' => !empty($part->qc_passed_at) ? Carbon::parse($part->qc_passed_at)->format('Y-m-d H:i:s') : '',
+                    'at' => ! empty($part->qc_passed_at) ? Carbon::parse($part->qc_passed_at)->format('Y-m-d H:i:s') : '',
                 ],
                 'qc_issue' => [
                     'checked' => $part->qc_issue,
                     'enabled' => true,
-                    'at' => !empty($part->qc_issue_at) ? Carbon::parse($part->qc_issue_at)->format('Y-m-d H:i:s') : '-',
+                    'at' => ! empty($part->qc_issue_at) ? Carbon::parse($part->qc_issue_at)->format('Y-m-d H:i:s') : '-',
                 ],
             ],
         ]);
@@ -303,7 +303,7 @@ class PartsController extends Controller
      */
     public function generatePoNumbers(Request $request)
     {
-        if (!$request->user()->role->hasPermission('update_procurement')) {
+        if (! $request->user()->role->hasPermission('update_procurement')) {
             abort(403);
         }
 
@@ -326,12 +326,12 @@ class PartsController extends Controller
             /**
              * generate the PO number for this grouping
              */
-            $poPrefix = str_pad($group[0], 2, '0', STR_PAD_LEFT) . '-' . str_pad($group[1], 2, '0', STR_PAD_LEFT) . '-';
-            $latestPo = Part::where('po_number', 'like', $poPrefix . '%')
+            $poPrefix = str_pad($group[0], 2, '0', STR_PAD_LEFT).'-'.str_pad($group[1], 2, '0', STR_PAD_LEFT).'-';
+            $latestPo = Part::where('po_number', 'like', $poPrefix.'%')
                 ->orderBy('po_number', 'desc')
                 ->first();
-            $number = !empty($latestPo) ? (int) explode('-', $latestPo->po_number)[2] + 1 : 1;
-            $poNumber = $poPrefix . str_pad($number, 3, '0', STR_PAD_LEFT);
+            $number = ! empty($latestPo) ? (int) explode('-', $latestPo->po_number)[2] + 1 : 1;
+            $poNumber = $poPrefix.str_pad($number, 3, '0', STR_PAD_LEFT);
 
             /**
              * Get all the parts for this grouping, group them by supplier and assign the PO number
@@ -358,7 +358,7 @@ class PartsController extends Controller
                  * increment the PO number
                  */
                 $number++;
-                $poNumber = $poPrefix . str_pad($number, 3, '0', STR_PAD_LEFT);
+                $poNumber = $poPrefix.str_pad($number, 3, '0', STR_PAD_LEFT);
             }
         }
 
@@ -380,24 +380,21 @@ class PartsController extends Controller
 
     /**
      * Search and replace the given PO numbers
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function searchReplacePo(Request $request): \Illuminate\Http\RedirectResponse
     {
-        if (!$request->user()->role->hasPermission('update_procurement')) {
+        if (! $request->user()->role->hasPermission('update_procurement')) {
             abort(403);
         }
 
         /**
          * check to see if an order for replace po already exists
          */
-        if (!empty(Order::where('po_number', $request->get('replace_po'))->first())) {
+        if (! empty(Order::where('po_number', $request->get('replace_po'))->first())) {
             return redirect()
                 ->back()
                 ->with([
-                    'error' => 'Order with PO number ' . $request->get('replace_po') . ' already exists',
+                    'error' => 'Order with PO number '.$request->get('replace_po').' already exists',
                 ]);
         }
 
@@ -408,7 +405,7 @@ class PartsController extends Controller
             ->where('po_number', $request->get('search_po'))
             ->get();
 
-        if (!empty($parts)) {
+        if (! empty($parts)) {
             foreach ($parts as $part) {
                 $part->po_number = $request->get('replace_po');
                 $part->save();
@@ -418,7 +415,7 @@ class PartsController extends Controller
         return redirect()
             ->back()
             ->with([
-                'success' => 'PO number ' . $request->get('search_po') . ' replaced with ' . $request->get('replace_po'),
+                'success' => 'PO number '.$request->get('search_po').' replaced with '.$request->get('replace_po'),
             ]);
     }
 
@@ -427,7 +424,7 @@ class PartsController extends Controller
      */
     public function autofillSuppliers(Request $request)
     {
-        if (!$request->user()->role->hasPermission('update_procurement')) {
+        if (! $request->user()->role->hasPermission('update_procurement')) {
             abort(403);
         }
 
@@ -437,7 +434,7 @@ class PartsController extends Controller
         foreach (AutofillSupplier::all() as $autofillSupplier) {
             $parts = $this->filter(Part::class, Part::query(), $request, Part::$procurementStructure)
                 ->where('supplier_id', null)
-                ->where('name', 'like', '%' . $autofillSupplier->text . '%')
+                ->where('name', 'like', '%'.$autofillSupplier->text.'%')
                 ->where('part_ordered', false)
                 ->where('name', 'not like', 'PPM%')
                 ->get();
@@ -463,20 +460,20 @@ class PartsController extends Controller
                 case 'LCM':
                 case 'LCBM':
                 case 'LCBW':
-                    if ($request->has('lc_supplier') && !empty($request->get('lc_supplier')) && !empty(($lcSupplier = Supplier::find($request->get('lc_supplier'))))) {
+                    if ($request->has('lc_supplier') && ! empty($request->get('lc_supplier')) && ! empty(($lcSupplier = Supplier::find($request->get('lc_supplier'))))) {
                         $part->supplier_id = $lcSupplier->id;
                         $part->save();
                     }
                     break;
                 case 'MCH':
-                    if ($request->has('part_supplier') && !empty($request->get('part_supplier')) && !empty(($partSupplier = Supplier::find($request->get('part_supplier'))))) {
+                    if ($request->has('part_supplier') && ! empty($request->get('part_supplier')) && ! empty(($partSupplier = Supplier::find($request->get('part_supplier'))))) {
                         $part->supplier_id = $partSupplier->id;
                         $part->save();
                     }
                     break;
                 case 'TLC':
                 case 'TLCM':
-                    if (!empty(($schuurman = Supplier::where('name', 'Schuurman Tube')->first()))) {
+                    if (! empty(($schuurman = Supplier::where('name', 'Schuurman Tube')->first()))) {
                         $part->supplier_id = $schuurman->id;
                         $part->save();
                     }
@@ -494,7 +491,7 @@ class PartsController extends Controller
      */
     public function markAs(MarkAsRequest $request)
     {
-        if (!$request->user()->role->hasPermission('update_warehouse')) {
+        if (! $request->user()->role->hasPermission('update_warehouse')) {
             abort(403);
         }
 
@@ -503,7 +500,7 @@ class PartsController extends Controller
         if ($parts->isEmpty()) {
             return redirect()
                 ->back()
-                ->withErrors('No parts found with PO Number ' . $request->get('po_number'));
+                ->withErrors('No parts found with PO Number '.$request->get('po_number'));
         }
 
         foreach ($parts as $part) {
@@ -547,7 +544,7 @@ class PartsController extends Controller
                 $part->qc_passed_at = null;
                 $part->qty_received = $part->quantity_ordered;
             } elseif ($request->get('mark_as') == 'treatment_1_part_dispatched') {
-                if (!$part->raw_part_received) {
+                if (! $part->raw_part_received) {
                     $part->raw_part_received = true;
                     $part->raw_part_received_at = now();
                 }
@@ -569,12 +566,12 @@ class PartsController extends Controller
                 $part->completed_part_received_at = null;
                 $part->qc_passed_at = null;
             } elseif ($request->get('mark_as') == 'treatment_1_part_received') {
-                if (!$part->raw_part_received) {
+                if (! $part->raw_part_received) {
                     $part->raw_part_received = true;
                     $part->raw_part_received_at = now();
                 }
 
-                if (!$part->treatment_1_part_dispatched) {
+                if (! $part->treatment_1_part_dispatched) {
                     $part->treatment_1_part_dispatched = true;
                     $part->treatment_1_part_dispatched_at = now();
                 }
@@ -594,17 +591,17 @@ class PartsController extends Controller
                 $part->completed_part_received_at = null;
                 $part->qc_passed_at = null;
             } elseif ($request->get('mark_as') == 'treatment_2_part_dispatched') {
-                if (!$part->raw_part_received) {
+                if (! $part->raw_part_received) {
                     $part->raw_part_received = true;
                     $part->raw_part_received_at = now();
                 }
 
-                if (!$part->treatment_1_part_dispatched) {
+                if (! $part->treatment_1_part_dispatched) {
                     $part->treatment_1_part_dispatched = true;
                     $part->treatment_1_part_dispatched_at = now();
                 }
 
-                if (!$part->treatment_1_part_received) {
+                if (! $part->treatment_1_part_received) {
                     $part->treatment_1_part_received = true;
                     $part->treatment_1_part_received_at = now();
                 }
@@ -622,22 +619,22 @@ class PartsController extends Controller
                 $part->completed_part_received_at = null;
                 $part->qc_passed_at = null;
             } elseif ($request->get('mark_as') == 'treatment_2_part_received') {
-                if (!$part->raw_part_received) {
+                if (! $part->raw_part_received) {
                     $part->raw_part_received = true;
                     $part->raw_part_received_at = now();
                 }
 
-                if (!$part->treatment_1_part_dispatched) {
+                if (! $part->treatment_1_part_dispatched) {
                     $part->treatment_1_part_dispatched = true;
                     $part->treatment_1_part_dispatched_at = now();
                 }
 
-                if (!$part->treatment_1_part_received) {
+                if (! $part->treatment_1_part_received) {
                     $part->treatment_1_part_received = true;
                     $part->treatment_1_part_received_at = now();
                 }
 
-                if (!$part->treatment_2_part_dispatched) {
+                if (! $part->treatment_2_part_dispatched) {
                     $part->treatment_2_part_dispatched = true;
                     $part->treatment_2_part_dispatched_at = now();
                 }
@@ -653,24 +650,24 @@ class PartsController extends Controller
                 $part->completed_part_received_at = null;
                 $part->qc_passed_at = null;
             } elseif ($request->get('mark_as') == 'completed_part_received') {
-                if (!$part->raw_part_received) {
+                if (! $part->raw_part_received) {
                     $part->raw_part_received = true;
                     $part->raw_part_received_at = now();
                 }
 
-                if (!$part->treatment_1_part_dispatched) {
+                if (! $part->treatment_1_part_dispatched) {
                     $part->treatment_1_part_dispatched = true;
                 }
 
-                if (!$part->treatment_1_part_received) {
+                if (! $part->treatment_1_part_received) {
                     $part->treatment_1_part_received = true;
                 }
 
-                if (!$part->treatment_2_part_dispatched) {
+                if (! $part->treatment_2_part_dispatched) {
                     $part->treatment_2_part_dispatched = true;
                 }
 
-                if (!$part->treatment_2_part_received) {
+                if (! $part->treatment_2_part_received) {
                     $part->treatment_2_part_received = true;
                 }
 
@@ -682,35 +679,35 @@ class PartsController extends Controller
                 $part->qc_by = null;
                 $part->qc_passed_at = null;
             } elseif ($request->get('mark_as') == 'qc_passed') {
-                if (!$part->raw_part_received) {
+                if (! $part->raw_part_received) {
                     $part->raw_part_received = true;
                     $part->raw_part_received_at = now();
                 }
 
-                if (!$part->treatment_1_part_dispatched) {
+                if (! $part->treatment_1_part_dispatched) {
                     $part->treatment_1_part_dispatched = true;
                 }
 
-                if (!$part->treatment_1_part_received) {
+                if (! $part->treatment_1_part_received) {
                     $part->treatment_1_part_received = true;
                 }
 
-                if (!$part->treatment_2_part_dispatched) {
+                if (! $part->treatment_2_part_dispatched) {
                     $part->treatment_2_part_dispatched = true;
                 }
 
-                if (!$part->treatment_2_part_received) {
+                if (! $part->treatment_2_part_received) {
                     $part->treatment_2_part_received = true;
                 }
 
-                if (!$part->completed_part_received) {
+                if (! $part->completed_part_received) {
                     $part->completed_part_received = true;
                     $part->completed_part_received_at = now();
                 }
 
                 $part->qc_passed = true;
                 $part->qc_passed_at = now();
-                $part->qc_by = 'QC passed by ' . $request->user()->name;
+                $part->qc_by = 'QC passed by '.$request->user()->name;
                 $part->status = 'assembly';
             }
             $part->save();
@@ -718,7 +715,7 @@ class PartsController extends Controller
 
         return redirect()
             ->back()
-            ->withSuccess('Parts marked as ' . Part::$markedAs[$request->get('mark_as')]);
+            ->withSuccess('Parts marked as '.Part::$markedAs[$request->get('mark_as')]);
     }
 
     /**

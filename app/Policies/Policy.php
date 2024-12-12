@@ -6,9 +6,6 @@ use App\Models\User;
 
 class Policy
 {
-    /**
-     * @var string
-     */
     protected string $permission;
 
     /**

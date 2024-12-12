@@ -19,9 +19,6 @@ class SubmissionController extends Controller
 {
     public $request;
 
-    /**
-     * @var ReplacementService
-     */
     public ReplacementService $replacementService;
 
     /**
@@ -51,12 +48,12 @@ class SubmissionController extends Controller
         // find a unique submission code
         // wait a second to get the next timestamp
         // failsafe for if user spams refresh button
-        $submissionCode = strtoupper(substr($user->name, 0, 3)) . $timestamp . $user->id;
+        $submissionCode = strtoupper(substr($user->name, 0, 3)).$timestamp.$user->id;
         $exists = Submission::where('submission_code', $submissionCode)->first();
 
-        while (!empty($exists)) {
+        while (! empty($exists)) {
             sleep(1);
-            $submissionCode = strtoupper(substr($user->name, 0, 3)) . $timestamp . $user->id;
+            $submissionCode = strtoupper(substr($user->name, 0, 3)).$timestamp.$user->id;
             $exists = Submission::where('submission_code', $submissionCode)->first();
         }
 
@@ -111,7 +108,7 @@ class SubmissionController extends Controller
         $submission->save();
 
         // link the project to the submission
-        if (!empty($request->get('project_id'))) {
+        if (! empty($request->get('project_id'))) {
             $project = Project::find($request->get('project_id'));
             $project->status = 'Work in Progress';
             $project->submission_id = $submission->id;
@@ -127,7 +124,7 @@ class SubmissionController extends Controller
         // send out email to recipients
         $group = RecipientGroup::where('field', 'Item created')->where('value', 'Submission')->first();
 
-        if (!empty($group)) {
+        if (! empty($group)) {
             $group->mail('New Submission Available', 'emails.submission.created', $submission);
         }
 
@@ -143,7 +140,7 @@ class SubmissionController extends Controller
         return redirect()
             ->route('submissions.index')
             ->with([
-                'success' => 'Submission created - ' . $submission->assembly_name,
+                'success' => 'Submission created - '.$submission->assembly_name,
                 'submission' => $submission,
                 'replacement' => $replacement,
             ]);
@@ -169,7 +166,7 @@ class SubmissionController extends Controller
             return redirect()->route('submissions.index', array_merge(['page' => $submissions->lastPage()], $request->except(['page'])));
         }
 
-        if (!empty($request->session()->get('submission')) && !empty($request->session()->get('replacement'))) {
+        if (! empty($request->session()->get('submission')) && ! empty($request->session()->get('replacement'))) {
             $replacementOptions = $this->replacementService->getReplacementOptions($request->session()->get('replacement'), $request->session()->get('submission'))[0] ?? [];
         }
 
@@ -300,7 +297,7 @@ class SubmissionController extends Controller
         }
 
         // delete files for submission
-        Storage::disk('s3')->deleteDirectory(env('APP_ENV') . '/files/' . $datum->submission_code);
+        Storage::disk('s3')->deleteDirectory(env('APP_ENV').'/files/'.$datum->submission_code);
 
         // delete parts and files
         foreach ($datum->parts()->withTrashed()->get() as $part) {
@@ -354,7 +351,6 @@ class SubmissionController extends Controller
     /**
      * Get replacement options
      *
-     * @param Request $request
      * @return JsonResponse
      */
     public function getReplacementOptions(Request $request): \Illuminate\Http\JsonResponse

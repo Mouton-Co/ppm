@@ -6,8 +6,8 @@ use App\Mail\PartReplaced;
 use App\Models\Part;
 use App\Models\RecipientGroup;
 use App\Models\Supplier;
-use Illuminate\Support\Facades\Mail;
 use App\Models\User;
+use Illuminate\Support\Facades\Mail;
 
 class PartObserver
 {
@@ -40,7 +40,7 @@ class PartObserver
              */
             $group = RecipientGroup::where('field', 'Currently responsible')->where('value', 'Procurement')->first();
 
-            if (!empty($group) && !empty($group->recipient_emails)) {
+            if (! empty($group) && ! empty($group->recipient_emails)) {
                 /**
                  * send to group
                  */
@@ -61,14 +61,14 @@ class PartObserver
                 })
                     ->pluck('email')
                     ->toArray();
-                
+
                 if (! empty($emails)) {
                     $mail = Mail::to($emails[0]);
 
                     if (count($emails) > 1) {
                         $mail->cc(array_slice($emails, 1));
                     }
-    
+
                     $mail->send(new PartReplaced($part));
                 }
             }

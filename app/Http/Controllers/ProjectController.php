@@ -29,13 +29,17 @@ class ProjectController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->user()->cannot('read', Project::class)) {
+        if ($request->user()->cannot('read', Project::class) && ! $request->user()->role->customer) {
             abort(403);
         }
 
         $this->checkTableConfigurations('projects', Project::class);
-        
-        if ($request->has('status') && $request->status === 'All except closed') {
+
+        if (auth()->user()->role->customer) {
+            $projects = $this->filter(Project::class, Project::query(), $request)
+                ->whereIn('machine_nr', json_decode(auth()->user()->role->permissions))
+                ->paginate(15);
+        } elseif ($request->has('status') && $request->status === 'All except closed') {
             $projects = $this->filter(Project::class, Project::query(), $request)
                 ->where('status', '!=', 'Closed')
                 ->paginate(15);
@@ -150,12 +154,12 @@ class ProjectController extends Controller
 
     /**
      * Generate a new coc number for a machine
-     * @param string $machineNr
-     * @return \Illuminate\Http\JsonResponse
+     *
+     * @param  string  $machineNr
      */
     public function generateCoc($machineNr): \Illuminate\Http\JsonResponse
     {
-        $projects = Project::where('coc', 'like', '%' . $machineNr . '_%')->get();
+        $projects = Project::where('coc', 'like', '%'.$machineNr.'_%')->get();
 
         // get the highest coc number
         $highest = 0;
@@ -168,16 +172,13 @@ class ProjectController extends Controller
         }
 
         // generate new coc number in format machineNr_###
-        $coc = $machineNr . '_' . str_pad($highest + 1, 3, '0', STR_PAD_LEFT);
+        $coc = $machineNr.'_'.str_pad($highest + 1, 3, '0', STR_PAD_LEFT);
 
         return response()->json(['coc' => $coc]);
     }
 
     /**
      * Update project status or resolved_at date
-     * @param Request $request
-     * @param $id
-     * @return \Illuminate\Http\JsonResponse
      */
     public function updateAjax(Request $request, $id): \Illuminate\Http\JsonResponse
     {
@@ -200,14 +201,14 @@ class ProjectController extends Controller
         }
 
         // if PO is added update status to `Order placed`
-        if ($request->field === 'related_pos' && !empty($request->value)) {
+        if ($request->field === 'related_pos' && ! empty($request->value)) {
             $project->update([
                 'status' => 'Order placed',
             ]);
         }
 
         // if waybill is added change status to `Shipped`
-        if ($request->field === 'waybill_nr' && !empty($request->value)) {
+        if ($request->field === 'waybill_nr' && ! empty($request->value)) {
             $project->update([
                 'status' => 'Shipped',
             ]);
@@ -243,8 +244,6 @@ class ProjectController extends Controller
 
     /**
      * Unlink a submission from a project
-     * @param $id
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function unlink($id): \Illuminate\Http\RedirectResponse
     {
@@ -266,9 +265,6 @@ class ProjectController extends Controller
 
     /**
      * Link a submission to a project
-     * @param $id
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
      */
     public function link($id, Request $request): \Illuminate\Http\JsonResponse
     {
@@ -303,24 +299,22 @@ class ProjectController extends Controller
 
     /**
      * Send an update to the currently responsible department or individual
-     *
-     * @param $id
      */
     public function sendUpdate($id): void
     {
         $project = Project::findOrFail($id);
 
         if (! empty($project)) {
-            $group = RecipientGroup::where('field', "Currently responsible")
+            $group = RecipientGroup::where('field', 'Currently responsible')
                 ->where('value', $project->currently_responsible)
                 ->first();
-    
+
             if (! empty($group)) {
                 $group->mail('New CoC Ticket', 'emails.project.assigned-department', $project);
             }
-    
+
             $individual = User::where('name', $project->currently_responsible)->first();
-    
+
             if (! empty($individual)) {
                 Mail::to($individual->email)->send(new ProjectUpdate('New CoC Ticket', 'emails.project.assigned-individual', $project));
             }

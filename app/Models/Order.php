@@ -98,7 +98,7 @@ class Order extends Model
     {
         return Part::where('po_number', $this->po_number);
     }
-    
+
     /**
      * Scope for all the orders that are due in five days
      */
@@ -155,8 +155,6 @@ class Order extends Model
 
     /**
      * Create an array of combined parts for supplier emails.
-     *
-     * @return array
      */
     public function getCombinedPartsAttribute(): array
     {

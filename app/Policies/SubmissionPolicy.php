@@ -9,6 +9,6 @@ class SubmissionPolicy extends Policy
      */
     public function __construct()
     {
-        $this->permission = "design";
+        $this->permission = 'design';
     }
 }

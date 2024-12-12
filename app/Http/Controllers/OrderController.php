@@ -211,7 +211,7 @@ class OrderController extends Controller
         if (! empty($order?->submission?->project)) {
             $order->submission->project->update([
                 'related_pos' => ! empty($order->submission->project->related_pos)
-                    ? $order->submission->project->related_pos . ', ' . $order->po_number
+                    ? $order->submission->project->related_pos.', '.$order->po_number
                     : $order->po_number,
             ]);
         }

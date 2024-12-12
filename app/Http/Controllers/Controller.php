@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
-use App\Models\Project;
 use App\Models\Part;
+use App\Models\Project;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
@@ -36,8 +36,6 @@ class Controller extends BaseController
 
     /**
      * Get the pill html for the filter
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
      */
     public function getPillHtml(Request $request): \Illuminate\Http\JsonResponse
     {
@@ -66,13 +64,13 @@ class Controller extends BaseController
 
     /**
      * Get the pill html for the filter
-     * @param Request $request
-     * @param array $field
-     * @return array
+     *
+     * @param  Request  $request
+     * @param  array  $field
      */
     protected function renderDropdownPill($request, $field): array
     {
-        $slot = "";
+        $slot = '';
         $selected = 'selected';
 
         if (! empty($field['relationship'])) {
@@ -86,17 +84,16 @@ class Controller extends BaseController
         } else {
             if ($field['filterable_options'] == 'custom') {
                 $customKey = \Str::camel("get_custom_{$request->field}_attribute");
-                $options =  $request->model::$customKey();
+                $options = $request->model::$customKey();
             } else {
                 $options = $field['filterable_options'];
             }
-    
+
             foreach ($options as $key => $value) {
                 $slot .= "<option value='$key' $selected>$value</option>";
                 $selected = '';
             }
         }
-
 
         return [
             'field' => $request->field,
@@ -110,9 +107,9 @@ class Controller extends BaseController
 
     /**
      * Get the pill html for the filter
-     * @param Request $request
-     * @param array $field
-     * @return array
+     *
+     * @param  Request  $request
+     * @param  array  $field
      */
     protected function renderBooleanPill($request, $field): array
     {
@@ -128,9 +125,9 @@ class Controller extends BaseController
 
     /**
      * Get the pill html for the filter
-     * @param Request $request
-     * @param array $field
-     * @return array
+     *
+     * @param  Request  $request
+     * @param  array  $field
      */
     protected function renderTextPill($request, $field): array
     {
@@ -145,9 +142,9 @@ class Controller extends BaseController
 
     /**
      * Get the pill html for the filter
-     * @param Request $request
-     * @param array $field
-     * @return array
+     *
+     * @param  Request  $request
+     * @param  array  $field
      */
     public function renderDatePill($request, $field): array
     {
@@ -162,10 +159,6 @@ class Controller extends BaseController
 
     /**
      * Filter the query
-     * @param $model
-     * @param $query
-     * @param $request
-     * @return mixed
      */
     public function filter($model, $query, $request, $structure = null): mixed
     {
@@ -174,14 +167,14 @@ class Controller extends BaseController
         $this->structure = $structure ?? $model::$structure;
 
         // show archived
-        if ($this->request->has('archived') && $this->request->get('archived') == 'true'){
+        if ($this->request->has('archived') && $this->request->get('archived') == 'true') {
             $query = $query->onlyTrashed();
         }
 
         // filter params
         foreach ($this->structure as $key => $value) {
             if ($this->request->has($key)) {
-            
+
                 /**
                  * if model is Project and field is status and value is 'all except closed'
                  * continue and do manually in the controller
@@ -227,7 +220,7 @@ class Controller extends BaseController
         if ($this->request->has('query')) {
             $query = $query->where(function ($subquery) {
                 foreach ($this->structure as $key => $value) {
-                    if (!empty($value['filterable']) && $value['filterable'] && array_key_exists($key, $this->model::first()?->getAttributes() ?? [])) {
+                    if (! empty($value['filterable']) && $value['filterable'] && array_key_exists($key, $this->model::first()?->getAttributes() ?? [])) {
                         if (! empty($this->structure[$key]['relationship'])) {
                             $subquery->orWhereRelation(
                                 explode('.', $this->structure[$key]['relationship'])[0],
@@ -253,11 +246,11 @@ class Controller extends BaseController
         ) {
             $order = $this->request->get('order') == 'asc' ? 'asc' : 'desc';
             $orderBy = $this->request->get('order_by');
-            
+
             if (! empty($this->structure[$orderBy]['relationship'])) {
                 $model = $this->structure[$orderBy]['relationship_model'];
                 $table = app($model)->getTable();
-                list($relationship, $field) = explode('.', $this->structure[$orderBy]['relationship']);
+                [$relationship, $field] = explode('.', $this->structure[$orderBy]['relationship']);
                 $query->orderBy(
                     $model::select($field)
                         ->whereColumn("{$relationship}_id", "{$table}.id")
@@ -275,9 +268,6 @@ class Controller extends BaseController
 
     /**
      * Creates table configurations if they don't exist
-     * @param string $table
-     * @param mixed $model
-     * @return void
      */
     public function checkTableConfigurations(string $table, mixed $model, $structure = null): void
     {
@@ -301,8 +291,6 @@ class Controller extends BaseController
 
     /**
      * Update the table configurations
-     * @param Request $request
-     * @return void
      */
     public function updateConfigs(Request $request): void
     {
@@ -329,11 +317,11 @@ class Controller extends BaseController
         if (empty($datum)) {
             return redirect()->route("{$this->route}.index");
         }
-        
+
         $datum->restore();
 
-        return redirect()->route("{$this->route}.index", ['archived' => "true"])->with([
-            'success' => "Item has been restored",
+        return redirect()->route("{$this->route}.index", ['archived' => 'true'])->with([
+            'success' => 'Item has been restored',
         ]);
     }
 
@@ -351,11 +339,11 @@ class Controller extends BaseController
         if (empty($datum)) {
             return redirect()->route("{$this->route}.index");
         }
-        
+
         $datum->forceDelete();
 
-        return redirect()->route("{$this->route}.index", ['archived' => "true"])->with([
-            'success' => "Item has been permanently deleted",
+        return redirect()->route("{$this->route}.index", ['archived' => 'true'])->with([
+            'success' => 'Item has been permanently deleted',
         ]);
     }
 }

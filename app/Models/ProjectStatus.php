@@ -17,7 +17,6 @@ class ProjectStatus extends Model
      */
     protected $fillable = ['name'];
 
-
     /*
     |--------------------------------------------------------------------------
     | Index table properties

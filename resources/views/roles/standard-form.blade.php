@@ -13,11 +13,9 @@
 >{{ __('Role') }}</label>
 <input
     class="{{ !empty($errors->get('role')) ? 'field-error' : 'field-dark' }} mb-5"
-    id="role"
     name="role"
     type="text"
     value="{{ $role->role ?? old('role') }}"
-    required
 >
 @if (!empty($errors->get('role')))
     @foreach ($errors->get('role') as $error)
@@ -32,9 +30,7 @@
 >{{ __('Landing page') }}</label>
 <select
     class="{{ !empty($errors->get('landing_page')) ? 'field-error' : 'field-dark' }} mb-5 w-full"
-    id="landing_page"
     name="landing_page"
-    required
 >
     @foreach ($landingPages as $landingPage)
         <option

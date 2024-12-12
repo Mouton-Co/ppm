@@ -9,6 +9,6 @@ class ProjectResponsiblePolicy extends Policy
      */
     public function __construct()
     {
-        $this->permission = "departments";
+        $this->permission = 'departments';
     }
 }

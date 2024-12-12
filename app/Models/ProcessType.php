@@ -74,8 +74,6 @@ class ProcessType extends Model
 
     /**
      * Checks if the field is disabled in the edit/create form.
-     * @param string $field
-     * @return bool
      */
     public function isDisabled(string $field): bool
     {

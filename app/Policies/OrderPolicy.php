@@ -9,6 +9,6 @@ class OrderPolicy extends Policy
      */
     public function __construct()
     {
-        $this->permission = "purchase_orders";
+        $this->permission = 'purchase_orders';
     }
 }

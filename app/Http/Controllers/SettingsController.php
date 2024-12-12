@@ -10,9 +10,6 @@ class SettingsController extends Controller
 {
     /**
      * Update the setting via ajax
-     *
-     * @param UpdateRequest $request
-     * @return JsonResponse
      */
     public function updateAjax(UpdateRequest $request): JsonResponse
     {

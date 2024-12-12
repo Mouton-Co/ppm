@@ -9,9 +9,6 @@ class ReplacementService
 {
     /**
      * Get the previous submission
-     *
-     * @param $submission
-     * @return Submission|null
      */
     public function getPreviousSubmission(Submission $submission): ?Submission
     {
@@ -27,8 +24,7 @@ class ReplacementService
     /**
      * Replace part
      *
-     * @var array $replacementOption
-     * @return void
+     * @var array
      */
     public function replacePart(array $replacementOption): void
     {
@@ -48,10 +44,6 @@ class ReplacementService
 
     /**
      * Get replacement options
-     *
-     * @param Submission $originalSubmission
-     * @param Submission $replacementSubmission
-     * @return array
      */
     public function getReplacementOptions(Submission $originalSubmission, Submission $replacementSubmission): array
     {
@@ -70,10 +62,6 @@ class ReplacementService
 
     /**
      * Split parts
-     *
-     * @param array $originalParts
-     * @param array $replacementParts
-     * @return array
      */
     public function splitParts(array &$originalParts, array &$replacementParts): array
     {
@@ -95,9 +83,6 @@ class ReplacementService
     /**
      * Add quantity changes
      *
-     * @param array $identicalOriginalParts
-     * @param array $identicalReplacementParts
-     * @param array $replacementOptions
      * @return array
      */
     public function addQtyChanges(array $identicalOriginalParts, array $identicalReplacementParts, array &$replacementOptions)
@@ -118,10 +103,6 @@ class ReplacementService
 
     /**
      * Add replacements
-     *
-     * @param array $differentOriginalParts
-     * @param array $differentReplacementParts
-     * @param array $replacementOptions
      */
     public function addReplacements(array $differentOriginalParts, array &$differentReplacementParts, array &$replacementOptions): void
     {
@@ -142,10 +123,6 @@ class ReplacementService
 
     /**
      * Find replacement
-     *
-     * @param string $originalPartName
-     * @param array $replacementParts
-     * @return int
      */
     public function findReplacement(string $originalPartName, array $replacementParts): int
     {
@@ -154,12 +131,12 @@ class ReplacementService
             $originalPartName = preg_replace('/\s+/', '', strtolower($originalPartName));
             $originalPartNameSyllables = explode('-', $originalPartName);
             $originalPartName = end($originalPartNameSyllables);
-    
+
             foreach ($replacementParts as $replacementPartId => $replacementPartName) {
                 $replacementPartName = preg_replace('/\s+/', '', strtolower($replacementPartName));
                 $replacementPartNameSyllables = explode('-', $replacementPartName);
                 $replacementPartName = end($replacementPartNameSyllables);
-    
+
                 if ($originalPartName == $replacementPartName) {
                     return $replacementPartId;
                 }
@@ -178,16 +155,11 @@ class ReplacementService
 
     /**
      * Mark as redundant by deleting parts
-     *
-     * @param Submission $newSubmission
-     * @param array $replacementOptions
-     * @param array $newParts
-     * @return void
      */
     public function markAsRedundant(Submission $newSubmission, array $replacementOptions, array $newParts): void
     {
         foreach ($newSubmission->parts as $part) {
-            if (!in_array($part->id, array_column($replacementOptions, 'new')) && !in_array($part->id, array_keys($newParts))) {
+            if (! in_array($part->id, array_column($replacementOptions, 'new')) && ! in_array($part->id, array_keys($newParts))) {
                 $part->redundant = 1;
                 $part->replaced_by_submission = 'Duplicate';
                 $part->save();

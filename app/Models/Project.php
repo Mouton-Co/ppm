@@ -81,9 +81,9 @@ class Project extends Model
             'filterable' => true,
             'component' => 'editable.select',
             'filterable_options' => [
-                "CoC" => "CoC",
-                "APL" => "APL",
-            ]
+                'CoC' => 'CoC',
+                'APL' => 'APL',
+            ],
         ],
         'noticed_issue' => [
             'label' => 'Noticed Issue',
@@ -207,8 +207,6 @@ class Project extends Model
 
     /**
      * Get the submission that owns the project.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function submission(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -217,8 +215,6 @@ class Project extends Model
 
     /**
      * Get the user that owns the project.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -227,19 +223,15 @@ class Project extends Model
 
     /**
      * Get the notes attribute.
-     *
-     * @return string
      */
     public function getNotesAttribute(): string
     {
-        return 'Noticed issue&#10;' . $this->noticed_issue .
-            '&#10;&#10;Proposed solution&#10;' . $this->proposed_solution;
+        return 'Noticed issue&#10;'.$this->noticed_issue.
+            '&#10;&#10;Proposed solution&#10;'.$this->proposed_solution;
     }
 
     /**
      * Get the issued at attribute.
-     *
-     * @return string
      */
     public function getIssuedAtAttribute(): string
     {
@@ -248,8 +240,6 @@ class Project extends Model
 
     /**
      * Get the resolved at attribute.
-     *
-     * @return string|null
      */
     public function getResolvedAtFormattedAttribute(): ?string
     {
@@ -258,8 +248,6 @@ class Project extends Model
 
     /**
      * Get the currently responsible attribute.
-     *
-     * @return array
      */
     public static function getCustomCurrentlyResponsibleAttribute(): array
     {
@@ -268,13 +256,12 @@ class Project extends Model
             User::pluck('name')->toArray()
         );
         sort($responsibles);
+
         return $responsibles;
     }
 
     /**
      * Get the status attribute.
-     *
-     * @return array
      */
     public static function getCustomStatusAttribute(): array
     {
@@ -285,7 +272,7 @@ class Project extends Model
         foreach ($statuses as $status) {
             $options[$status] = $status;
         }
-        
+
         return $options;
     }
 }

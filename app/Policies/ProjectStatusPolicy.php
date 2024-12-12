@@ -9,6 +9,6 @@ class ProjectStatusPolicy extends Policy
      */
     public function __construct()
     {
-        $this->permission = "project_statuses";
+        $this->permission = 'project_statuses';
     }
 }
