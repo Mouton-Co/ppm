@@ -28,7 +28,6 @@ class OrderObserver
      */
     public function updated(Order $order): void
     {
-        info('order observer');
         /**
          * update due date of parts
          */
@@ -39,7 +38,6 @@ class OrderObserver
                 ]);
             }
         }
-        info('order observer end');
     }
 
     /**

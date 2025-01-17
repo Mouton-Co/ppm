@@ -24,7 +24,6 @@ class PartObserver
      */
     public function updated(Part $part): void
     {
-        info('part observer');
         /**
          * check if replaced_by_submission was updated
          * don't send email if in local environment
@@ -75,8 +74,6 @@ class PartObserver
             }
         }
 
-        info('part observer 1');
-
         /**
          * when part is ordered
          */
@@ -85,12 +82,9 @@ class PartObserver
             ! empty($part->part_ordered_at) &&
             ! empty($part?->supplier?->average_lead_time)
         ) {
-            $part->update([
-                'due_date' => now()->addDays($part->supplier->average_lead_time),
-            ]);
+            $part->due_date = now()->addDays($part->supplier->average_lead_time);
+            $part->saveQuietly();
         }
-
-        info('part observer 2');
 
         /**
          * when part is dispatched for treatment 1
@@ -100,12 +94,9 @@ class PartObserver
             ! empty($part->treatment_1_part_dispatched_at) &&
             ! empty($days = Supplier::where('name', $part->treatment_1_supplier)->first()?->average_lead_time)
         ) {
-            $part->update([
-                'due_date' => now()->addDays($days),
-            ]);
+            $part->due_date = now()->addDays($days);
+            $part->saveQuietly();
         }
-
-        info('part observer 3');
 
         /**
          * when part is dispatched for treatment 2
@@ -115,11 +106,9 @@ class PartObserver
             ! empty($part->treatment_2_part_dispatched_at) &&
             ! empty($days = Supplier::where('name', $part->treatment_2_supplier)->first()?->average_lead_time)
         ) {
-            $part->update([
-                'due_date' => now()->addDays($days),
-            ]);
+            $part->due_date = now()->addDays($days);
+            $part->saveQuietly();
         }
-        info('part observer end');
     }
 
     /**

@@ -177,7 +177,6 @@ class OrderController extends Controller
      */
     public function markOrdered(Request $request, $id)
     {
-        info('markOrdered');
         if (
             $request->user()?->cannot('update', Order::class) &&
             ! $request->has('token') &&
@@ -185,7 +184,6 @@ class OrderController extends Controller
         ) {
             abort(403);
         }
-        info('has permissions');
 
         $order = Order::find($id);
 
@@ -194,25 +192,19 @@ class OrderController extends Controller
                 'Order not found.'
             );
         }
-        info('order found');
 
         $order->update([
             'status' => 'ordered',
         ]);
-        info('Order status updated');
-
-        info('attempt to show parts:');
-        info(json_encode($order->parts()->get(), 128));
+        
         // mark all parts as complete
         foreach ($order->parts()->get() as $part) {
-            info('attempt to update part: '.$part->id);
             $part->update([
                 'part_ordered' => true,
                 'part_ordered_at' => now(),
                 'status' => 'supplier',
                 'qty_received' => 0,
             ]);
-            info('Part marked as ordered: '.$part->id);
         }
 
         // if project is attached to submission update related POs
@@ -223,7 +215,6 @@ class OrderController extends Controller
                     : $order->po_number,
             ]);
         }
-        info('related project updated');
 
         if ($request->has('token')) {
 
@@ -234,7 +225,6 @@ class OrderController extends Controller
 
             return redirect()->route('confirmation');
         }
-        info('returning');
 
         return redirect()->back()->withSuccess(
             'Parts marked as ordered.'
