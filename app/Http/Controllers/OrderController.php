@@ -177,6 +177,7 @@ class OrderController extends Controller
      */
     public function markOrdered(Request $request, $id)
     {
+        info('markOrdered');
         if (
             $request->user()?->cannot('update', Order::class) &&
             ! $request->has('token') &&
@@ -184,6 +185,7 @@ class OrderController extends Controller
         ) {
             abort(403);
         }
+        info('has permissions');
 
         $order = Order::find($id);
 
@@ -192,10 +194,12 @@ class OrderController extends Controller
                 'Order not found.'
             );
         }
+        info('order found');
 
         $order->update([
             'status' => 'ordered',
         ]);
+        info('Order status updated');
 
         // mark all parts as complete
         foreach ($order->parts()->get() as $part) {
