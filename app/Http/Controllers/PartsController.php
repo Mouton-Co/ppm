@@ -371,7 +371,7 @@ class PartsController extends Controller
     protected function generatePoNumbersForDnoSuppliers(): void
     {
         foreach (Part::all() as $part) {
-            if ($part->supplier->dno && empty($part->po_number)) {
+            if (! empty($part->supplier->dno) && $part->supplier->dno && empty($part->po_number)) {
                 $part->po_number = "M{$part->submission->machine_number} - DNO";
                 $part->save();
             }
