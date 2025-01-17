@@ -205,6 +205,7 @@ class OrderController extends Controller
                 'status' => 'supplier',
                 'qty_received' => 0,
             ]);
+            info('Part marked as ordered: '.$part->id);
         }
 
         // if project is attached to submission update related POs
@@ -215,6 +216,7 @@ class OrderController extends Controller
                     : $order->po_number,
             ]);
         }
+        info('related project updated');
 
         if ($request->has('token')) {
 
@@ -223,8 +225,9 @@ class OrderController extends Controller
              */
             EmailService::sendClientConfirmedEmail($order);
 
-            return view('order.confirmation');
+            return redirect()->route('confirmation');
         }
+        info('returning');
 
         return redirect()->back()->withSuccess(
             'Parts marked as ordered.'
