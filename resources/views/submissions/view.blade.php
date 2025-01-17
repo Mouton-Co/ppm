@@ -58,9 +58,7 @@
             <div class="details-list">
                 <dt class="details-list-title">{{ __('Current unit number') }}</dt>
                 <dd class="details-list-value">
-                    {{ $submission->current_unit_number .
-                        ' - ' .
-                        config('dropdowns.unit_numbers.' . $submission->current_unit_number) ?? 'N/A' }}
+                    {{ App\Models\Submission::$structure['current_unit_number']['filterable_options'][$submission->current_unit_number] ?? 'N/A' }}
                 </dd>
             </div>
             <div class="details-list">
