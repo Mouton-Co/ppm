@@ -24,6 +24,7 @@ class PartObserver
      */
     public function updated(Part $part): void
     {
+        info('part observer');
         /**
          * check if replaced_by_submission was updated
          * don't send email if in local environment
@@ -74,6 +75,8 @@ class PartObserver
             }
         }
 
+        info('part observer 1');
+
         /**
          * when part is ordered
          */
@@ -86,6 +89,8 @@ class PartObserver
                 'due_date' => now()->addDays($part->supplier->average_lead_time),
             ]);
         }
+
+        info('part observer 2');
 
         /**
          * when part is dispatched for treatment 1
@@ -100,6 +105,8 @@ class PartObserver
             ]);
         }
 
+        info('part observer 3');
+
         /**
          * when part is dispatched for treatment 2
          */
@@ -112,6 +119,7 @@ class PartObserver
                 'due_date' => now()->addDays($days),
             ]);
         }
+        info('part observer end');
     }
 
     /**

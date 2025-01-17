@@ -205,6 +205,7 @@ class OrderController extends Controller
         info(json_encode($order->parts()->get(), 128));
         // mark all parts as complete
         foreach ($order->parts()->get() as $part) {
+            info('attempt to update part: '.$part->id);
             $part->update([
                 'part_ordered' => true,
                 'part_ordered_at' => now(),
