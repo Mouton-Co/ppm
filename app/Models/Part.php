@@ -510,6 +510,15 @@ class Part extends Model
             'sortable' => true,
             'filterable' => true,
         ],
+        'submission_submission_code' => [
+            'label' => 'Submission Code',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+            'relationship' => 'submission.submission_code',
+            'relationship_model' => Submission::class,
+            'component' => 'procurement.submission',
+        ],
         'status' => [
             'label' => 'Status',
             'type' => 'dropdown',
