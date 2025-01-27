@@ -196,7 +196,7 @@ class OrderController extends Controller
         $order->update([
             'status' => 'ordered',
         ]);
-        
+
         // mark all parts as complete
         foreach ($order->parts()->get() as $part) {
             $part->update([
