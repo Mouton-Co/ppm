@@ -123,7 +123,7 @@ class OrderController extends Controller
         $poNumbers = Part::whereNotNull('po_number')
             ->whereNotNull('supplier_id')
             ->where('po_number', 'not like', '%dno%')
-            ->where('part_ordered', false)
+            ->where('status', 'processing')
             ->get()
             ->groupBy('po_number');
 
