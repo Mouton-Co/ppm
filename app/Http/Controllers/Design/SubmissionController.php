@@ -64,14 +64,11 @@ class SubmissionController extends Controller
 
         $projects = Project::whereNull('submission_id')->orderBy('coc')->get();
 
-        $replacementOptions = Submission::where('submitted', 1)->get();
-
         return view('designer.new-submission')->with([
             'submission' => $submission,
             'submission_types' => Submission::$structure['submission_type']['filterable_options'],
             'unit_numbers' => Submission::$structure['current_unit_number']['filterable_options'],
             'projects' => $projects,
-            'replacementOptions' => $replacementOptions,
         ]);
     }
 
@@ -128,13 +125,9 @@ class SubmissionController extends Controller
             $group->mail('New Submission Available', 'emails.submission.created', $submission);
         }
 
-        $replacement = null;
-        if ($submission->submission_type == 3) {
-            if ($request->has('replacement') && ! empty($request->get('replacement'))) {
-                $replacement = Submission::find($request->get('replacement'));
-            } else {
-                $replacement = $this->replacementService->getPreviousSubmission($submission);
-            }
+        $replacements = [];
+        if ($submission->submission_type == Submission::REPLACEMENT) {
+            $replacements = $submission->previousSubmissions()->get();
         }
 
         return redirect()
@@ -142,7 +135,7 @@ class SubmissionController extends Controller
             ->with([
                 'success' => 'Submission created - '.$submission->assembly_name,
                 'submission' => $submission,
-                'replacement' => $replacement,
+                'replacements' => $replacements,
             ]);
     }
 
@@ -166,8 +159,8 @@ class SubmissionController extends Controller
             return redirect()->route('submissions.index', array_merge(['page' => $submissions->lastPage()], $request->except(['page'])));
         }
 
-        if (! empty($request->session()->get('submission')) && ! empty($request->session()->get('replacement'))) {
-            $replacementOptions = $this->replacementService->getReplacementOptions($request->session()->get('replacement'), $request->session()->get('submission'))[0] ?? [];
+        if (! empty($request->session()->get('submission')) && ! empty($request->session()->get('replacements'))) {
+            $replacementOptions = $this->replacementService->getReplacementOptions($request->session()->get('replacements'), $request->session()->get('submission'))[0] ?? [];
         }
 
         return view('generic.index')->with([
@@ -178,7 +171,6 @@ class SubmissionController extends Controller
             'data' => $submissions,
             'model' => Submission::class,
             'submission' => $request->session()->get('submission') ?? null,
-            'replacement' => $request->session()->get('replacement') ?? null,
             'replacementOptions' => $replacementOptions ?? [],
         ]);
     }
@@ -325,9 +317,10 @@ class SubmissionController extends Controller
             abort(403);
         }
 
-        [$replacementOptions, $newParts] = $this->replacementService->getReplacementOptions(Submission::find($request->get('original_id')), Submission::find($request->get('new_id')));
+        $replacementSubmission = Submission::find($request->get('new_id'));
+        [$replacementOptions, $newParts] = $this->replacementService->getReplacementOptions($replacementSubmission->previousSubmissions()->get(), $replacementSubmission);
 
-        foreach ($request->except(['_token', 'original_id', 'new_id']) as $partId => $value) {
+        foreach ($request->except(['_token', 'new_id']) as $partId => $value) {
             if ($value == 'on') {
                 $this->replacementService->replacePart($replacementOptions[$partId]);
             }
@@ -335,9 +328,8 @@ class SubmissionController extends Controller
 
         $this->replacementService->markAsRedundant(Submission::find($request->get('new_id')), $replacementOptions, $newParts);
         EmailService::sendBomReplacedEmail(
-            $request->except(['_token', 'original_id', 'new_id']),
+            $request->except(['_token', 'new_id']),
             $replacementOptions,
-            $request->get('original_id'),
             $request->get('new_id')
         );
 

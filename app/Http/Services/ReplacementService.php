@@ -4,23 +4,10 @@ namespace App\Http\Services;
 
 use App\Models\Part;
 use App\Models\Submission;
+use Illuminate\Database\Eloquent\Collection;
 
 class ReplacementService
 {
-    /**
-     * Get the previous submission
-     */
-    public function getPreviousSubmission(Submission $submission): ?Submission
-    {
-        return Submission::where('machine_number', $submission->machine_number)
-            ->where('current_unit_number', $submission->current_unit_number)
-            ->where('created_at', '<', $submission->created_at)
-            ->where('submission_type', 2)
-            ->where('submitted', 1)
-            ->orderBy('created_at', 'desc')
-            ->first();
-    }
-
     /**
      * Replace part
      *
@@ -45,17 +32,19 @@ class ReplacementService
     /**
      * Get replacement options
      */
-    public function getReplacementOptions(Submission $originalSubmission, Submission $replacementSubmission): array
+    public function getReplacementOptions(Collection $previousSubmissions, Submission $replacementSubmission): array
     {
-        $differentOriginalParts = $originalSubmission->parts()->pluck('name', 'id')->toArray();
-        $differentReplacementParts = $replacementSubmission->parts()->pluck('name', 'id')->toArray();
-
-        [$identicalOriginalParts, $identicalReplacementParts] = $this->splitParts($differentOriginalParts, $differentReplacementParts);
-
         $replacementOptions = [];
 
-        $this->addQtyChanges($identicalOriginalParts, $identicalReplacementParts, $replacementOptions);
-        $this->addReplacements($differentOriginalParts, $differentReplacementParts, $replacementOptions);
+        foreach ($previousSubmissions as $originalSubmission) {
+            $differentOriginalParts = $originalSubmission->parts()->pluck('name', 'id')->toArray();
+            $differentReplacementParts = $replacementSubmission->parts()->pluck('name', 'id')->toArray();
+
+            [$identicalOriginalParts, $identicalReplacementParts] = $this->splitParts($differentOriginalParts, $differentReplacementParts);
+
+            $this->addQtyChanges($identicalOriginalParts, $identicalReplacementParts, $replacementOptions);
+            $this->addReplacements($differentOriginalParts, $differentReplacementParts, $replacementOptions);
+        }
 
         return [$replacementOptions, $differentReplacementParts];
     }
