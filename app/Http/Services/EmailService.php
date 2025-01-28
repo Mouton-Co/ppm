@@ -37,13 +37,12 @@ class EmailService
     /**
      * Send an email to the procurement team when a BOM is replaced
      */
-    public static function sendBomReplacedEmail(array $replacements, array $replacementOptions, string $originalId, string $replacementId): void
+    public static function sendBomReplacedEmail(array $replacements, array $replacementOptions, string $replacementId): void
     {
         /**
          * see if there is a procurement recipient group to receive this
          */
         $group = RecipientGroup::where('field', 'Currently responsible')->where('value', 'Procurement')->first();
-        $original = Submission::find($originalId);
         $replacement = Submission::find($replacementId);
 
         if (! empty($group) && ! empty($group->recipient_emails)) {
@@ -57,7 +56,7 @@ class EmailService
                 $mail->cc(array_slice($emails, 1));
             }
 
-            $mail->send(new BomReplaced($replacements, $replacementOptions, $original, $replacement));
+            $mail->send(new BomReplaced($replacements, $replacementOptions, $replacement));
         } else {
             /**
              * send to users with procurement role instead
@@ -75,7 +74,7 @@ class EmailService
                     $mail->cc(array_slice($emails, 1));
                 }
 
-                $mail->send(new BomReplaced($replacements, $replacementOptions, $original, $replacement));
+                $mail->send(new BomReplaced($replacements, $replacementOptions, $replacement));
             }
         }
     }

@@ -12,10 +12,6 @@
         <a href="{{ route('submissions.show', $replacement->id) }}">
             {{ $replacement->submission_code }}
         </a>
-        replaced
-        <a href="{{ route('submissions.show', $original->id) }}">
-            {{ $original->submission_code }}
-        </a>
     </p>
 
     <p>

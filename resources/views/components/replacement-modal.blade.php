@@ -26,12 +26,6 @@
                         href="{{ route('submissions.show', $submission->id) }}"
                         target="_blank"
                     >{{ $submission->submission_code ?? 'N/A' }}</a>
-                    <x-icon.back class="h-5 w-5 min-w-fit rotate-180" />
-                    <a
-                        class="text-sky-400 hover:underline"
-                        href="{{ route('submissions.show', $replacement->id) }}"
-                        target="_blank"
-                    >{{ $replacement->submission_code ?? 'N/A' }}</a>
                 </div>
                 <p class="text-wrap mt-2 text-left text-sm">
                     The following replacements has been auto detected. Please select which ones you'd like
@@ -51,11 +45,6 @@
                         method="post"
                     >
                         @csrf
-                        <input
-                            name="original_id"
-                            type="hidden"
-                            value="{{ $replacement->id }}"
-                        >
                         <input
                             name="new_id"
                             type="hidden"
