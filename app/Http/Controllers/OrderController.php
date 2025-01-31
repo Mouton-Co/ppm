@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Order\StoreRequest;
 use App\Http\Requests\Order\UpdateRequest;
+use App\Http\Requests\Parts\MarkAsRequest;
 use App\Http\Services\EmailService;
 use App\Models\Order;
 use App\Models\Part;
@@ -214,6 +215,19 @@ class OrderController extends Controller
                     ? $order->submission->project->related_pos.', '.$order->po_number
                     : $order->po_number,
             ]);
+        }
+
+        // if mark as qc passed, do that as well
+        if ($request->has('qc_passed')) {
+            // Manually create an instance of MarkAsRequest
+            $markAsRequest = app(MarkAsRequest::class);
+            $markAsRequest->merge([
+                'po_number' => $order->po_number,
+                'mark_as' => 'qc_passed',
+            ]);
+
+            // do a post request to the parts controller
+            return app('App\Http\Controllers\PartsController')->markAs($markAsRequest);
         }
 
         if ($request->has('token')) {
