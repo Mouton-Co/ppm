@@ -141,22 +141,16 @@
                                     <span>{{ __('Prepare email') }}</span>
                                     <span aria-hidden="true">&rarr;</span>
                                 </a>
-                                <form
-                                    action="{{ route('parts.mark-as', [
-                                        'po_number' => $order->po_number,
-                                        'mark_as' => 'qc_passed',
+                                <a
+                                    class="text-right hover:text-sky-600"
+                                    href="{{ route('orders.complete', [
+                                        'id' => $order->id,
+                                        'qc_passed' => 'true',
                                     ]) }}"
-                                    method="post"
                                 >
-                                    @csrf
-                                    <button
-                                        class="flex hover:text-sky-600"
-                                        type="submit"
-                                    >
-                                        <span class="text-nowrap">{{ __('Mark as QC passed') }}</span>
-                                        <span aria-hidden="true">&rarr;</span>
-                                    </button>
-                                </form>
+                                    <span>{{ __('Mark as QC passed') }}</span>
+                                    <span aria-hidden="true">&rarr;</span>
+                                </a>
                                 <a
                                     class="text-right hover:text-sky-600"
                                     href="{{ route('orders.complete', $order->id) }}"
