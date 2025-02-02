@@ -17,18 +17,15 @@ class BomReplaced extends Mailable
 
     protected array $replacementOptions;
 
-    protected Submission $original;
-
     protected Submission $replacement;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(array $replacements, array $replacementOptions, Submission $original, Submission $replacement)
+    public function __construct(array $replacements, array $replacementOptions, Submission $replacement)
     {
         $this->replacements = $replacements;
         $this->replacementOptions = $replacementOptions;
-        $this->original = $original;
         $this->replacement = $replacement;
     }
 
@@ -52,7 +49,6 @@ class BomReplaced extends Mailable
             with: [
                 'replacements' => $this->replacements,
                 'replacementOptions' => $this->replacementOptions,
-                'original' => $this->original,
                 'replacement' => $this->replacement,
             ],
         );

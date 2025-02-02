@@ -4,7 +4,7 @@
         <form
             class="flex items-center gap-3"
             action="{{ route('parts.mark-as') }}"
-            method="post"
+            method="get"
         >
             @csrf
 

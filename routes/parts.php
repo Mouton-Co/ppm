@@ -17,7 +17,7 @@ Route::prefix('parts')->group(function () {
     Route::post('autofill-suppliers', [PartsController::class, 'autofillSuppliers'])->name('parts.autofill-suppliers');
     Route::post('generate-po-numbers', [PartsController::class, 'generatePoNumbers'])
         ->name('parts.generate-po-numbers');
-    Route::post('mark-as', [PartsController::class, 'markAs'])->name('parts.mark-as');
+    Route::get('mark-as', [PartsController::class, 'markAs'])->name('parts.mark-as');
     Route::post('search-replace-po', [PartsController::class, 'searchReplacePo'])->name('parts.search-replace-po');
     Route::get('unselect', [PartsController::class, 'unselect'])->name('parts.unselect');
 });

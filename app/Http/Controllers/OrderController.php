@@ -123,7 +123,7 @@ class OrderController extends Controller
         $poNumbers = Part::whereNotNull('po_number')
             ->whereNotNull('supplier_id')
             ->where('po_number', 'not like', '%dno%')
-            ->where('part_ordered', false)
+            ->where('status', 'processing')
             ->get()
             ->groupBy('po_number');
 
@@ -213,6 +213,14 @@ class OrderController extends Controller
                 'related_pos' => ! empty($order->submission->project->related_pos)
                     ? $order->submission->project->related_pos.', '.$order->po_number
                     : $order->po_number,
+            ]);
+        }
+
+        // if mark as qc passed, do that as well
+        if ($request->has('qc_passed')) {
+            return redirect()->route('parts.mark-as', [
+                'po_number' => $order->po_number,
+                'mark_as' => 'qc_passed',
             ]);
         }
 

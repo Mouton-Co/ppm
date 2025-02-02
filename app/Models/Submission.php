@@ -30,6 +30,21 @@ class Submission extends Model
         'project_id',
     ];
 
+    /**
+     * The submission types
+     */
+    const ADDITIONAL_PROJECT = 0;
+
+    const ADDITION = 1;
+
+    const NEW_BOM = 2;
+
+    const REPLACEMENT = 3;
+
+    const MODIFICATION = 4;
+
+    const WORKSHOP = 5;
+
     /*
     |--------------------------------------------------------------------------
     | Index table properties
@@ -177,6 +192,18 @@ class Submission extends Model
     public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class);
+    }
+
+    /**
+     * Get the previous submissions for the same machine and unit number
+     */
+    public function previousSubmissions(): \Illuminate\Database\Eloquent\Builder
+    {
+        return Submission::where('created_at', '<', $this->created_at)
+            ->where('machine_number', $this->machine_number)
+            ->where('current_unit_number', $this->current_unit_number)
+            ->where('submitted', 1)
+            ->orderBy('created_at', 'desc');
     }
 
     /*
