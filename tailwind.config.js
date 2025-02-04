@@ -1,5 +1,23 @@
 const defaultTheme = require('tailwindcss/defaultTheme');
 
+const dotenv = require('dotenv');
+dotenv.config();
+
+const colors = {
+    'light-gray': '#818285',
+    'dark-gray': '#3a3a3b',
+    'dark-field': '#2a3441',
+    'dark-field-border': '#404954',
+    'feedback-success': '#545d6a',
+    'nav-link': '#9ca3a3',
+};
+
+// staging styling overrides
+if (process.env.APP_ENV === 'staging') {
+    // simply changes navbar on the left to a whiter color so you can identify when on staging
+    colors['gray-900'] = '#e5e7eb';
+}
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
     content: [
@@ -12,14 +30,7 @@ module.exports = {
             fontFamily: {
                 sans: ['Inter var', ...defaultTheme.fontFamily.sans],
             },
-            colors: {
-                'light-gray': '#818285',
-                'dark-gray': '#3a3a3b',
-                'dark-field': '#2a3441',
-                'dark-field-border': '#404954',
-                'feedback-success': '#545d6a',
-                'nav-link': '#9ca3a3',
-            }
+            colors: colors
         },
         screens: {
             'smaller-than-380': {'min': '0px', 'max': '380px'},
