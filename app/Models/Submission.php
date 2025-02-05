@@ -154,6 +154,12 @@ class Submission extends Model
             'sortable' => true,
             'filterable' => true,
         ],
+        'updated_at' => [
+            'label' => 'Updated at',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
     ];
 
     public static $actions = [

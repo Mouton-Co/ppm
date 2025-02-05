@@ -73,6 +73,18 @@ class Order extends Model
             'relationship' => 'submission.submission_code',
             'relationship_model' => Submission::class,
         ],
+        'created_at' => [
+            'label' => 'Created at',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
+        'updated_at' => [
+            'label' => 'Updated at',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
     ];
 
     /**
