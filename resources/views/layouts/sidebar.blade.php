@@ -34,7 +34,10 @@
                         <li>
                             <a
                                 class="nav-item-{{ request()->segment(1) == 'submisssions' ? 'active' : 'default' }}"
-                                href="{{ route('submissions.index') }}"
+                                href="{{ route('submissions.index', [
+                                    'order_by' => 'updated_at',
+                                    'order' => 'desc',
+                                ]) }}"
                             >
                                 <x-icon.submission class="h-6 w-6 shrink-0" />
                                 {{ __('Design') }}
@@ -45,7 +48,12 @@
                         <li>
                             <a
                                 class="nav-item-{{ request()->segment(2) == 'procurement' ? 'active' : 'default' }}"
-                                href="{{ route('parts.procurement.index', ['status' => 'processing', 'redundant' => '0']) }}"
+                                href="{{ route('parts.procurement.index', [
+                                    'status' => 'processing',
+                                    'redundant' => '0',
+                                    'order_by' => 'updated_at',
+                                    'order' => 'desc',
+                                ]) }}"
                             >
                                 <x-icon.procurement class="h-6 w-6 shrink-0" />
                                 {{ __('Procurement') }}
@@ -56,7 +64,12 @@
                         <li>
                             <a
                                 class="nav-item-{{ request()->segment(2) == 'warehouse' ? 'active' : 'default' }}"
-                                href="{{ route('parts.warehouse.index', ['status' => 'supplier', 'redundant' => '0']) }}"
+                                href="{{ route('parts.warehouse.index', [
+                                    'status' => 'supplier',
+                                    'redundant' => '0',
+                                    'order_by' => 'updated_at',
+                                    'order' => 'desc',
+                                ]) }}"
                             >
                                 <x-icon.warehouse class="h-6 w-6 shrink-0" />
                                 {{ __('Warehouse') }}
@@ -69,6 +82,8 @@
                                 class="nav-item-{{ request()->segment(1) == 'orders' ? 'active' : 'default' }}"
                                 href="{{ route('orders.index', [
                                     'status' => 'All except ordered',
+                                    'order_by' => 'updated_at',
+                                    'order' => 'desc',
                                 ]) }}"
                             >
                                 <x-icon.order class="h-6 w-6 shrink-0" />
@@ -93,7 +108,10 @@
                         <li>
                             <a
                                 class="nav-item-{{ request()->segment(1) == 'users' ? 'active' : 'default' }}"
-                                href="{{ route('user.index') }}"
+                                href="{{ route('user.index', [
+                                    'order_by' => 'updated_at',
+                                    'order' => 'desc',
+                                ]) }}"
                             >
                                 <svg
                                     class="h-6 w-6 shrink-0"
@@ -122,7 +140,10 @@
                         <li>
                             <a
                                 class="nav-item-{{ request()->segment(1) == 'roles' ? 'active' : 'default' }}"
-                                href="{{ route('roles.index') }}"
+                                href="{{ route('roles.index', [
+                                    'order_by' => 'updated_at',
+                                    'order' => 'desc',
+                                ]) }}"
                             >
                                 <x-icon.role class="h-6 w-6 shrink-0" />
                                 <span class="truncate">{{ __('Roles') }}</span>
@@ -133,7 +154,10 @@
                         <li>
                             <a
                                 class="nav-item-{{ request()->segment(1) == 'suppliers' ? 'active' : 'default' }}"
-                                href="{{ route('suppliers.index') }}"
+                                href="{{ route('suppliers.index', [
+                                    'order_by' => 'updated_at',
+                                    'order' => 'desc',
+                                ]) }}"
                             >
                                 <x-icon.suitcase class="h-6 w-6 shrink-0" />
                                 <span class="truncate">{{ __('Suppliers') }}</span>
@@ -144,7 +168,10 @@
                         <li>
                             <a
                                 class="nav-item-{{ request()->segment(1) == 'representatives' ? 'active' : 'default' }}"
-                                href="{{ route('representatives.index') }}"
+                                href="{{ route('representatives.index', [
+                                    'order_by' => 'updated_at',
+                                    'order' => 'desc',
+                                ]) }}"
                             >
                                 <x-icon.representative class="h-6 w-6 shrink-0" />
                                 <span class="truncate">{{ __('Representatives') }}</span>
@@ -155,7 +182,10 @@
                         <li>
                             <a
                                 class="nav-item-{{ request()->segment(1) == 'autofill-suppliers' ? 'active' : 'default' }}"
-                                href="{{ route('autofill-suppliers.index') }}"
+                                href="{{ route('autofill-suppliers.index', [
+                                    'order_by' => 'updated_at',
+                                    'order' => 'desc',
+                                ]) }}"
                             >
                                 <x-icon.vlookup class="h-6 w-6 shrink-0" />
                                 <span class="truncate">{{ __('Autofill Suppliers') }}</span>
@@ -166,7 +196,10 @@
                         <li>
                             <a
                                 class="nav-item-{{ request()->segment(1) == 'process-types' ? 'active' : 'default' }}"
-                                href="{{ route('process-types.index') }}"
+                                href="{{ route('process-types.index', [
+                                    'order_by' => 'updated_at',
+                                    'order' => 'desc',
+                                ]) }}"
                             >
                                 <x-icon.process-type class="h-6 w-6 shrink-0" />
                                 <span class="truncate">{{ __('Process Types') }}</span>
@@ -177,7 +210,10 @@
                         <li>
                             <a
                                 class="nav-item-{{ request()->segment(1) == 'project-statuses' ? 'active' : 'default' }}"
-                                href="{{ route('project-statuses.index') }}"
+                                href="{{ route('project-statuses.index', [
+                                    'order_by' => 'updated_at',
+                                    'order' => 'desc',
+                                ]) }}"
                             >
                                 <x-icon.statuses class="h-6 w-6 shrink-0" />
                                 <span class="truncate">{{ __('Project statuses') }}</span>
@@ -188,7 +224,10 @@
                         <li>
                             <a
                                 class="nav-item-{{ request()->segment(1) == 'project-responsibles' ? 'active' : 'default' }}"
-                                href="{{ route('project-responsibles.index') }}"
+                                href="{{ route('project-responsibles.index', [
+                                    'order_by' => 'updated_at',
+                                    'order' => 'desc',
+                                ]) }}"
                             >
                                 <svg
                                     class="h-6 w-6 shrink-0"
@@ -217,7 +256,10 @@
                         <li>
                             <a
                                 class="nav-item-{{ request()->segment(1) == 'recipient-groups' ? 'active' : 'default' }}"
-                                href="{{ route('recipient-groups.index') }}"
+                                href="{{ route('recipient-groups.index', [
+                                    'order_by' => 'updated_at',
+                                    'order' => 'desc',
+                                ]) }}"
                             >
                                 <x-icon.email class="h-6 w-6 shrink-0" />
                                 <span class="truncate">{{ __('Email triggers') }}</span>

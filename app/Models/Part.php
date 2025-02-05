@@ -304,6 +304,18 @@ class Part extends Model
             'filterable' => true,
             'component' => 'editable.text',
         ],
+        'created_at' => [
+            'label' => 'Created at',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
+        'updated_at' => [
+            'label' => 'Updated at',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
     ];
 
     /**
@@ -640,6 +652,18 @@ class Part extends Model
             'sortable' => true,
             'filterable' => true,
             'component' => 'editable.text',
+        ],
+        'created_at' => [
+            'label' => 'Created at',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
+        'updated_at' => [
+            'label' => 'Updated at',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
         ],
     ];
 
