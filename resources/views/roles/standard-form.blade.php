@@ -12,13 +12,13 @@
     for="role"
 >{{ __('Role') }}</label>
 <input
-    class="{{ !empty($errors->get('role')) ? 'field-error' : 'field-dark' }} mb-5"
-    name="role"
+    class="{{ !empty($errors->get('role_standard')) ? 'field-error' : 'field-dark' }} mb-5"
+    name="role_standard"
     type="text"
-    value="{{ $role->role ?? old('role') }}"
+    value="{{ $role->role ?? old('role_standard') }}"
 >
-@if (!empty($errors->get('role')))
-    @foreach ($errors->get('role') as $error)
+@if (!empty($errors->get('role_standard')))
+    @foreach ($errors->get('role_standard') as $error)
         @include('components.error-message', ['error' => $error, 'hidden' => 'false', 'class' => 'mb-5'])
     @endforeach
 @endif
