@@ -145,13 +145,13 @@ class RoleController extends Controller
 
         if ($request->has('customer') && $request->get('customer') == 'on') {
             $role->update([
-                'role' => $request->get('role') ?? 'N/A',
+                'role' => $request->get('role_customer') ?? 'N/A',
                 'permissions' => json_encode($request->get('machine_numbers', [])),
                 'customer' => true,
             ]);
         } else {
             $role->update([
-                'role' => $request->get('role') ?? 'N/A',
+                'role' => $request->get('role_standard') ?? 'N/A',
                 'landing_page' => $request->get('landing_page') ?? 'Projects',
                 'permissions' => json_encode($this->service->formatPermissionsFromRequest($request)),
             ]);
