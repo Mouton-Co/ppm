@@ -37,3 +37,5 @@ import { replacement } from "./submissions/replacement.js";
 replacement();
 import { settings } from "./general/settings.js";
 settings();
+import { warehouse } from "./parts/warehouse.js";
+warehouse();
