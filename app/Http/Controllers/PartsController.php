@@ -13,6 +13,7 @@ use App\Models\Order;
 use App\Models\Part;
 use App\Models\Submission;
 use App\Models\Supplier;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -496,6 +497,11 @@ class PartsController extends Controller
         }
 
         $parts = Part::where('po_number', $request->get('po_number'))->get();
+        $qcUser = User::find($request->get('qc_by')) ?? null;
+
+        if (empty($qcUser)) {
+            $qcUser = auth()->user();
+        }
 
         if ($parts->isEmpty()) {
             return redirect()
@@ -707,7 +713,7 @@ class PartsController extends Controller
 
                 $part->qc_passed = true;
                 $part->qc_passed_at = now();
-                $part->qc_by = 'QC passed by '.$request->user()->name;
+                $part->qc_by = $qcUser->name;
                 $part->status = 'assembly';
             }
             $part->save();

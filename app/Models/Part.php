@@ -304,6 +304,18 @@ class Part extends Model
             'filterable' => true,
             'component' => 'editable.text',
         ],
+        'created_at' => [
+            'label' => 'Created at',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
+        'updated_at' => [
+            'label' => 'Updated at',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
     ];
 
     /**
@@ -598,6 +610,8 @@ class Part extends Model
             'type' => 'text',
             'sortable' => true,
             'filterable' => true,
+            'component' => 'editable.select',
+            'filterable_options' => 'custom',
         ],
         'job_card' => [
             'label' => 'Job Card #',
@@ -640,6 +654,18 @@ class Part extends Model
             'sortable' => true,
             'filterable' => true,
             'component' => 'editable.text',
+        ],
+        'created_at' => [
+            'label' => 'Created at',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
+        ],
+        'updated_at' => [
+            'label' => 'Updated at',
+            'type' => 'text',
+            'sortable' => true,
+            'filterable' => true,
         ],
     ];
 
@@ -778,6 +804,11 @@ class Part extends Model
     public static function getCustomTreatment2SupplierAttribute(): array
     {
         return Supplier::orderBy('name')->pluck('name')->toArray();
+    }
+
+    public static function getCustomQcByAttribute(): array
+    {
+        return User::whereRelation('role', 'role', 'QC department')->orderBy('name')->pluck('name')->toArray();
     }
 
     /**
