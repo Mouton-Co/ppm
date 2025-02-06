@@ -48,7 +48,7 @@
 
 
             @php
-                $options = App\Models\User::whereRelation('role', 'role', 'Warehouse')->pluck('name', 'id')->toArray();
+                $options = App\Models\User::whereRelation('role', 'role', 'QC department')->pluck('name', 'id')->toArray();
             @endphp
 
             <label
