@@ -713,7 +713,7 @@ class PartsController extends Controller
 
                 $part->qc_passed = true;
                 $part->qc_passed_at = now();
-                $part->qc_by = 'QC passed by '.$qcUser->name;
+                $part->qc_by = $qcUser->name;
                 $part->status = 'assembly';
             }
             $part->save();
