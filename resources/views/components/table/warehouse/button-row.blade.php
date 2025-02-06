@@ -46,6 +46,26 @@
                 @endforeach
             </select>
 
+
+            @php
+                $options = App\Models\User::whereRelation('role', 'role', 'Warehouse')->pluck('name', 'id')->toArray();
+            @endphp
+
+            <label
+                class="min-w-fit text-white hidden"
+                for="qc_by"
+            >{{ __("QC'd by") }}</label>
+            <select
+                class="hidden editable-cell-dropdown !w-[195px] cursor-pointer border-none bg-transparent focus:outline-none"
+                name="qc_by"
+            >
+                @foreach ($options as $optionKey => $optionValue)
+                    <option value="{{ $optionKey }}">
+                        {{ $optionValue }}
+                    </option>
+                @endforeach
+            </select>
+
             <button
                 class="btn-sky text-nowrap min-w-fit max-w-fit"
                 type="submit"
