@@ -6,7 +6,7 @@
     @endphp
 
     {{-- heading --}}
-    <div class="mb-2 flex items-center justify-between">
+    <div class="mb-2 flex flex-col">
         <div class="flex items-center gap-10">
             <h2 class="text-lg text-white">{{ $heading ?? 'Items' }}</h2>
             @if ($model == \App\Models\Supplier::class)
@@ -36,7 +36,7 @@
                 class="h-7 rounded border border-sky-600 px-2 py-1 text-sm text-sky-600 shadow hover:border-sky-700 hover:bg-sky-700 hover:text-white"
                 id="filter"
             >
-                {{ __('Filter') }}
+                {{ __('Apply Filters') }}
             </button>
             @if (!empty($model::$actions['create']) && auth()->user()->can('create', $model))
                 <a
@@ -172,7 +172,7 @@
             id="filter-options-toggle"
         >
             <x-icon.filters class="h-5 w-5" />
-            <span>{{ __('Filter') }}</span>
+            <span>{{ __('Add Filter') }}</span>
         </div>
         <div
             class="absolute bottom-0 right-0 z-10 hidden w-full max-w-sm translate-y-full text-xs shadow-lg"
