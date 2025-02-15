@@ -215,6 +215,14 @@
             <thead class="bg-gray-700 text-xs uppercase text-gray-400">
                 <tr>
                     @foreach (auth()->user()->table_configs['tables'][$table]['show'] as $key)
+                        @if (
+                            $model == \App\Models\Project::class &&
+                            array_key_exists('hide_for_customers', $structure[$key]) &&
+                            $structure[$key]['hide_for_customers'] == 'true' &&
+                            auth()->user()->role->customer
+                        )
+                            @continue
+                        @endif
                         <th
                             class="px-6 py-2"
                             scope="col"
@@ -330,6 +338,14 @@
                     <tr
                         class="@if (!empty($datum->replaced_by_submission)) text-red-500 @endif border-b border-gray-700 bg-gray-800">
                         @foreach (auth()->user()->table_configs['tables'][$table]['show'] as $key)
+                            @if (
+                                $model == \App\Models\Project::class &&
+                                array_key_exists('hide_for_customers', $structure[$key]) &&
+                                $structure[$key]['hide_for_customers'] == 'true' &&
+                                auth()->user()->role->customer
+                            )
+                                @continue
+                            @endif
                             <td
                                 class="text-nowrap min-w-fit truncate px-6 py-2"
                                 item-id="{{ $datum->id }}"
