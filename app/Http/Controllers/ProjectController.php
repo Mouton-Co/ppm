@@ -320,4 +320,31 @@ class ProjectController extends Controller
             }
         }
     }
+
+    /**
+     * Update checkbox with ajax
+     */
+    public function updateCheckbox(Request $request)
+    {
+        if (! $request->user()->role->hasPermission('update_projects')) {
+            abort(403);
+        }
+
+        $project = Project::find($request->id);
+
+        if (empty($project)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Project not found',
+            ], 404);
+        }
+
+        $project->{$request->get('field')} = $request->get('value');
+        $project->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Project updated successfully',
+        ]);
+    }
 }

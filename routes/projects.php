@@ -16,4 +16,5 @@ Route::post('project/unlink/{id}', [ProjectController::class, 'unlink'])->name('
 Route::post('project/link/{id}', [ProjectController::class, 'link'])->name('projects.link');
 Route::post('project/send-update/{id}', [ProjectController::class, 'sendUpdate'])->name('projects.send-update');
 Route::post('projects/restore/{id}', [ProjectController::class, 'restore'])->name('projects.restore');
-Route::post('projecst/trash/{id}', [ProjectController::class, 'trash'])->name('projects.trash');
+Route::post('project/trash/{id}', [ProjectController::class, 'trash'])->name('projects.trash');
+Route::post('project/update-checkbox/{id}', [ProjectController::class, 'updateCheckbox'])->name('projects.update-checkbox');
