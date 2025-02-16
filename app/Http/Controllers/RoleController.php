@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\RoleExport;
 use App\Http\Services\RoleService;
 use App\Models\Project;
 use App\Models\Role;
@@ -172,5 +173,19 @@ class RoleController extends Controller
         Role::findOrFail($id)->delete();
 
         return redirect()->route('roles.index')->with('success', 'Role deleted successfully.');
+    }
+
+    /**
+     * Export roles to excel
+     *
+     * @return \Maatwebsite\Excel\Excel
+     */
+    public function export(Request $request)
+    {
+        if ($request->user()->cannot('read', Role::class)) {
+            abort(403);
+        }
+
+        return (new RoleExport($request))->download('roles.xlsx');
     }
 }

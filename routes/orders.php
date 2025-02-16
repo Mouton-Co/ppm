@@ -16,4 +16,5 @@ Route::prefix('orders')->group(function () {
     Route::post('/restore/{id}', [OrderController::class, 'restore'])->name('orders.restore');
     Route::post('/trash/{id}', [OrderController::class, 'trash'])->name('orders.trash');
     Route::post('/update-date/{id}', [OrderController::class, 'updateDate'])->name('orders.update-date');
+    Route::post('/export', [OrderController::class, 'export'])->name('orders.export');
 });

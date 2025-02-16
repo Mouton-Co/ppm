@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\AutofillSupplierExport;
 use App\Http\Requests\AutofillSuppliers\StoreRequest;
 use App\Http\Requests\AutofillSuppliers\UpdateRequest;
 use App\Models\AutofillSupplier;
@@ -126,5 +127,19 @@ class AutofillSupplierController extends Controller
         }
 
         return redirect()->route('autofill-suppliers.index')->withSuccess('Autofill supplier deleted.');
+    }
+
+    /**
+     * Export autofill suppliers to excel
+     *
+     * @return \Maatwebsite\Excel\Excel
+     */
+    public function export(Request $request)
+    {
+        if ($request->user()->cannot('read', AutofillSupplier::class)) {
+            abort(403);
+        }
+
+        return (new AutofillSupplierExport($request))->download('autofill-suppliers.xlsx');
     }
 }

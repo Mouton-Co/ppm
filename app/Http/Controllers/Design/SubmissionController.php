@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Design;
 
+use App\Exports\SubmissionExport;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\PartsController;
 use App\Http\Helpers\FileManagementHelper;
@@ -358,5 +359,19 @@ class SubmissionController extends Controller
         }
 
         return response()->json($replacementOptions->pluck('submission_code', 'id'));
+    }
+
+    /**
+     * Export submissions to excel
+     *
+     * @return \Maatwebsite\Excel\Excel
+     */
+    public function export(Request $request)
+    {
+        if ($request->user()->cannot('read', Submission::class)) {
+            abort(403);
+        }
+
+        return (new SubmissionExport($request))->download('submissions.xlsx');
     }
 }

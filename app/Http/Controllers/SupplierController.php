@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\SupplierExport;
 use App\Http\Requests\Supplier\StoreRequest;
 use App\Http\Requests\Supplier\UpdateRequest;
 use App\Models\Order;
@@ -188,5 +189,19 @@ class SupplierController extends Controller
             'success' => true,
             'message' => 'Supplier updated successfully',
         ]);
+    }
+
+    /**
+     * Export suppliers to excel
+     *
+     * @return \Maatwebsite\Excel\Excel
+     */
+    public function export(Request $request)
+    {
+        if ($request->user()->cannot('read', Supplier::class)) {
+            abort(403);
+        }
+
+        return (new SupplierExport($request))->download('suppliers.xlsx');
     }
 }

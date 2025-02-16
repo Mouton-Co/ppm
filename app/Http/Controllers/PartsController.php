@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\BomExcel;
+use App\Exports\PartExport;
 use App\Http\Helpers\UploadFilesHelper;
 use App\Http\Requests\Parts\MarkAsRequest;
 use App\Http\Requests\Parts\UpdateCheckboxRequest;
@@ -94,6 +95,7 @@ class PartsController extends Controller
             'model' => Part::class,
             'structure' => Part::$procurementStructure,
             'slot' => 'components.table.procurement.button-row',
+            'route' => 'parts',
         ]);
     }
 
@@ -144,6 +146,7 @@ class PartsController extends Controller
             'model' => Part::class,
             'structure' => Part::$warehouseStructure,
             'slot' => 'components.table.warehouse.button-row',
+            'route' => 'parts',
         ]);
     }
 
@@ -736,5 +739,22 @@ class PartsController extends Controller
             ->with([
                 'success' => 'All parts unselected',
             ]);
+    }
+
+    /**
+     * Export parts to excel
+     *
+     * @return \Maatwebsite\Excel\Excel
+     */
+    public function export(Request $request)
+    {
+        if (
+            ! $request->user()->role->hasPermission('read_procurement') ||
+            ! $request->user()->role->hasPermission('read_warehouse')
+        ) {
+            abort(403);
+        }
+
+        return (new PartExport($request))->download('parts.xlsx');
     }
 }
