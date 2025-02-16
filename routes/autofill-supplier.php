@@ -8,3 +8,5 @@ Route::post('autofill-suppliers/restore/{id}', [\App\Http\Controllers\AutofillSu
     ->name('autofill-suppliers.restore');
 Route::post('autofill-suppliers/trash/{id}', [\App\Http\Controllers\AutofillSupplierController::class, 'trash'])
     ->name('autofill-suppliers.trash');
+Route::post('autofill-suppliers/export', [\App\Http\Controllers\AutofillSupplierController::class, 'export'])
+    ->name('autofill-suppliers.export');

@@ -19,4 +19,5 @@ Route::middleware(['admin'])->group(function () {
     Route::delete('/user/delete/{id}', [UserController::class, 'destroy'])->name('user.destroy');
     Route::post('/user/restore/{id}', [UserController::class, 'restore'])->name('user.restore');
     Route::post('/user/trash/{id}', [UserController::class, 'trash'])->name('user.trash');
+    Route::post('/users/export', [UserController::class, 'export'])->name('user.export');
 });

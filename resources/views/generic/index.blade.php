@@ -22,30 +22,51 @@
             @endif
         </div>
 
-        <div class="flex cursor-pointer gap-2">
-            <div class="flex items-center gap-2">
-                <input
-                    class="rounded"
-                    name="archived-checkbox"
-                    type="checkbox"
-                    @if (request()->has('archived') && request()->get('archived') == 'true') checked @endif
+        <div class="flex w-full justify-between">
+            <div class="flex cursor-pointer gap-2">
+                <div class="flex items-center gap-2">
+                    <input
+                        class="rounded"
+                        name="archived-checkbox"
+                        type="checkbox"
+                        @if (request()->has('archived') && request()->get('archived') == 'true') checked @endif
+                    >
+                    <span class="text-sm text-gray-400">{{ __('Show archived') }}</span>
+                </div>
+                <button
+                    class="h-7 rounded border border-sky-600 px-2 py-1 text-sm text-sky-600 shadow hover:border-sky-700 hover:bg-sky-700 hover:text-white"
+                    id="filter"
                 >
-                <span class="text-sm text-gray-400">{{ __('Show archived') }}</span>
+                    {{ __('Apply Filters') }}
+                </button>
+                @if (!empty($model::$actions['create']) && auth()->user()->can('create', $model))
+                    <a
+                        class="block h-7 rounded border border-sky-700 bg-sky-700 px-2 py-1 text-sm text-white shadow hover:border-sky-600 hover:bg-sky-600"
+                        href="{{ route("$route.create", request()->query()) }}"
+                    >
+                        {{ $model::$actions['create'] }}
+                    </a>
+                @endif
             </div>
-            <button
-                class="h-7 rounded border border-sky-600 px-2 py-1 text-sm text-sky-600 shadow hover:border-sky-700 hover:bg-sky-700 hover:text-white"
-                id="filter"
+            
+            <form
+                action="{{ route("$route.export", request()->query()) }}"
+                method="post"
+                target="_blank"
             >
-                {{ __('Apply Filters') }}
-            </button>
-            @if (!empty($model::$actions['create']) && auth()->user()->can('create', $model))
-                <a
-                    class="block h-7 rounded border border-sky-700 bg-sky-700 px-2 py-1 text-sm text-white shadow hover:border-sky-600 hover:bg-sky-600"
-                    href="{{ route("$route.create") }}"
+                @csrf
+                <input
+                    name="slug"
+                    type="hidden"
+                    value="{{ request()->segment(1) }}"
                 >
-                    {{ $model::$actions['create'] }}
-                </a>
-            @endif
+                <button
+                    class="h-7 rounded border border-sky-700 bg-sky-700 px-2 py-1 text-sm text-white shadow hover:border-sky-600 hover:bg-sky-600"
+                    type="submit"
+                >
+                    {{ __("Export") }}
+                </button>
+            </form>
         </div>
     </div>
 
@@ -217,17 +238,16 @@
                     @foreach (auth()->user()->table_configs['tables'][$table]['show'] as $key)
                         @if (
                             $model == \App\Models\Project::class &&
-                            array_key_exists('hide_for_customers', $structure[$key]) &&
-                            $structure[$key]['hide_for_customers'] == 'true' &&
-                            auth()->user()->role->customer
-                        )
+                                array_key_exists('hide_for_customers', $structure[$key]) &&
+                                $structure[$key]['hide_for_customers'] == 'true' &&
+                                auth()->user()->role->customer)
                             @continue
                         @endif
                         <th
                             class="px-6 py-2"
                             scope="col"
                         >
-                            <div class="text-nowrap flex items-center">
+                            <div class="flex items-center text-nowrap">
                                 {{ $structure[$key]['label'] }}
                                 @if (!empty($structure[$key]['sortable']) && $structure[$key]['sortable'])
                                     <form
@@ -340,14 +360,13 @@
                         @foreach (auth()->user()->table_configs['tables'][$table]['show'] as $key)
                             @if (
                                 $model == \App\Models\Project::class &&
-                                array_key_exists('hide_for_customers', $structure[$key]) &&
-                                $structure[$key]['hide_for_customers'] == 'true' &&
-                                auth()->user()->role->customer
-                            )
+                                    array_key_exists('hide_for_customers', $structure[$key]) &&
+                                    $structure[$key]['hide_for_customers'] == 'true' &&
+                                    auth()->user()->role->customer)
                                 @continue
                             @endif
                             <td
-                                class="text-nowrap min-w-fit truncate px-6 py-2"
+                                class="min-w-fit truncate text-nowrap px-6 py-2"
                                 item-id="{{ $datum->id }}"
                                 item-key="{{ $key }}"
                             >

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ProjectExport;
 use App\Http\Requests\Project\StoreRequest;
 use App\Mail\ProjectUpdate;
 use App\Models\Project;
@@ -346,5 +347,19 @@ class ProjectController extends Controller
             'success' => true,
             'message' => 'Project updated successfully',
         ]);
+    }
+
+    /**
+     * Export projects to excel
+     *
+     * @return \Maatwebsite\Excel\Excel
+     */
+    public function export(Request $request)
+    {
+        if (! $request->user()->role->hasPermission('read_projects')) {
+            abort(403);
+        }
+
+        return (new ProjectExport($request))->download('projects.xlsx');
     }
 }

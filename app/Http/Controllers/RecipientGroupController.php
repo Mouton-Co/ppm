@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\RecipientGroupExport;
 use App\Http\Requests\RecipientGroup\StoreRequest;
 use App\Http\Requests\RecipientGroup\UpdateRequest;
 use App\Models\Project;
@@ -154,5 +155,19 @@ class RecipientGroupController extends Controller
         $recipientGroup->delete();
 
         return redirect()->route('recipient-groups.index')->with('success', 'Email trigger deleted');
+    }
+
+    /**
+     * Export recipient groups to excel
+     *
+     * @return \Maatwebsite\Excel\Excel
+     */
+    public function export(Request $request)
+    {
+        if ($request->user()->cannot('read', RecipientGroup::class)) {
+            abort(403);
+        }
+
+        return (new RecipientGroupExport($request))->download('recipient-groups.xlsx');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ProjectStatusExport;
 use App\Http\Requests\ProjectStatus\StoreRequest;
 use App\Http\Requests\ProjectStatus\UpdateRequest;
 use App\Models\ProjectStatus;
@@ -110,5 +111,19 @@ class ProjectStatusController extends Controller
         $projectStatus->delete();
 
         return redirect()->back()->with('success', 'Status deleted successfully');
+    }
+
+    /**
+     * Export project statuses to excel
+     *
+     * @return \Maatwebsite\Excel\Excel
+     */
+    public function export(Request $request)
+    {
+        if ($request->user()->cannot('read', ProjectStatus::class)) {
+            abort(403);
+        }
+
+        return (new ProjectStatusExport($request))->download('project-statuses.xlsx');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\RepresentativeExport;
 use App\Http\Requests\Representative\StoreRequest;
 use App\Http\Requests\Representative\UpdateRequest;
 use App\Models\Representative;
@@ -145,5 +146,19 @@ class RepresentativeController extends Controller
         return redirect()->route('representatives.index')->with([
             'success' => "$name deleted successfully",
         ]);
+    }
+
+    /**
+     * Export representatives to excel
+     *
+     * @return \Maatwebsite\Excel\Excel
+     */
+    public function export(Request $request)
+    {
+        if ($request->user()->cannot('read', Representative::class)) {
+            abort(403);
+        }
+
+        return (new RepresentativeExport($request))->download('representatives.xlsx');
     }
 }

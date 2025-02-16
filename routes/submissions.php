@@ -22,3 +22,4 @@ Route::post('/submissions/restore/{id}', [SubmissionController::class, 'restore'
 Route::post('/submissions/trash/{id}', [SubmissionController::class, 'trash'])->name('submissions.trash');
 Route::post('/submissions/replace', [SubmissionController::class, 'replace'])->name('submissions.replace');
 Route::post('/submission/replacement-options', [SubmissionController::class, 'getReplacementOptions'])->name('submissions.replacement-options');
+Route::post('/submissions/export', [SubmissionController::class, 'export'])->name('submissions.export');
