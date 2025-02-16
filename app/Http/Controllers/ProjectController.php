@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ProjectExport;
 use App\Http\Requests\Project\StoreRequest;
 use App\Mail\ProjectUpdate;
 use App\Models\Project;
@@ -319,5 +320,46 @@ class ProjectController extends Controller
                 Mail::to($individual->email)->send(new ProjectUpdate('New CoC Ticket', 'emails.project.assigned-individual', $project));
             }
         }
+    }
+
+    /**
+     * Update checkbox with ajax
+     */
+    public function updateCheckbox(Request $request)
+    {
+        if (! $request->user()->role->hasPermission('update_projects')) {
+            abort(403);
+        }
+
+        $project = Project::find($request->id);
+
+        if (empty($project)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Project not found',
+            ], 404);
+        }
+
+        $project->{$request->get('field')} = $request->get('value');
+        $project->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Project updated successfully',
+        ]);
+    }
+
+    /**
+     * Export projects to excel
+     *
+     * @return \Maatwebsite\Excel\Excel
+     */
+    public function export(Request $request)
+    {
+        if (! $request->user()->role->hasPermission('read_projects')) {
+            abort(403);
+        }
+
+        return (new ProjectExport($request))->download('projects.xlsx');
     }
 }
