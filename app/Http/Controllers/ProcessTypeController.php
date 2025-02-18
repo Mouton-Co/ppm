@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ProcessTypeExport;
 use App\Http\Requests\ProcessTypes\StoreRequest;
 use App\Http\Requests\ProcessTypes\UpdateRequest;
 use App\Models\ProcessType;
@@ -146,5 +147,19 @@ class ProcessTypeController extends Controller
         }
 
         return redirect()->route('process-types.index')->withSuccess('Process type deleted.');
+    }
+
+    /**
+     * Export process types to excel
+     *
+     * @return \Maatwebsite\Excel\Excel
+     */
+    public function export(Request $request)
+    {
+        if ($request->user()->cannot('read', ProcessType::class)) {
+            abort(403);
+        }
+
+        return (new ProcessTypeExport($request))->download('process-types.xlsx');
     }
 }

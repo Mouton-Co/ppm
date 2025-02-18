@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\UserExport;
 use App\Http\Requests\User\UserStoreRequest;
 use App\Http\Requests\User\UserUpdateRequest;
 use App\Models\Role;
@@ -153,5 +154,19 @@ class UserController extends Controller
         return redirect()->route('user.index')->with([
             'success' => "User $name has been removed",
         ]);
+    }
+
+    /**
+     * Export users to excel
+     *
+     * @return \Maatwebsite\Excel\Excel
+     */
+    public function export(Request $request)
+    {
+        if ($request->user()->cannot('read', User::class)) {
+            abort(403);
+        }
+
+        return (new UserExport($request))->download('users.xlsx');
     }
 }

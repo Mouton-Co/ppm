@@ -86,6 +86,8 @@ export function cellEdit() {
 
         if ($(this).attr('model') == 'App\\Models\\Supplier') {
             updateSupplierCheckbox(id, field, value);
+        } else if ($(this).attr('model') == 'App\\Models\\Project') {
+            updateProjectCheckbox(id, field, value);
         } else {
             updatePartCheckbox(id, field, value);
         }
@@ -98,6 +100,22 @@ export function cellEdit() {
             $.ajax({ // route('suppliers.update-checkbox', $part->id)
                 type: 'POST',
                 url: '/suppliers/update-checkbox/' + id,
+                data: {
+                    _token: $('meta[name="csrf-token"]').attr('content'),
+                    id: id,
+                    field: field,
+                    value: value
+                }
+            });
+        }, 200);
+    }
+
+    function updateProjectCheckbox(id, field, value)
+    {
+        setTimeout(function () {
+            $.ajax({ // route('projects.update-checkbox', $part->id)
+                type: 'POST',
+                url: '/project/update-checkbox/' + id,
                 data: {
                     _token: $('meta[name="csrf-token"]').attr('content'),
                     id: id,

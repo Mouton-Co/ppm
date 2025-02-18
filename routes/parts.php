@@ -20,4 +20,5 @@ Route::prefix('parts')->group(function () {
     Route::get('mark-as', [PartsController::class, 'markAs'])->name('parts.mark-as');
     Route::post('search-replace-po', [PartsController::class, 'searchReplacePo'])->name('parts.search-replace-po');
     Route::get('unselect', [PartsController::class, 'unselect'])->name('parts.unselect');
+    Route::post('parts/export', [PartsController::class, 'export'])->name('parts.export');
 });

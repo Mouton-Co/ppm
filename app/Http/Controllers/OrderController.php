@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\OrderExport;
 use App\Http\Requests\Order\StoreRequest;
 use App\Http\Requests\Order\UpdateRequest;
 use App\Http\Services\EmailService;
@@ -47,6 +48,7 @@ class OrderController extends Controller
             'data' => $orders,
             'model' => Order::class,
             'slot' => 'components.table.orders.list',
+            'route' => 'orders',
         ]);
     }
 
@@ -266,5 +268,19 @@ class OrderController extends Controller
         return response()->json([
             'message' => 'Order not found.',
         ]);
+    }
+
+    /**
+     * Export orders to excel
+     *
+     * @return \Maatwebsite\Excel\Excel
+     */
+    public function export(Request $request)
+    {
+        if ($request->user()->cannot('read', Order::class)) {
+            abort(403);
+        }
+
+        return (new OrderExport($request))->download('orders.xlsx');
     }
 }

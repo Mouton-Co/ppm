@@ -74,6 +74,14 @@ class Project extends Model
             'sortable' => true,
             'filterable' => true,
         ],
+        'internal' => [
+            'label' => 'Internal',
+            'type' => 'boolean',
+            'sortable' => true,
+            'filterable' => true,
+            'component' => 'editable.checkbox',
+            'hide_for_customers' => true,
+        ],
         'costing' => [
             'label' => 'Costing',
             'type' => 'dropdown',
@@ -274,5 +282,15 @@ class Project extends Model
         }
 
         return $options;
+    }
+
+    /**
+     * Can the checkbox be edited.
+     *
+     * @param  string  $key
+     */
+    public function checkboxEnabled($key): bool
+    {
+        return true;
     }
 }
