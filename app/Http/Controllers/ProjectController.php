@@ -39,6 +39,7 @@ class ProjectController extends Controller
         if (auth()->user()->role->customer) {
             $projects = $this->filter(Project::class, Project::query(), $request)
                 ->whereIn('machine_nr', json_decode(auth()->user()->role->permissions))
+                ->where('internal', 0)
                 ->paginate(15);
         } elseif ($request->has('status') && $request->status === 'All except closed') {
             $projects = $this->filter(Project::class, Project::query(), $request)
