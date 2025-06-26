@@ -18,6 +18,7 @@ $treatments = [
     'Powder Coat - Structured White',
     'Powder Coat - Traffic Yellow',
     'Rubberize',
+    'Sand blast',
     'Sharpen',
     'Skim',
     'Straighten',
@@ -26,6 +27,7 @@ $treatments = [
     'Teflon Coat',
     'Tap/Drill',
     'Vacuum Harden',
+    'Orbital Sand',
     'Other',
 ];
 
